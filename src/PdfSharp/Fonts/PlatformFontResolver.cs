@@ -98,14 +98,6 @@ namespace PdfSharp.Fonts
             WpfGlyphTypeface wpfGlyphTypeface;
             XFontSource fontSource = CreateFontSource(familyName, fontResolvingOptions, out wpfFontFamily, out wpfTypeface, out wpfGlyphTypeface, typefaceKey);
 #endif
-#if SILVERLIGHT
-            //GlyphTypeface wpfGlyphTypeface;
-            XFontSource fontSource = null;//CreateFontSource(familyName, isBold, isItalic, out wpfGlyphTypeface, typefaceKey);
-#endif
-#if NETFX_CORE
-            //GlyphTypeface wpfGlyphTypeface;
-            XFontSource fontSource = null;//CreateFontSource(familyName, isBold, isItalic, out wpfGlyphTypeface, typefaceKey);
-#endif
             // If no such font exists return null. PDFsharp will fail.
             if (fontSource == null)
                 return null;
@@ -170,9 +162,6 @@ namespace PdfSharp.Fonts
 #endif
             }
 
-#if SILVERLIGHT
-            fontResolverInfo = null; //new PlattformResolverInfo(typefaceKey, false, false, wpfGlyphTypeface);
-#endif
             FontFactory.CacheFontResolverInfo(typefaceKey, fontResolverInfo);
 
             // Register font data under the platform specific face name.
@@ -311,26 +300,6 @@ namespace PdfSharp.Fonts
             // Get or create the font source and cache it under the specified typeface key.
             XFontSource fontSource = XFontSource.GetOrCreateFromWpf(typefaceKey, wpfGlyphTypeface);
             return fontSource;
-        }
-#endif
-
-#if SILVERLIGHT
-        /// <summary>
-        /// Silverlight has no access to the bytes of its fonts and therefore return null.
-        /// </summary>
-        internal static XFontSource CreateFontSource(string familyName, bool isBold, bool isItalic)
-        {
-            // PDFsharp does not provide a default font because this would blow up the assembly
-            // unnecessarily if the font is not needed. Provide your own font resolver to generate
-            // PDF files containing text.
-            return null;
-        }
-#endif
-
-#if NETFX_CORE
-        internal static XFontSource CreateFontSource(string familyName, bool isBold, bool isItalic, string typefaceKey)
-        {
-            throw new NotImplementedException();
         }
 #endif
     }

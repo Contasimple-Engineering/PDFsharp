@@ -500,32 +500,6 @@ namespace PdfSharp.Drawing
         readonly WpfGlyphTypeface _wpfGlyphTypeface;
 #endif
 
-#if SILVERLIGHT_
-    /// <summary>
-    /// Gets the FontSource object used in Silverlight 4.
-    /// </summary>
-        public FontSource FontSource
-        {
-            get
-            {
-                if (_fontSource == null)
-                {
-#if true
-                    MemoryStream stream = new MemoryStream(_fontface.FontData.Bytes);
-                    _fontSource = new FontSource(stream);
-#else
-                    using (MemoryStream stream = new MemoryStream(_fontface.Data))
-                    {
-                        _fontSource = new FontSource(stream);
-                    }
-#endif
-                }
-                return _fontSource;
-            }
-        }
-        FontSource _fontSource;
-#endif
-
         /// <summary>
         /// Gets the DebuggerDisplayAttribute text.
         /// </summary>

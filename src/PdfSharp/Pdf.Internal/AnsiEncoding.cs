@@ -36,7 +36,7 @@ namespace PdfSharp.Pdf.Internal
     /// </summary>
     public sealed class AnsiEncoding : Encoding
     {
-#if DEBUG_ && !(SILVERLIGHT || NETFX_CORE)
+#if DEBUG_
         public static void ProofImplementation()
         {
             // Implementation was verified with .NET Ansi encoding.

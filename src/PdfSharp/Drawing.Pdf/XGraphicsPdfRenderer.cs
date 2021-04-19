@@ -38,17 +38,6 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Media;
-using SysPoint = System.Windows.Point;
-using SysSize = System.Windows.Size;
-#endif
-#if NETFX_CORE
-using Windows.UI.Xaml.Media;
-using SysPoint = Windows.Foundation.Point;
-using SysSize = Windows.Foundation.Size;
-#endif
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;
 using PdfSharp.Pdf;
@@ -413,11 +402,6 @@ namespace PdfSharp.Drawing.Pdf
                 AppendPath(path._gdipPath);
             else
                 AppendPath(path._pathGeometry);
-            AppendStrokeFill(pen, brush, path.FillMode, false);
-#endif
-#if NETFX_CORE
-            Realize(pen, brush);
-            AppendPath(path._pathGeometry);
             AppendStrokeFill(pen, brush, path.FillMode, false);
 #endif
         }
@@ -1137,7 +1121,7 @@ namespace PdfSharp.Drawing.Pdf
             }
         }
 
-#if WPF || NETFX_CORE
+#if WPF
         void AppendPartialArc(SysPoint point1, SysPoint point2, double rotationAngle,
             SysSize size, bool isLargeArc, SweepDirection sweepDirection, PathStart pathStart)
         {
@@ -1389,7 +1373,7 @@ namespace PdfSharp.Drawing.Pdf
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Appends the content of a PathGeometry object.
         /// </summary>

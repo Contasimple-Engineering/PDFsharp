@@ -68,13 +68,8 @@ namespace PdfSharp.Pdf.Internal
             {
                 if (_winAnsiEncoding == null)
                 {
-#if !NETFX_CORE
                     // Use .net encoder if available.
                     _winAnsiEncoding = Encoding.GetEncoding(1252);
-#else
-                    // Use own implementation in Silverlight and WinRT
-                    _winAnsiEncoding = new AnsiEncoding();
-#endif
                 }
                 return _winAnsiEncoding;
             }

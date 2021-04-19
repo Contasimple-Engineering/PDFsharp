@@ -472,12 +472,7 @@ namespace PdfSharp.SharpZipLib.Zip
         // This isn't so great but is better than nothing.
         // Trying to work out an appropriate OEM code page would be good.
         // 850 is a good default for English speakers particularly in Europe.
-#if NETFX_CORE
-        // TODO Do we need this for PDFsharp? If so, make it work.
-        static int defaultCodePage = 65001;
-#else
         static int defaultCodePage = CultureInfo.CurrentCulture.TextInfo.ANSICodePage;
-#endif
 #else
 	    /// <remarks>
 	    /// Get OEM codepage from NetFX, which parses the NLP file with culture info table etc etc.
@@ -537,11 +532,7 @@ namespace PdfSharp.SharpZipLib.Zip
                 return string.Empty;
             }
 
-#if NETFX_CORE
-            return Encoding.GetEncoding("utf-8").GetString(data, 0, count);
-#else
             return Encoding.GetEncoding(DefaultCodePage).GetString(data, 0, count);
-#endif
         }
 
         /// <summary>
@@ -631,11 +622,7 @@ namespace PdfSharp.SharpZipLib.Zip
                 return new byte[0];
             }
 
-#if NETFX_CORE
-            return Encoding.GetEncoding("utf-8").GetBytes(str);
-#else
             return Encoding.GetEncoding(DefaultCodePage).GetBytes(str);
-#endif
         }
 
         /// <summary>

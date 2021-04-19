@@ -34,9 +34,7 @@ using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using PdfSharp.Pdf.Advanced;
 using PdfSharp.Pdf.Internal;
-#if !NETFX_CORE
 using System.Security.Cryptography;
-#endif
 
 #pragma warning disable 0169
 #pragma warning disable 0649
@@ -358,11 +356,9 @@ namespace PdfSharp.Pdf.Security
         /// </summary>
         void InitEncryptionKey(byte[] documentID, byte[] userPad, byte[] ownerKey, int permissions, bool strongEncryption)
         {
-            //#if !SILVERLIGHT
             _ownerKey = ownerKey;
             _encryptionKey = new byte[strongEncryption ? 16 : 5];
 
-#if !NETFX_CORE
             _md5.Initialize();
             _md5.TransformBlock(userPad, 0, userPad.Length, userPad, 0);
             _md5.TransformBlock(ownerKey, 0, ownerKey.Length, ownerKey, 0);
@@ -388,8 +384,6 @@ namespace PdfSharp.Pdf.Security
                 }
             }
             Array.Copy(digest, 0, _encryptionKey, 0, _encryptionKey.Length);
-            //#endif
-#endif
         }
 
         /// <summary>
@@ -397,8 +391,6 @@ namespace PdfSharp.Pdf.Security
         /// </summary>
         void SetupUserKey(byte[] documentID)
         {
-#if !NETFX_CORE
-            //#if !SILVERLIGHT
             if (_encryptionKey.Length == 16)
             {
                 _md5.TransformBlock(PasswordPadding, 0, PasswordPadding.Length, PasswordPadding, 0);
@@ -422,8 +414,6 @@ namespace PdfSharp.Pdf.Security
                 PrepareRC4Key(_encryptionKey);
                 EncryptRC4(PasswordPadding, _userKey);
             }
-            //#endif
-#endif
         }
 
         /// <summary>
@@ -528,8 +518,6 @@ namespace PdfSharp.Pdf.Security
         /// </summary>
         internal void SetHashKey(PdfObjectID id)
         {
-#if !NETFX_CORE
-            //#if !SILVERLIGHT
             byte[] objectId = new byte[5];
             _md5.Initialize();
             // Split the object number and generation
@@ -545,8 +533,6 @@ namespace PdfSharp.Pdf.Security
             _keySize = _encryptionKey.Length + 5;
             if (_keySize > 16)
                 _keySize = 16;
-            //#endif
-#endif
         }
 
         /// <summary>
@@ -621,9 +607,6 @@ namespace PdfSharp.Pdf.Security
         readonly MD5 _md5 = new MD5CryptoServiceProvider();
 #if DEBUG_
         readonly MD5Managed _md5M = new MD5Managed();
-#endif
-#if NETFX_CORE
-        // readonly MD5Managed _md5 = new MD5Managed();
 #endif
         /// <summary>
         /// Bytes used for RC4 encryption.

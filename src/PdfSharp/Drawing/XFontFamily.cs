@@ -139,14 +139,6 @@ namespace PdfSharp.Drawing
             return new XFontFamily(fontFamilyInternal);
         }
 #endif
-#if SILVERLIGHT
-        //internal static XFontFamily CreateFromWpf(System.Windows.Media.FontFamily wpfFontFamily)
-        //{
-        //    XFontFamily fontFamily = new XFontFamily(wpfFontFamily.FamilyNames[XmlLanguage.GetLanguage("en")]);
-        //    fontFamily._wpfFamily = wpfFontFamily;
-        //    return fontFamily;
-        //}
-#endif
 
         /// <summary>
         /// Gets the name of the font family.

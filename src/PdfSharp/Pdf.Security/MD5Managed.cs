@@ -40,9 +40,7 @@
 
 using System;
 using System.Diagnostics;
-#if !NETFX_CORE
 using System.Security.Cryptography;
-#endif
 
 // ReSharper disable InconsistentNaming
 

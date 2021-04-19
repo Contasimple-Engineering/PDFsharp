@@ -111,12 +111,6 @@ namespace PdfSharp.Drawing
 #if WPF && !SILVERLIGHT
             // Nothing to do.
 #endif
-#if SILVERLIGHT
-            // Save current level of Canvas stack.
-            _stackLevel = _gfx._dc.Level;
-            // Create new Canvas for subsequent UIElements.
-            _gfx._dc.PushCanvas();
-#endif
         }
 
         /// <summary>
@@ -139,10 +133,6 @@ namespace PdfSharp.Drawing
                     _gfx._dc.Pop();
                 _geometryPushLevel = 0;
             }
-#endif
-#if SILVERLIGHT
-      // Pop all Canvas objects created in this state.
-      _gfx._dc.Pop(_gfx._dc.Level - _stackLevel);
 #endif
         }
 
@@ -169,20 +159,6 @@ namespace PdfSharp.Drawing
             _geometryPushLevel++;
         }
         int _geometryPushLevel;
-#endif
-
-#if SILVERLIGHT
-        public void PushTransform(MatrixTransform transform)
-        {
-            _gfx._dc.PushTransform(transform);
-        }
-
-        public void PushClip(Geometry geometry)
-        {
-            _gfx._dc.PushClip(geometry);
-        }
-
-        int _stackLevel;
 #endif
 
         readonly XGraphics _gfx;

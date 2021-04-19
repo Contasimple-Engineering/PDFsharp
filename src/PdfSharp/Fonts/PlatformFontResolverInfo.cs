@@ -90,12 +90,5 @@ namespace PdfSharp.Fonts
         }
         readonly WpfGlyphTypeface _wpfGlyphTypeface;
 #endif
-#if NETFX_CORE
-        public PlatformFontResolverInfo(string faceName, bool mustSimulateBold, bool mustSimulateItalic)
-            : base(faceName, mustSimulateBold, mustSimulateItalic)
-        {
-            //_gdiFont = gdiFont;
-        }
-#endif
     }
 }

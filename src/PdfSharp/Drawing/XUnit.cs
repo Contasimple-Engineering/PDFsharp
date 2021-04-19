@@ -67,11 +67,7 @@ namespace PdfSharp.Drawing
         public XUnit(double value, XGraphicsUnit type)
         {
             if (!Enum.IsDefined(typeof(XGraphicsUnit), type))
-#if !SILVERLIGHT && !NETFX_CORE
                 throw new System.ComponentModel.InvalidEnumArgumentException(nameof(type), (int)type, typeof(XGraphicsUnit));
-#else
-                throw new ArgumentException("type");
-#endif
             _value = value;
             _type = type;
         }

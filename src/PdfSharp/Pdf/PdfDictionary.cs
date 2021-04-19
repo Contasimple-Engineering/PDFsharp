@@ -824,14 +824,13 @@ namespace PdfSharp.Pdf
                 {
                     if (options != VCF.None)
                     {
-#if NETFX_CORE && DEBUG_
+#if DEBUG_
                         if (key == "/Resources")
                             Debug-Break.Break();
 #endif
                         Type type = GetValueType(key);
                         if (type != null)
                         {
-#if !NETFX_CORE
                             Debug.Assert(typeof(PdfItem).IsAssignableFrom(type), "Type not allowed.");
                             if (typeof(PdfDictionary).IsAssignableFrom(type))
                             {
@@ -843,21 +842,6 @@ namespace PdfSharp.Pdf
                             }
                             else
                                 throw new NotImplementedException("Type other than array or dictionary.");
-#else
-                            // Rewritten WinRT style.
-                            TypeInfo typeInfo = type.GetTypeInfo();
-                            Debug.Assert(typeof(PdfItem).GetTypeInfo().IsAssignableFrom(typeInfo), "Type not allowed.");
-                            if (typeof(PdfDictionary).GetTypeInfo().IsAssignableFrom(typeInfo))
-                            {
-                                value = obj = CreateDictionary(type, null);
-                            }
-                            else if (typeof(PdfArray).GetTypeInfo().IsAssignableFrom(typeInfo))
-                            {
-                                value = obj = CreateArray(type, null);
-                            }
-                            else
-                                throw new NotImplementedException("Type other than array or dictionary.");
-#endif
                             if (options == VCF.CreateIndirect)
                             {
                                 _ownerDictionary.Owner._irefTable.Add(obj);
@@ -889,7 +873,6 @@ namespace PdfSharp.Pdf
                             Type type = GetValueType(key);
                             Debug.Assert(type != null, "No value type specified in meta information. Please send this file to PDFsharp support.");
 
-#if !NETFX_CORE
                             if (type != null && type != value.GetType())
                             {
                                 if (typeof(PdfDictionary).IsAssignableFrom(type))
@@ -905,25 +888,6 @@ namespace PdfSharp.Pdf
                                 else
                                     throw new NotImplementedException("Type other than array or dictionary.");
                             }
-#else
-                            // Rewritten WinRT style.
-                            TypeInfo typeInfo = type.GetTypeInfo();
-                            if (type != null && type != value.GetType())
-                            {
-                                if (typeof(PdfDictionary).GetTypeInfo().IsAssignableFrom(typeInfo))
-                                {
-                                    Debug.Assert(value is PdfDictionary, "Bug in PDFsharp. Please send this file to PDFsharp support.");
-                                    value = CreateDictionary(type, (PdfDictionary)value);
-                                }
-                                else if (typeof(PdfArray).GetTypeInfo().IsAssignableFrom(typeInfo))
-                                {
-                                    Debug.Assert(value is PdfArray, "Bug in PDFsharp. Please send this file to PDFsharp support.");
-                                    value = CreateArray(type, (PdfArray)value);
-                                }
-                                else
-                                    throw new NotImplementedException("Type other than array or dictionary.");
-                            }
-#endif
                         }
                         return value;
                     }
@@ -989,7 +953,6 @@ namespace PdfSharp.Pdf
 
             PdfArray CreateArray(Type type, PdfArray oldArray)
             {
-#if !NETFX_CORE
                 ConstructorInfo ctorInfo;
                 PdfArray array;
                 if (oldArray == null)
@@ -1009,48 +972,10 @@ namespace PdfSharp.Pdf
                     array = ctorInfo.Invoke(new object[] { oldArray }) as PdfArray;
                 }
                 return array;
-#else
-                // Rewritten WinRT style.
-                PdfArray array = null;
-                if (oldArray == null)
-                {
-                    // Use constructor with signature 'Ctor(PdfDocument owner)'.
-                    var ctorInfos = type.GetTypeInfo().DeclaredConstructors; //.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                    //null, new Type[] { typeof(PdfDocument) }, null);
-                    foreach (var ctorInfo in ctorInfos)
-                    {
-                        var parameters = ctorInfo.GetParameters();
-                        if (parameters.Length == 1 && parameters[0].ParameterType == typeof(PdfDocument))
-                        {
-                            array = ctorInfo.Invoke(new object[] { _ownerDictionary.Owner }) as PdfArray;
-                            break;
-                        }
-                    }
-                    Debug.Assert(array != null, "No appropriate constructor found for type: " + type.Name);
-                }
-                else
-                {
-                    // Use constructor with signature 'Ctor(PdfDictionary dict)'.
-                    var ctorInfos = type.GetTypeInfo().DeclaredConstructors; // .GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                    //null, new Type[] { typeof(PdfArray) }, null);
-                    foreach (var ctorInfo in ctorInfos)
-                    {
-                        var parameters = ctorInfo.GetParameters();
-                        if (parameters.Length == 1 && parameters[0].ParameterType == typeof(PdfArray))
-                        {
-                            array = ctorInfo.Invoke(new object[] { oldArray }) as PdfArray;
-                            break;
-                        }
-                    }
-                    Debug.Assert(array != null, "No appropriate constructor found for type: " + type.Name);
-                }
-                return array;
-#endif
             }
 
             PdfDictionary CreateDictionary(Type type, PdfDictionary oldDictionary)
             {
-#if !NETFX_CORE
                 ConstructorInfo ctorInfo;
                 PdfDictionary dict;
                 if (oldDictionary == null)
@@ -1070,46 +995,10 @@ namespace PdfSharp.Pdf
                     dict = ctorInfo.Invoke(new object[] { oldDictionary }) as PdfDictionary;
                 }
                 return dict;
-#else
-                // Rewritten WinRT style.
-                PdfDictionary dict = null;
-                if (oldDictionary == null)
-                {
-                    // Use constructor with signature 'Ctor(PdfDocument owner)'.
-                    var ctorInfos = type.GetTypeInfo().DeclaredConstructors; //GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                    //null, new Type[] { typeof(PdfDocument) }, null);
-                    foreach (var ctorInfo in ctorInfos)
-                    {
-                        var parameters = ctorInfo.GetParameters();
-                        if (parameters.Length == 1 && parameters[0].ParameterType == typeof(PdfDocument))
-                        {
-                            dict = ctorInfo.Invoke(new object[] { _ownerDictionary.Owner }) as PdfDictionary;
-                            break;
-                        }
-                    }
-                    Debug.Assert(dict != null, "No appropriate constructor found for type: " + type.Name);
-                }
-                else
-                {
-                    var ctorInfos = type.GetTypeInfo().DeclaredConstructors; // GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[] { typeof(PdfDictionary) }, null);
-                    foreach (var ctorInfo in ctorInfos)
-                    {
-                        var parameters = ctorInfo.GetParameters();
-                        if (parameters.Length == 1 && parameters[0].ParameterType == typeof(PdfDictionary))
-                        {
-                            dict = ctorInfo.Invoke(new object[] { _ownerDictionary.Owner }) as PdfDictionary;
-                            break;
-                        }
-                    }
-                    Debug.Assert(dict != null, "No appropriate constructor found for type: " + type.Name);
-                }
-                return dict;
-#endif
             }
 
             PdfItem CreateValue(Type type, PdfDictionary oldValue)
             {
-#if !NETFX_CORE
                 ConstructorInfo ctorInfo = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                     null, new Type[] { typeof(PdfDocument) }, null);
                 PdfObject obj = ctorInfo.Invoke(new object[] { _ownerDictionary.Owner }) as PdfObject;
@@ -1124,32 +1013,6 @@ namespace PdfSharp.Pdf
                     }
                 }
                 return obj;
-#else
-                // Rewritten WinRT style.
-                PdfObject obj = null;
-                var ctorInfos = type.GetTypeInfo().DeclaredConstructors; // GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[] { typeof(PdfDocument) }, null);
-                foreach (var ctorInfo in ctorInfos)
-                {
-                    var parameters = ctorInfo.GetParameters();
-                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(PdfDocument))
-                    {
-                        obj = ctorInfo.Invoke(new object[] { _ownerDictionary.Owner }) as PdfObject;
-                        break;
-                    }
-                }
-                Debug.Assert(obj != null, "No appropriate constructor found for type: " + type.Name);
-                if (oldValue != null)
-                {
-                    obj.Reference = oldValue.Reference;
-                    obj.Reference.Value = obj;
-                    if (obj is PdfDictionary)
-                    {
-                        PdfDictionary dict = (PdfDictionary)obj;
-                        dict._elements = oldValue._elements;
-                    }
-                }
-                return obj;
-#endif
             }
 
             /// <summary>

@@ -69,7 +69,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Initializes a new instance of the XPoint class with the specified point.
         /// </summary>
@@ -215,7 +215,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Converts this XPoint to a System.Windows.Point.
         /// </summary>
@@ -381,7 +381,7 @@ namespace PdfSharp.Drawing
             return new XVector(point._x, point._y);
         }
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Performs an implicit conversion from XPoint to Point.
         /// </summary>

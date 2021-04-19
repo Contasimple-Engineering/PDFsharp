@@ -493,7 +493,6 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
             throw new NotSupportedException("DeflaterOutputStream Read not supported");
         }
 
-#if !NETFX_CORE
 		/// <summary>
 		/// Asynchronous reads are not supported a NotSupportedException is always thrown
 		/// </summary>
@@ -508,9 +507,7 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
 		{
 			throw new NotSupportedException("DeflaterOutputStream BeginRead not currently supported");
 		}
-#endif
 
-#if !NETFX_CORE
         /// <summary>
 		/// Asynchronous writes arent supported, a NotSupportedException is always thrown
 		/// </summary>
@@ -525,7 +522,6 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
 		{
 			throw new NotSupportedException("BeginWrite is not supported");
 		}
-#endif
 
         /// <summary>
         /// Flushes the stream by calling <see cref="DeflaterOutputStream.Flush">Flush</see> on the deflater and then
@@ -538,7 +534,6 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
             baseOutputStream_.Flush();
         }
 
-#if !NETFX_CORE
 		/// <summary>
 		/// Calls <see cref="Finish"/> and closes the underlying
 		/// stream when <see cref="IsStreamOwner"></see> is true.
@@ -567,37 +562,6 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
 				}
 			}
 		}
-#else
-        public void Close()
-        {
-            if (!isClosed_)
-            {
-                isClosed_ = true;
-
-                try
-                {
-                    Finish();
-#if true//NETCF_1_0
-                    keys = null;
-#else
-					if ( cryptoTransform_ != null ) {
-						GetAuthCodeIfAES();
-						cryptoTransform_.Dispose();
-						cryptoTransform_ = null;
-					}
-#endif
-                }
-                finally
-                {
-                    if (isStreamOwner_)
-                    {
-                        //baseOutputStream_.Close();
-                        baseOutputStream_.Dispose();
-                    }
-                }
-            }
-        }
-#endif
 
 
         private void GetAuthCodeIfAES()

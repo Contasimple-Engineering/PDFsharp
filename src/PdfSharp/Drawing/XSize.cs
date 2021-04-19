@@ -34,16 +34,6 @@ using System.Runtime.InteropServices;
 #if GDI
 using System.Drawing;
 #endif
-#if WPF
-using System.Windows;
-using SysPoint = System.Windows.Point;
-using SysSize = System.Windows.Size;
-#endif
-#if NETFX_CORE
-using Windows.UI.Xaml.Media;
-using SysPoint = Windows.Foundation.Point;
-using SysSize = Windows.Foundation.Size;
-#endif
 using PdfSharp.Internal;
 
 namespace PdfSharp.Drawing
@@ -177,7 +167,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Converts this XSize to a System.Windows.Size.
         /// </summary>
@@ -206,7 +196,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Creates an XSize from a System.Drawing.Size.
         /// </summary>
@@ -329,7 +319,7 @@ namespace PdfSharp.Drawing
             return new XPoint(size._width, size._height);
         }
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Performs an explicit conversion from Size to XSize.
         /// </summary>

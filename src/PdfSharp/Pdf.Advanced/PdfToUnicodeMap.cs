@@ -89,11 +89,7 @@ namespace PdfSharp.Pdf.Advanced
             }
 
             MemoryStream ms = new MemoryStream();
-#if !SILVERLIGHT && !NETFX_CORE
             StreamWriter wrt = new StreamWriter(ms, Encoding.ASCII);
-#else
-            StreamWriter wrt = new StreamWriter(ms, Encoding.UTF8);
-#endif
             wrt.Write(prefix);
 
             wrt.WriteLine("1 begincodespacerange");

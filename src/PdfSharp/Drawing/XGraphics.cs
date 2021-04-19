@@ -318,13 +318,9 @@ namespace PdfSharp.Drawing  // #??? Clean up
             _gfx = null;
             TargetContext = XGraphicTargetContext.GDI;
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
             _dv = new DrawingVisual();
             _dc = _dv.RenderOpen();
-            TargetContext = XGraphicTargetContext.WPF;
-#endif
-#if SILVERLIGHT
-            _dc = new AgDrawingContext(new Canvas());
             TargetContext = XGraphicTargetContext.WPF;
 #endif
 #if GDI && WPF
@@ -506,12 +502,8 @@ namespace PdfSharp.Drawing  // #??? Clean up
             XGraphics gfx = new XGraphics((System.Drawing.Graphics)null, size, pageUnit, pageDirection);
             return gfx;
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
             XGraphics gfx = new XGraphics((System.Windows.Media.DrawingContext)null, size, pageUnit, pageDirection);
-            return gfx;
-#endif
-#if SILVERLIGHT
-            XGraphics gfx = new XGraphics(new Canvas(), size, pageUnit, pageDirection);
             return gfx;
 #endif
         }

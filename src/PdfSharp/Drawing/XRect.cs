@@ -37,19 +37,6 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Media;
-using SysPoint = System.Windows.Point;
-using SysSize = System.Windows.Size;
-using SysRect = System.Windows.Rect;
-#endif
-#if NETFX_CORE
-using Windows.UI.Xaml.Media;
-using SysPoint = Windows.Foundation.Point;
-using SysSize = Windows.Foundation.Size;
-using SysRect = Windows.Foundation.Rect;
-#endif
 using PdfSharp.Internal;
 
 namespace PdfSharp.Drawing
@@ -149,7 +136,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Initializes a new instance of the XRect class.
         /// </summary>
@@ -791,7 +778,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Performs an implicit conversion from System.Windows.Rect to XRect.
         /// </summary>

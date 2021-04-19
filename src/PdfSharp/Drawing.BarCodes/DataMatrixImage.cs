@@ -753,11 +753,7 @@ namespace PdfSharp.Drawing.BarCodes
             image.Interpolate = false;
             return image;
 #endif
-#if WPF
-            // WPFHACK
-            return null;
-#endif
-#if CORE || NETFX_CORE
+#if CORE
             return null;
 #endif
         }

@@ -50,10 +50,6 @@ using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;
 using PdfSharp.Pdf;
-
-#if SILVERLIGHT
-#pragma warning disable 649
-#endif
 // ReSharper disable ConvertToAutoProperty
 
 namespace PdfSharp.Drawing

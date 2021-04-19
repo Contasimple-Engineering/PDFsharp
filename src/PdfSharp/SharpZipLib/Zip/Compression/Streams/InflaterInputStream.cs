@@ -666,7 +666,6 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
             throw new NotSupportedException("InflaterInputStream WriteByte not supported");
         }
 
-#if !NETFX_CORE
         /// <summary>
         /// Entry point to begin an asynchronous write.  Always throws a NotSupportedException.
         /// </summary>
@@ -681,9 +680,7 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
         {
             throw new NotSupportedException("InflaterInputStream BeginWrite not supported");
         }
-#endif
 
-#if !NETFX_CORE
         /// <summary>
         /// Closes the input stream.  When <see cref="IsStreamOwner"></see>
         /// is true the underlying stream is also closed.
@@ -699,20 +696,6 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
                 }
             }
         }
-#else
-        public  void Close()
-        {
-            if (!isClosed)
-            {
-                isClosed = true;
-                if (isStreamOwner)
-                {
-                    //baseInputStream.Close();
-                    baseInputStream.Dispose();
-                }
-            }
-        }
-#endif
 
         /// <summary>
         /// Reads decompressed data into the provided buffer byte array
@@ -794,12 +777,10 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
         ///// </summary>
         ////protected long csize;
 
-#if true || !NETFX_CORE
         /// <summary>
         /// Flag indicating wether this instance has been closed or not.
         /// </summary>
         bool isClosed;
-#endif
 
         /// <summary>
         /// Flag indicating wether this instance is designated the stream owner.

@@ -86,11 +86,6 @@
 
 #elif WPF
 // PDFsharp based on Windows Presentation Foundation.
-#elif SILVERLIGHT
-// PDFsharp based on 'Silverlight'.
-#if !WPF
-#error 'SILVERLIGHT' must be defined together with 'WPF'
-#endif
 
 #elif CORE
 // PDFsharp independent of any particular .NET library.

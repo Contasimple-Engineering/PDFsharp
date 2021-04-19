@@ -244,10 +244,6 @@ namespace PdfSharp
         // Hybrid - for testing only
         public const string Technology = "-h";
 #endif
-#if NETFX_CORE
-        // WinRT
-        public const string Technology = "-wrt";
-#endif
 #if CORE
         // .net without GDI+ and WPF
         public const string Technology = "";  // no extension

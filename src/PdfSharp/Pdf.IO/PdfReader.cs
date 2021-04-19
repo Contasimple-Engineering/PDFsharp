@@ -72,7 +72,6 @@ namespace PdfSharp.Pdf.IO
         /// </summary>
         public static int TestPdfFile(string path)
         {
-#if !NETFX_CORE
             FileStream stream = null;
             try
             {
@@ -102,7 +101,6 @@ namespace PdfSharp.Pdf.IO
                 {
                 }
             }
-#endif
             return 0;
         }
 
@@ -203,7 +201,6 @@ namespace PdfSharp.Pdf.IO
         /// </summary>
         public static PdfDocument Open(string path, string password, PdfDocumentOpenMode openmode, PdfPasswordProvider provider)
         {
-#if !NETFX_CORE
             PdfDocument document;
             Stream stream = null;
             try
@@ -221,9 +218,6 @@ namespace PdfSharp.Pdf.IO
                     stream.Close();
             }
             return document;
-#else
-                    return null;
-#endif
         }
 
         /// <summary>

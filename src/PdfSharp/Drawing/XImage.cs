@@ -238,24 +238,13 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
             // Create a WPF BitmapImage.
             BitmapImage bmi = new BitmapImage();
             bmi.BeginInit();
             bmi.StreamSource = stream;
             bmi.EndInit();
             _wpfImage = bmi;
-#endif
-#if SILVERLIGHT
-            int length = (int)stream.Length;
-            stream.Seek(0, SeekOrigin.Begin);
-            //_bytes = new byte[length];
-            //stream.Read(_bytes, 0, length);
-            //stream.Seek(0, SeekOrigin.Begin);
-
-            // Create a Silverlight BitmapImage.
-            _wpfImage = new BitmapImage();
-            _wpfImage.SetSource(stream);
 #endif
 
 #if true_
@@ -1473,9 +1462,6 @@ namespace PdfSharp.Drawing
 #endif
 #if WPF
         internal BitmapSource _wpfImage;
-#if SILVERLIGHT
-        //internal byte[] _bytes;
-#endif
 #endif
 
         /// <summary>
