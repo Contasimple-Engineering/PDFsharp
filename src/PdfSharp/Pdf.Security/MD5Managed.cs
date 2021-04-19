@@ -40,56 +40,20 @@
 
 using System;
 using System.Diagnostics;
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
 using System.Security.Cryptography;
 #endif
 
 // ReSharper disable InconsistentNaming
 
-#if SILVERLIGHT || WINDOWS_PHONE || UWP || (GDI && DEBUG)
+#if (GDI && DEBUG)
 namespace PdfSharp.Pdf.Security
 {
-#if UWP
-    class HashAlgorithm
-    {
-        public int HashSizeValue { get; set; }
-
-        public virtual void Initialize()
-        { }
-
-        protected virtual void HashCore(byte[] array, int ibStart, int cbSize)
-        { }
-
-        protected virtual byte[] HashFinal()
-        {
-            return null;
-        }
-
-        public byte[] HashValue { get; set; }
-
-        public void TransformBlock(byte[] a, int b, int c, byte[] d, int e)
-        { }
-
-        public void TransformFinalBlock(byte[] a, int b, int c)
-        { }
-
-        public byte[] ComputeHash(byte[] a)
-        {
-            return null;
-        }
-
-        public byte[] Hash
-        {
-            get { return null; }
-        }
-    }
-#endif
     /// <summary>
     /// A managed implementation of the MD5 algorithm.
     /// Necessary because MD5 is not part of the framework in Silverlight and WP.
     /// </summary>
     class MD5Managed
-        //#if !UWP
         : HashAlgorithm  // TODO: WinRT has not even a HashAlgorithm base class.
                          //#endif
     {

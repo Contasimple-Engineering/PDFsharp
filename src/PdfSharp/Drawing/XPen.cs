@@ -40,8 +40,6 @@ using System.Windows.Media;
 using WpfPen =System.Windows.Media.Pen;
 using WpfBrush =System.Windows.Media.Brush;
 #endif
-#if UWP
-#endif
 
 namespace PdfSharp.Drawing
 {

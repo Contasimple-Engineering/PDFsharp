@@ -36,11 +36,6 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Media;
 #endif
-#if UWP
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Brushes;
-using UwpBrush = Windows.UI.Xaml.Media.Brush;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -155,13 +150,6 @@ namespace PdfSharp.Drawing
             Debug.Assert(_wpfBrush.Color == brush1.Color);  // Crashes during unit testing
 #endif
             return _wpfBrush;
-        }
-#endif
-
-#if UWP
-        internal override ICanvasBrush RealizeCanvasBrush()
-        {
-            return new CanvasSolidColorBrush(CanvasDevice.GetSharedDevice(), _color.ToUwpColor());
         }
 #endif
 

@@ -94,11 +94,7 @@ namespace PdfSharp.Pdf.IO
                 {
                     if (stream != null)
                     {
-#if UWP
-                        stream.Dispose();
-#else
                         stream.Close();
-#endif
                     }
                 }
                 // ReSharper disable once EmptyGeneralCatchClause
@@ -222,11 +218,7 @@ namespace PdfSharp.Pdf.IO
             finally
             {
                 if (stream != null)
-#if !UWP
                     stream.Close();
-#else
-                    stream.Dispose();
-#endif
             }
             return document;
 #else

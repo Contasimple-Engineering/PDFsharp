@@ -64,16 +64,6 @@ using SysPoint = Windows.Foundation.Point;
 using SysSize = Windows.Foundation.Size;
 using SysRect = Windows.Foundation.Rect;
 #endif
-#if UWP
-using System.Numerics;
-using Windows.UI;
-using Windows.UI.Xaml.Controls;
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Geometry;
-using SysPoint = Windows.Foundation.Point;
-using SysSize = Windows.Foundation.Size;
-using SysRect = Windows.Foundation.Rect;
-#endif
 using PdfSharp.Pdf;
 using PdfSharp.Drawing.Pdf;
 using PdfSharp.Internal;
@@ -252,58 +242,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #else
             _dc = new AgDrawingContext(canvas);
 #endif
-
-            _gsStack = new GraphicsStateStack(this);
-            TargetContext = XGraphicTargetContext.WPF;
-
-            _drawGraphics = true;
-            _pageSize = new XSize(size.Width, size.Height);
-            _pageUnit = pageUnit;
-            switch (pageUnit)
-            {
-                case XGraphicsUnit.Point:
-                    _pageSizePoints = new XSize(size.Width, size.Height);
-                    break;
-
-                case XGraphicsUnit.Inch:
-                    _pageSizePoints = new XSize(XUnit.FromInch(size.Width), XUnit.FromInch(size.Height));
-                    break;
-
-                case XGraphicsUnit.Millimeter:
-                    _pageSizePoints = new XSize(XUnit.FromMillimeter(size.Width), XUnit.FromMillimeter(size.Height));
-                    break;
-
-                case XGraphicsUnit.Centimeter:
-                    _pageSizePoints = new XSize(XUnit.FromCentimeter(size.Width), XUnit.FromCentimeter(size.Height));
-                    break;
-
-                case XGraphicsUnit.Presentation:
-                    _pageSizePoints = new XSize(XUnit.FromPresentation(size.Width), XUnit.FromPresentation(size.Height));
-                    break;
-
-                default:
-                    throw new NotImplementedException("unit");
-            }
-
-            _pageDirection = pageDirection;
-            Initialize();
-        }
-#endif
-
-#if UWP
-        /// <summary>
-        /// Initializes a new instance of the XGraphics class.
-        /// </summary>
-        /// <param name="canvasDrawingSession">The canvas.</param>
-        /// <param name="size">The size.</param>
-        /// <param name="pageUnit">The page unit.</param>
-        /// <param name="pageDirection">The page direction.</param>
-        XGraphics(CanvasDrawingSession canvasDrawingSession, XSize size, XGraphicsUnit pageUnit, XPageDirection pageDirection)
-        {
-            if (canvasDrawingSession == null)
-                throw new ArgumentNullException("canvasDrawingSession");
-
-            _cds = canvasDrawingSession;
 
             _gsStack = new GraphicsStateStack(this);
             TargetContext = XGraphicTargetContext.WPF;
@@ -582,7 +520,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
             XGraphics gfx = new XGraphics(new Canvas(), size, pageUnit, pageDirection);
             return gfx;
 #endif
-#if NETFX_CORE || UWP // NETFX_CORE_TODO
+#if NETFX_CORE // NETFX_CORE_TODO
             return null;
 #endif
         }
@@ -642,16 +580,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
         public static XGraphics FromCanvas(Canvas canvas, XSize size, XGraphicsUnit unit)
         {
             return new XGraphics(canvas, size, unit, XPageDirection.Downwards);
-        }
-#endif
-
-#if UWP
-        /// <summary>
-        /// Creates a new instance of the XGraphics class from a  Microsoft.Graphics.Canvas.CanvasDrawingSession object.
-        /// </summary>
-        public static XGraphics FromCanvasDrawingSession(CanvasDrawingSession drawingSession, XSize size, XGraphicsUnit unit)
-        {
-            return new XGraphics(drawingSession, size, unit, XPageDirection.Downwards);
         }
 #endif
 
@@ -1087,9 +1015,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
                 if (TargetContext == XGraphicTargetContext.WPF)
                     _dc.DrawLine(pen.RealizeWpfPen(), new SysPoint(x1, y1), new SysPoint(x2, y2));
 #endif
-#if UWP
-                _cds.DrawLine(new Vector2((float)x1, (float)x2), new Vector2((float)x2, (float)y2), Colors.Red, (float)pen.Width);
-#endif
             }
 
             if (_renderer != null)
@@ -1192,16 +1117,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
                     geo.Figures.Add(figure);
                     _dc.DrawGeometry(null, pen.RealizeWpfPen(), geo);
                 }
-#endif
-#if UWP
-                var pathBuilder = new CanvasPathBuilder(_cds.Device);
-                pathBuilder.BeginFigure((float)points[0].X, (float)points[0].Y, CanvasFigureFill.DoesNotAffectFills);
-                int length = points.Length;
-                for (int idx = 1; idx < length; idx++)
-                    pathBuilder.AddLine((float)points[idx].X, (float)points[idx].Y);
-                pathBuilder.EndFigure(CanvasFigureLoop.Open);
-                var geometry = CanvasGeometry.CreatePath(pathBuilder);
-                _cds.DrawGeometry(geometry, Colors.Red);
 #endif
             }
 
@@ -1731,12 +1646,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
                     _dc.DrawRectangle(null, pen.RealizeWpfPen(), new Rect(x, y, width, height));
                 }
 #endif
-#if UWP
-                if (TargetContext == XGraphicTargetContext.UWP)
-                {
-                    _cds.DrawRectangle((float)x, (float)y, (float)width, (float)height, pen.Color.ToUwpColor());
-                }
-#endif
             }
 
             if (_renderer != null)
@@ -1798,12 +1707,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #if WPF
                 if (TargetContext == XGraphicTargetContext.WPF)
                     _dc.DrawRectangle(brush.RealizeWpfBrush(), null, new Rect(x, y, width, height));
-#endif
-#if UWP
-                if (TargetContext == XGraphicTargetContext.UWP)
-                {
-                    _cds.DrawRectangle((float)x, (float)y, (float)width, (float)height, brush.RealizeCanvasBrush());
-                }
 #endif
             }
 
@@ -2477,23 +2380,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
                         brush != null ? brush.RealizeWpfBrush() : null,
                         pen != null ? pen.RealizeWpfPen() : null,
                         new SysPoint(x + radiusX, y + radiusY), radiusX, radiusY);
-                }
-#endif
-#if UWP
-                //var cds = new CanvasDrawingSession();
-                //cds.DrawCachedGeometry();
-
-                if (TargetContext == XGraphicTargetContext.UWP)
-                {
-                    var radiusX = (float)width / 2;
-                    var radiusY = (float)height / 2;
-
-                    //var geometry = CanvasGeometry.CreateEllipse(_cds.Device, (float)x + radiusX, (float)y + radiusY, radiusX, radiusY);
-
-                    if (brush != null)
-                        _cds.FillEllipse((float)x + radiusX, (float)y + radiusY, radiusX, radiusY, Colors.Blue);
-                    if (pen != null)
-                        _cds.DrawEllipse((float)x + radiusX, (float)y + radiusY, radiusX, radiusY, pen.Color.ToUwpColor());
                 }
 #endif
             }
@@ -3794,7 +3680,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
             return size23;
 #endif
 #endif
-#if CORE || NETFX_CORE || UWP
+#if CORE || NETFX_CORE
             XSize size = FontHelper.MeasureString(text, font, XStringFormats.Default);
             return size;
 #endif
@@ -5174,10 +5060,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #else
         internal AgDrawingContext _dc;
 #endif
-#endif
-
-#if UWP
-        readonly CanvasDrawingSession _cds;
 #endif
 
         /// <summary>

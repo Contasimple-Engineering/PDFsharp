@@ -34,7 +34,7 @@ using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using PdfSharp.Pdf.Advanced;
 using PdfSharp.Pdf.Internal;
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
 using System.Security.Cryptography;
 #endif
 
@@ -615,16 +615,12 @@ namespace PdfSharp.Pdf.Security
         /// </summary>
         byte[] _encryptionKey;
 
-#if !SILVERLIGHT && !UWP
         /// <summary>
         /// The message digest algorithm MD5.
         /// </summary>
         readonly MD5 _md5 = new MD5CryptoServiceProvider();
 #if DEBUG_
         readonly MD5Managed _md5M = new MD5Managed();
-#endif
-#else
-        readonly MD5Managed _md5 = new MD5Managed();
 #endif
 #if NETFX_CORE
         // readonly MD5Managed _md5 = new MD5Managed();

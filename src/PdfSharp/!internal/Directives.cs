@@ -92,22 +92,11 @@
 #error 'SILVERLIGHT' must be defined together with 'WPF'
 #endif
 
-#elif WINDOWS_PHONE
-// PDFsharp based on 'Windows Phone'.
-#if !WPF
-#error 'WINDOWS_PHONE' must be defined together with 'WPF'.
-#endif
-#if !SILVERLIGHT
-#error 'WINDOWS_PHONE' must be defined together with 'SILVERLIGHT'.
-#endif
-
 #elif CORE
 // PDFsharp independent of any particular .NET library.
 #elif NETFX_CORE
 // PDFsharp based on 'WinRT'.
-#elif UWP
-// PDFsharp based on 'Windows Universal Platform'.
 
 #else
-#error Either 'CORE', 'GDI', 'WPF', 'SILVERLIGHT', 'WINDOWS_PHONE', or 'NETFX_CORE' must be defined. Or UWP.
+#error Either 'CORE', 'GDI', 'WPF', or 'NETFX_CORE' must be defined.
 #endif

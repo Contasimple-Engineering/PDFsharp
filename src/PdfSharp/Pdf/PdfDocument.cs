@@ -329,11 +329,7 @@ namespace PdfSharp.Pdf
                 if (stream != null)
                 {
                     if (closeStream)
-#if UWP
-                        stream.Dispose();
-#else
                         stream.Close();
-#endif
                     else
                     {
                         if (stream.CanRead && stream.CanSeek)

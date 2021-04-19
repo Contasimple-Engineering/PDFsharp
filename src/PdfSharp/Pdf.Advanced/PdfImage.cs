@@ -356,11 +356,7 @@ namespace PdfSharp.Pdf.Advanced
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (ownMemory)
                 {
-#if UWP || true
                     memory.Dispose();
-#else
-                memory.Close();
-#endif
                 }
             }
 
@@ -452,12 +448,7 @@ namespace PdfSharp.Pdf.Advanced
             }
 #endif
 #if WPF
-            // TODOSILVERLIGHT
-#if !SILVERLIGHT
             string pixelFormat = _image._wpfImage.Format.ToString();
-#else
-            string pixelFormat = "xxx";
-#endif
             bool isCmyk = _image.IsCmyk;
             bool isGrey = pixelFormat == "Gray8";
             if (isCmyk)
@@ -857,7 +848,7 @@ namespace PdfSharp.Pdf.Advanced
             Debug.Assert(streamLength > 0, "Bitmap image encoding failed.");
             if (streamLength > 0)
             {
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
                 // THHO4STLA: available with wrt, but not with wrt81.
                 // Note: imageBits.Length can be larger than streamLength. Do not use these extra bytes!
                 byte[] imageBits = memory.GetBuffer();
@@ -866,11 +857,6 @@ namespace PdfSharp.Pdf.Advanced
                 memory.Seek(0, SeekOrigin.Begin);
                 memory.Read(imageBits, 0, streamLength);
                 memory.Close();
-#elif UWP
-                byte[] imageBits = new byte[streamLength];
-                memory.Seek(0, SeekOrigin.Begin);
-                memory.Read(imageBits, 0, streamLength);
-                memory.Dispose();
 #endif
 
                 int height = _image.PixelHeight;
@@ -1061,11 +1047,7 @@ namespace PdfSharp.Pdf.Advanced
                 byte[] imageBits = new byte[streamLength];
                 memory.Seek(0, SeekOrigin.Begin);
                 memory.Read(imageBits, 0, streamLength);
-#if !UWP
                 memory.Close();
-#else
-                memory.Dispose();
-#endif
 
                 int height = _image.PixelHeight;
                 int width = _image.PixelWidth;

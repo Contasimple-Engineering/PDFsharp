@@ -592,7 +592,7 @@ namespace PdfSharp.Drawing
         public double GetHeight()
         {
             double value = CellSpace * _emSize / UnitsPerEm;
-#if CORE || NETFX_CORE || UWP
+#if CORE || NETFX_CORE
             return value;
 #endif
 #if GDI && !WPF

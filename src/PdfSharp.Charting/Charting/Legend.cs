@@ -28,9 +28,7 @@
 #endregion
 
 using System;
-#if !WINDOWS_PHONE
 using System.ComponentModel;
-#endif
 
 namespace PdfSharp.Charting
 {

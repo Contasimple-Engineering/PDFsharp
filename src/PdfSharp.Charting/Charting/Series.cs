@@ -29,9 +29,7 @@
 
 using System;
 using PdfSharp.Drawing;
-#if !SILVERLIGHT
 using System.ComponentModel;
-#endif
 
 namespace PdfSharp.Charting
 {

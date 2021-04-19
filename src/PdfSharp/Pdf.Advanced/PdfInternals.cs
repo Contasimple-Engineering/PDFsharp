@@ -204,7 +204,7 @@ namespace PdfSharp.Pdf.Advanced
             _document._irefTable.Add(obj);
 #else
             T result = null;
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
             ConstructorInfo ctorInfo = typeof(T).GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.ExactBinding,
                 null, new Type[] { typeof(PdfDocument) }, null);
 #else

@@ -493,7 +493,7 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
             throw new NotSupportedException("DeflaterOutputStream Read not supported");
         }
 
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
 		/// <summary>
 		/// Asynchronous reads are not supported a NotSupportedException is always thrown
 		/// </summary>
@@ -510,7 +510,7 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
 		}
 #endif
 
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
         /// <summary>
 		/// Asynchronous writes arent supported, a NotSupportedException is always thrown
 		/// </summary>
@@ -538,7 +538,7 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
             baseOutputStream_.Flush();
         }
 
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
 		/// <summary>
 		/// Calls <see cref="Finish"/> and closes the underlying
 		/// stream when <see cref="IsStreamOwner"></see> is true.
@@ -658,9 +658,7 @@ namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
         /// </summary>
         protected Stream baseOutputStream_;
 
-#if true || !NETFX_CORE && !UWP
         bool isClosed_;
-#endif
 
         bool isStreamOwner_ = true;
         #endregion

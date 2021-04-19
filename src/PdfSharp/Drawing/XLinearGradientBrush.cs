@@ -44,12 +44,6 @@ using SysRect = System.Windows.Rect;
 using WpfBrush = System.Windows.Media.Brush;
 using WpfLinearGradientBrush = System.Windows.Media.LinearGradientBrush;
 #endif
-#if UWP
-using Windows.UI;
-using Windows.UI.Xaml.Media;
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Brushes;
-#endif
 
 // ReSharper disable RedundantNameQualifier because it is required for hybrid build
 
@@ -359,17 +353,6 @@ namespace PdfSharp.Drawing
                 brush.Transform = transform;
 #endif
             }
-            return brush;
-        }
-#endif
-
-#if UWP
-        internal override ICanvasBrush RealizeCanvasBrush()
-        {
-            ICanvasBrush brush;
-
-            brush = new CanvasSolidColorBrush(CanvasDevice.GetSharedDevice(), Colors.RoyalBlue);
-
             return brush;
         }
 #endif

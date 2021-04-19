@@ -70,16 +70,12 @@ namespace PdfSharp.Drawing
                 _name = _gdiFontFamily.Name;
             }
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
             if (createPlatformObjects)
             {
                 _wpfFontFamily = new WpfFontFamily(familyName);
                 _name = _wpfFontFamily.FamilyNames[FontHelper.XmlLanguageEnUs];
             }
-#endif
-#if SILVERLIGHT
-            _wpfFontFamily = new WpfFontFamily(_name);
-            _name = _wpfFontFamily.Source;  // Not expected to change _name.
 #endif
         }
 
@@ -98,14 +94,8 @@ namespace PdfSharp.Drawing
 #if WPF
         FontFamilyInternal(WpfFontFamily wpfFontFamily)
         {
-#if !SILVERLIGHT
-            _sourceName = wpfFontFamily.Source;
-            _name = wpfFontFamily.FamilyNames[FontHelper.XmlLanguageEnUs];
-            _wpfFontFamily = wpfFontFamily;
-#else
             _sourceName = _name = wpfFontFamily.Source;
             _wpfFontFamily = wpfFontFamily;
-#endif
 #if GDI
             // Hybrid build only.
             _gdiFontFamily = new GdiFontFamily(_sourceName);

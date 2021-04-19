@@ -51,11 +51,7 @@ namespace PdfSharp.Pdf.Content
         {
             if (_stream != null && closeUnderlyingStream)
             {
-#if UWP
-                _stream.Dispose();
-#else
                 _stream.Close();
-#endif
                 _stream = null;
             }
         }

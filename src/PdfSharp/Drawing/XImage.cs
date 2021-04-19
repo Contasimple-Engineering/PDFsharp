@@ -44,7 +44,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
 using Windows.UI.Xaml.Media.Imaging;
 #endif
 using PdfSharp.Drawing.Internal;
@@ -186,7 +186,7 @@ namespace PdfSharp.Drawing
         // Useful stuff here: http://stackoverflow.com/questions/350027/setting-wpf-image-source-in-code
         XImage(string path)
         {
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
             path = Path.GetFullPath(path);
             if (!File.Exists(path))
                 throw new FileNotFoundException(PSSR.FileNotFound(path));
@@ -444,7 +444,7 @@ namespace PdfSharp.Drawing
 
             if (PdfReader.TestPdfFile(path) > 0)
                 return true;
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
             return File.Exists(path);
 #else
             return false;
@@ -957,7 +957,7 @@ namespace PdfSharp.Drawing
 #if WPF && !GDI
                 return _wpfImage.PixelWidth;
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 return 100;
 #endif
             }
@@ -998,7 +998,7 @@ namespace PdfSharp.Drawing
 #if WPF && !GDI
                 return _wpfImage.PixelHeight;
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 return _wrtImage.PixelHeight;
 #endif
             }
@@ -1064,7 +1064,7 @@ namespace PdfSharp.Drawing
                 return _wpfImage.PixelWidth * 72 / 96.0;
 #endif
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 //var wb = new WriteableBitmap();
                 //GetImagePropertiesAsync
                 return 100;
@@ -1117,7 +1117,7 @@ namespace PdfSharp.Drawing
                 return _wpfImage.PixelHeight * 72 / 96.0;
 #endif
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 return _wrtImage.PixelHeight; //_gdi Image.Width * 72 / _gdiImage.HorizontalResolution;
 #endif
             }
@@ -1163,7 +1163,7 @@ namespace PdfSharp.Drawing
 #if WPF && !GDI
                 return _wpfImage.PixelWidth;
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 return _wrtImage.PixelWidth;
 #endif
             }
@@ -1209,7 +1209,7 @@ namespace PdfSharp.Drawing
 #if WPF && !GDI
                 return _wpfImage.PixelHeight;
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 return _wrtImage.PixelHeight;
 #endif
             }
@@ -1266,7 +1266,7 @@ namespace PdfSharp.Drawing
                 return 96;
 #endif
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 return 96;
 #endif
             }
@@ -1315,7 +1315,7 @@ namespace PdfSharp.Drawing
                 return 96;
 #endif
 #endif
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 return 96;
 #endif
             }
@@ -1537,7 +1537,7 @@ namespace PdfSharp.Drawing
         //internal byte[] _bytes;
 #endif
 #endif
-#if NETFX_CORE  || UWP
+#if NETFX_CORE
         internal BitmapSource _wrtImage;
 #endif
 

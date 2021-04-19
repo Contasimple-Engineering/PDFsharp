@@ -989,7 +989,7 @@ namespace PdfSharp.Pdf
 
             PdfArray CreateArray(Type type, PdfArray oldArray)
             {
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
                 ConstructorInfo ctorInfo;
                 PdfArray array;
                 if (oldArray == null)
@@ -1050,7 +1050,7 @@ namespace PdfSharp.Pdf
 
             PdfDictionary CreateDictionary(Type type, PdfDictionary oldDictionary)
             {
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
                 ConstructorInfo ctorInfo;
                 PdfDictionary dict;
                 if (oldDictionary == null)
@@ -1109,7 +1109,7 @@ namespace PdfSharp.Pdf
 
             PdfItem CreateValue(Type type, PdfDictionary oldValue)
             {
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
                 ConstructorInfo ctorInfo = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                     null, new Type[] { typeof(PdfDocument) }, null);
                 PdfObject obj = ctorInfo.Invoke(new object[] { _ownerDictionary.Owner }) as PdfObject;

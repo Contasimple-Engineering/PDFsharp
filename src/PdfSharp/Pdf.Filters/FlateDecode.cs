@@ -146,7 +146,7 @@ namespace PdfSharp.Pdf.Filters
             zip.Write(data, 0, data.Length);
             zip.Finish();
 #endif
-#if !NETFX_CORE && !UWP
+#if !NETFX_CORE
             ms.Capacity = (int)ms.Length;
             return ms.GetBuffer();
 #else
@@ -198,15 +198,11 @@ namespace PdfSharp.Pdf.Filters
                     msOutput.Write(abResult, 0, cbRead);
             }
             while (cbRead > 0);
-#if UWP
-            iis.Dispose();
-#else
             iis.Close();
-#endif
             msOutput.Flush();
             if (msOutput.Length >= 0)
             {
-#if NETFX_CORE || UWP
+#if NETFX_CORE
                 return msOutput.ToArray();
 #else
                 msOutput.Capacity = (int)msOutput.Length;

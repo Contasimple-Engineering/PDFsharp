@@ -43,11 +43,6 @@ namespace PdfSharp.Charting.Renderers
         /// </summary>
         internal static void Draw(XGraphics graphics, XPoint pos, MarkerRendererInfo rendererInfo)
         {
-#if SILVERLIGHT
-      return; // BUG: Code crashs Silverlight Path class.
-#pragma warning disable 0162
-#endif
-
             if (rendererInfo.MarkerStyle == MarkerStyle.None)
                 return;
 

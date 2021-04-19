@@ -132,10 +132,9 @@ namespace PdfSharp.Drawing
 #endif
 
 #if WPF
-#if !SILVERLIGHT
         public static readonly CultureInfo CultureInfoEnUs = CultureInfo.GetCultureInfo("en-US");
         public static readonly XmlLanguage XmlLanguageEnUs = XmlLanguage.GetLanguage("en-US");
-#endif
+
         /// <summary>
         /// Creates a typeface.
         /// </summary>
@@ -144,15 +143,10 @@ namespace PdfSharp.Drawing
             // BUG: does not work with fonts that have others than the four default styles
             WpfFontStyle fontStyle = FontStyleFromStyle(style);
             WpfFontWeight fontWeight = FontWeightFromStyle(style);
-#if !SILVERLIGHT
             WpfTypeface typeface = new WpfTypeface(family, fontStyle, fontWeight, FontStretches.Normal);
-#else
-            WpfTypeface typeface = null;
-#endif
             return typeface;
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Creates the formatted text.
         /// </summary>
@@ -172,26 +166,6 @@ namespace PdfSharp.Drawing
             //formattedText.SetFontStretch(FontStretches.Condensed);
             return formattedText;
         }
-#endif
-
-#if SILVERLIGHT_
-        /// <summary>
-        /// Creates the TextBlock.
-        /// </summary>
-        public static TextBlock CreateTextBlock(string text, XGlyphTypeface glyphTypeface, double emSize, Brush brush)
-        {
-            TextBlock textBlock = new TextBlock();
-            textBlock.FontFamily = glyphTypeface.FontFamily;
-            textBlock.FontSource = glyphTypeface.FontSource;
-            textBlock.FontSize = emSize;
-            textBlock.FontWeight = glyphTypeface.IsBold ? FontWeights.Bold : FontWeights.Normal;
-            textBlock.FontStyle = glyphTypeface.IsItalic ? FontStyles.Italic : FontStyles.Normal;
-            textBlock.Foreground = brush;
-            textBlock.Text = text;
-
-            return textBlock;
-        }
-#endif
 
         /// <summary>
         /// Simple hack to make it work...
@@ -244,7 +218,7 @@ namespace PdfSharp.Drawing
         public static bool IsStyleAvailable(XFontFamily family, XGdiFontStyle style)
         {
             style &= XGdiFontStyle.BoldItalic;
-#if !SILVERLIGHT
+
             // TODOWPF: check for correctness
             // FontDescriptor descriptor = FontDescriptorCache.GetOrCreateDescriptor(family.Name, style);
             //XFontMetrics metrics = descriptor.FontMetrics;
@@ -291,9 +265,6 @@ namespace PdfSharp.Drawing
                 //////                    return true;
             }
             return false;
-#else
-            return true; // AGHACK
-#endif
         }
 #endif
 

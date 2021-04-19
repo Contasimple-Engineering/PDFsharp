@@ -230,15 +230,13 @@ namespace PdfSharp
         /// -gdi : GDI+,
         /// -wpf : WPF,
         /// -hybrid : Both GDI+ and WPF (hybrid).
-        /// -sl : Silverlight
-        /// -wp : Windows Phone
         /// -wrt : Windows RunTime
         /// </summary>
 #if GDI && !WPF
         // GDI+ (System.Drawing)
         public const string Technology = "-gdi";
 #endif
-#if WPF && !GDI && !SILVERLIGHT
+#if WPF && !GDI
         // Windows Presentation Foundation
         public const string Technology = "-wpf";
 #endif
@@ -246,21 +244,9 @@ namespace PdfSharp
         // Hybrid - for testing only
         public const string Technology = "-h";
 #endif
-#if SILVERLIGHT && !WINDOWS_PHONE
-        // Silverlight 5
-        public const string Technology = "-sl";
-#endif
-#if WINDOWS_PHONE
-        // Windows Phone
-        public const string Technology = "-wp";
-#endif
 #if NETFX_CORE
         // WinRT
         public const string Technology = "-wrt";
-#endif
-#if UWP
-        // Windows Universal App
-        public const string Technology = "-uwp";
 #endif
 #if CORE
         // .net without GDI+ and WPF

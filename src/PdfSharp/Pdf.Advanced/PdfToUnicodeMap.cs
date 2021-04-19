@@ -107,19 +107,11 @@ namespace PdfSharp.Pdf.Advanced
             wrt.WriteLine("endbfrange");
 
             wrt.Write(suffix);
-#if !UWP
             wrt.Close();
-#else
-            wrt.Dispose();
-#endif
 
             // Compress like content streams
             byte[] bytes = ms.ToArray();
-#if !UWP
             ms.Close();
-#else
-            ms.Dispose();
-#endif
             if (Owner.Options.CompressContentStreams)
             {
                 Elements.SetName("/Filter", "/FlateDecode");
