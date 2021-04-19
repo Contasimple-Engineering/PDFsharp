@@ -34,12 +34,6 @@ using GdiFont = System.Drawing.Font;
 using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFontStyle = System.Drawing.FontStyle;
 #endif
-#if WPF
-using System.Windows.Media;
-using System.Windows.Markup;
-using WpfFontFamily = System.Windows.Media.FontFamily;
-using WpfFontStyle = System.Windows.FontStyle;
-#endif
 using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 
@@ -79,18 +73,6 @@ namespace PdfSharp.Drawing
         //}
 #endif
 
-#if WPF
-        //public XFontFamily(WpfFontFamily wpfFontFamily)
-        //{
-        //    FamilyInternal = FontFamilyInternal.GetOrCreateFromWpf(wpfFontFamily);
-        //    //// HACK
-        //    //int idxHash = _name.LastIndexOf('#');
-        //    //if (idxHash > 0)
-        //    //    _name = _name.Substring(idxHash + 1);
-        //    //_wpfFamily = family;
-        //}
-#endif
-
         internal static XFontFamily CreateFromName_not_used(string name, bool createPlatformFamily)
         {
             XFontFamily fontFamily = new XFontFamily(name);
@@ -98,9 +80,6 @@ namespace PdfSharp.Drawing
             {
 #if GDI
                 //fontFamily._gdiFamily = new System.Drawing.FontFamily(name);
-#endif
-#if WPF
-                //fontFamily._wpfFamily = new System.Windows.Media.FontFamily(name);
 #endif
             }
             return fontFamily;
@@ -128,14 +107,6 @@ namespace PdfSharp.Drawing
         internal static XFontFamily GetOrCreateFromGdi(GdiFont font)
         {
             FontFamilyInternal fontFamilyInternal = FontFamilyInternal.GetOrCreateFromGdi(font.FontFamily);
-            return new XFontFamily(fontFamilyInternal);
-        }
-#endif
-
-#if WPF
-        internal static XFontFamily GetOrCreateFromWpf(WpfFontFamily wpfFontFamily)
-        {
-            FontFamilyInternal fontFamilyInternal = FontFamilyInternal.GetOrCreateFromWpf(wpfFontFamily);
             return new XFontFamily(fontFamilyInternal);
         }
 #endif
@@ -235,24 +206,10 @@ namespace PdfSharp.Drawing
 #if CORE
             throw new InvalidOperationException("In CORE build it is the responsibility of the developer to provide all required font faces.");
 #endif
-#if GDI && !WPF
+#if GDI
             if (GdiFamily != null)
                 return GdiFamily.IsStyleAvailable((GdiFontStyle)xStyle);
             return false;
-#endif
-#if WPF && !GDI
-            if (WpfFamily != null)
-                return FontHelper.IsStyleAvailable(this, xStyle);
-            return false;
-#endif
-#if WPF && GDI
-#if DEBUG
-            //bool gdiResult = _gdiFamily.IsStyle Available((FontStyle)style);
-            //bool wpfResult = FontHelper.IsStyle Available(this, style);
-            //// TODOWPF: check when fails
-            //Debug.Assert(gdiResult == wpfResult, "GDI+ and WPF provide different values.");
-#endif
-            return FontHelper.IsStyleAvailable(this, xStyle);
 #endif
         }
 
@@ -286,17 +243,6 @@ namespace PdfSharp.Drawing
         internal GdiFontFamily GdiFamily
         {
             get { return FamilyInternal.GdiFamily; }
-        }
-#endif
-
-#if WPF
-        /// <summary>
-        /// Gets the underlying WPF font family object.
-        /// Is null if the font was created by a font resolver.
-        /// </summary>
-        internal WpfFontFamily WpfFamily
-        {
-            get { return FamilyInternal.WpfFamily; }
         }
 #endif
 

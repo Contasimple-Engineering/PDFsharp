@@ -36,14 +36,6 @@ using System.Drawing;
 using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFont = System.Drawing.Font;
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Resources;
-using WpfFontFamily = System.Windows.Media.FontFamily;
-using WpfGlyphTypeface = System.Windows.Media.GlyphTypeface;
-using WpfTypeface = System.Windows.Media.Typeface;
-#endif
 using PdfSharp.Drawing;
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;

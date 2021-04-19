@@ -228,21 +228,11 @@ namespace PdfSharp
         /// The technology tag of the product:
         /// (none) Pure .NET
         /// -gdi : GDI+,
-        /// -wpf : WPF,
-        /// -hybrid : Both GDI+ and WPF (hybrid).
         /// -wrt : Windows RunTime
         /// </summary>
-#if GDI && !WPF
+#if GDI
         // GDI+ (System.Drawing)
         public const string Technology = "-gdi";
-#endif
-#if WPF && !GDI
-        // Windows Presentation Foundation
-        public const string Technology = "-wpf";
-#endif
-#if WPF && GDI
-        // Hybrid - for testing only
-        public const string Technology = "-h";
 #endif
 #if CORE
         // .net without GDI+ and WPF

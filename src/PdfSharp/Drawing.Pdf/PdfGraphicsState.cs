@@ -35,8 +35,6 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 #endif
-#if WPF
-#endif
 using PdfSharp.Internal;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
@@ -513,27 +511,13 @@ namespace PdfSharp.Drawing.Pdf
             if (clipPath._gdipPath.PointCount < 0)
                 return;
 #endif
-#if WPF
-            // Do not render an empty path.
-            if (clipPath._pathGeometry.Bounds.IsEmpty)
-                return;
-#endif
             _renderer.BeginGraphicMode();
             RealizeCtm();
 #if CORE
             _renderer.AppendPath(clipPath._corePath);
 #endif
-#if GDI && !WPF
+#if GDI
             _renderer.AppendPath(clipPath._gdipPath);
-#endif
-#if WPF && !GDI
-            _renderer.AppendPath(clipPath._pathGeometry);
-#endif
-#if WPF && GDI
-            if (_renderer.Gfx.TargetContext == XGraphicTargetContext.GDI)
-                _renderer.AppendPath(clipPath._gdipPath);
-            else
-                _renderer.AppendPath(clipPath._pathGeometry);
 #endif
             _renderer.Append(clipPath.FillMode == XFillMode.Winding ? "W n\n" : "W* n\n");
         }

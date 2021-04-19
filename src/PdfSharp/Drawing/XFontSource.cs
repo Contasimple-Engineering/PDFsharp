@@ -37,14 +37,6 @@ using PdfSharp.Fonts;
 using GdiFont = System.Drawing.Font;
 using GdiFontStyle = System.Drawing.FontStyle;
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Media;
-using WpfFontFamily = System.Windows.Media.FontFamily;
-using WpfTypeface = System.Windows.Media.Typeface;
-using WpfGlyphTypeface = System.Windows.Media.GlyphTypeface;
-#endif
 using PdfSharp.Internal;
 using PdfSharp.Fonts.OpenType;
 
@@ -170,28 +162,6 @@ namespace PdfSharp.Drawing
             NativeMethods.ReleaseDC(IntPtr.Zero, hdc);
 
             return bytes;
-        }
-#endif
-
-#if WPF
-        internal static XFontSource GetOrCreateFromWpf(string typefaceKey, WpfGlyphTypeface wpfGlyphTypeface)
-        {
-            byte[] bytes = ReadFontBytesFromWpf(wpfGlyphTypeface);
-            XFontSource fontSource = GetOrCreateFrom(typefaceKey, bytes);
-            return fontSource;
-        }
-
-        internal static byte[] ReadFontBytesFromWpf(WpfGlyphTypeface wpfGlyphTypeface)
-        {
-            using (Stream fontStream = wpfGlyphTypeface.GetFontStream())
-            {
-                if (fontStream == null)
-                    throw new InvalidOperationException("Cannot retrieve font data.");
-                int size = (int)fontStream.Length;
-                byte[] bytes = new byte[size];
-                fontStream.Read(bytes, 0, size);
-                return bytes;
-            }
         }
 #endif
 

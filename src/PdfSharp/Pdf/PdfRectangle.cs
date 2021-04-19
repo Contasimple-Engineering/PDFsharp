@@ -33,9 +33,6 @@ using System.Globalization;
 #if GDI
 using System.Drawing;
 #endif
-#if WPF
-using System.Windows.Media;
-#endif
 using PdfSharp.Drawing;
 using PdfSharp.Pdf.Advanced;
 using PdfSharp.Pdf.IO;

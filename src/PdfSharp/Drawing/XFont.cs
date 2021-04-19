@@ -40,12 +40,6 @@ using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFont = System.Drawing.Font;
 using GdiFontStyle = System.Drawing.FontStyle;
 #endif
-#if WPF
-using System.Windows.Markup;
-using WpfFontFamily = System.Windows.Media.FontFamily;
-using WpfTypeface = System.Windows.Media.Typeface;
-using WpfGlyphTypeface = System.Windows.Media.GlyphTypeface;
-#endif
 using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;
@@ -165,60 +159,6 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XFont"/> class from a System.Windows.Media.FontFamily.
-        /// </summary>
-        /// <param name="fontFamily">The System.Windows.Media.FontFamily.</param>
-        /// <param name="emSize">The em size.</param>
-        /// <param name="style">The font style.</param>
-        public XFont(WpfFontFamily fontFamily, double emSize, XFontStyle style)
-            : this(fontFamily, emSize, style, new XPdfFontOptions(GlobalFontSettings.DefaultFontEncoding))
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XFont"/> class from a System.Drawing.FontFamily.
-        /// </summary>
-        /// <param name="fontFamily">The System.Windows.Media.FontFamily.</param>
-        /// <param name="emSize">The em size.</param>
-        /// <param name="style">The font style.</param>
-        /// <param name="pdfOptions">Additional PDF options.</param>
-        public XFont(WpfFontFamily fontFamily, double emSize, XFontStyle style, XPdfFontOptions pdfOptions)
-        {
-            _familyName = fontFamily.FamilyNames[XmlLanguage.GetLanguage("en-US")];
-            _wpfFontFamily = fontFamily;
-            _emSize = emSize;
-            _style = style;
-            _pdfOptions = pdfOptions;
-            InitializeFromWpf();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XFont" /> class from a System.Windows.Media.Typeface.
-        /// </summary>
-        /// <param name="typeface">The System.Windows.Media.Typeface.</param>
-        /// <param name="emSize">The em size.</param>
-        public XFont(WpfTypeface typeface, double emSize)
-            : this(typeface, emSize, new XPdfFontOptions(GlobalFontSettings.DefaultFontEncoding))
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XFont"/> class from a System.Windows.Media.Typeface.
-        /// </summary>
-        /// <param name="typeface">The System.Windows.Media.Typeface.</param>
-        /// <param name="emSize">The em size.</param>
-        /// <param name="pdfOptions">Additional PDF options.</param>
-        public XFont(WpfTypeface typeface, double emSize, XPdfFontOptions pdfOptions)
-        {
-            _wpfTypeface = typeface;
-            //Debug.Assert(font.Name == font.FontFamily.Name);
-            //_familyName = font.Name;
-            _emSize = emSize;
-            _pdfOptions = pdfOptions;
-            InitializeFromWpf();
-        }
-#endif
-
         //// Methods
         //public Font(Font prototype, FontStyle newStyle);
         //public Font(FontFamily family, float emSize);
@@ -274,40 +214,6 @@ namespace PdfSharp.Drawing
             XFontSource fontSource;  // Not needed here.
             _gdiFont = FontHelper.CreateFont(_familyName, (float)_emSize, (GdiFontStyle)(_style & XFontStyle.BoldItalic), out fontSource);
 #endif
-#if WPF  // Pure WPF
-            _wpfFontFamily = _glyphTypeface.FontFamily.WpfFamily;
-            _wpfTypeface = _glyphTypeface.WpfTypeface;
-
-            if (_wpfFontFamily == null)
-                _wpfFontFamily = new WpfFontFamily(Name);
-
-            if (_wpfTypeface == null)
-                _wpfTypeface = FontHelper.CreateTypeface(WpfFontFamily, _style);
-#endif
-#if WPF
-            if (GlyphTypeface == null)
-            {
-                //Debug.Assert(Typeface == null);
-                // #P F C
-                //GlyphTypeface = XPrivateFontCollection.TryGetXGlyphTypeface(Name, _style);
-                //if (GlyphTypeface == null)
-                //{
-                //    // HACK: Just make it work...
-                //    GlyphTypeface = GlobalFontSettings.TryGetXGlyphTypeface(Name, _style, out Data);
-                //}
-#if DEBUG
-                if (GlyphTypeface == null)
-                    throw new Exception("No font: " + Name);
-#endif
-                _wpfFamily = GlyphTypeface.FontFamily;
-            }
-
-            //if (Family == null)
-            //  Family = new System.Windows.Media.FontFamily(Name);
-
-            //if (Typeface == null)
-            //  Typeface = FontHelper.CreateTypeface(Family, _style);
-#endif
             CreateDescriptorAndInitializeFontMetrics();
         }
 
@@ -347,31 +253,6 @@ namespace PdfSharp.Drawing
                 CreateDescriptorAndInitializeFontMetrics();
             }
             finally { Lock.ExitFontFactory(); }
-        }
-#endif
-
-#if WPF
-        void InitializeFromWpf()
-        {
-            if (_wpfFontFamily != null)
-            {
-                _wpfTypeface = FontHelper.CreateTypeface(_wpfFontFamily, _style);
-            }
-
-            if (_wpfTypeface != null)
-            {
-                _familyName = _wpfTypeface.FontFamily.FamilyNames[XmlLanguage.GetLanguage("en-US")];
-                _glyphTypeface = XGlyphTypeface.GetOrCreateFromWpf(_wpfTypeface);
-            }
-            else
-            {
-                Debug.Assert(false);
-            }
-
-            if (_glyphTypeface == null)
-                _glyphTypeface = XGlyphTypeface.GetOrCreateFrom(_familyName, new FontResolvingOptions(_style));
-
-            CreateDescriptorAndInitializeFontMetrics();
         }
 #endif
 
@@ -586,17 +467,11 @@ namespace PdfSharp.Drawing
 #if CORE
             return value;
 #endif
-#if GDI && !WPF
+#if GDI
 #if DEBUG_
             double gdiValue = Font.GetHeight();
             Debug.Assert(DoubleUtil.AreRoughlyEqual(gdiValue, value, 5));
 #endif
-            return value;
-#endif
-#if WPF && !GDI
-            return value;
-#endif
-#if WPF && GDI  // Testing only
             return value;
 #endif
         }
@@ -616,7 +491,7 @@ namespace PdfSharp.Drawing
             double value = CellSpace * _emSize / UnitsPerEm;
             return value;
 #endif
-#if GDI && !WPF
+#if GDI
             if (graphics._gfx != null)  // #MediumTrust
             {
                 double value = Font.GetHeight(graphics._gfx);
@@ -626,35 +501,6 @@ namespace PdfSharp.Drawing
                 return Font.GetHeight(graphics._gfx);
             }
             return CellSpace * _emSize / UnitsPerEm;
-#endif
-#if WPF && !GDI
-            double value = CellSpace * _emSize / UnitsPerEm;
-            return value;
-#endif
-#if GDI && WPF  // Testing only
-            if (graphics.TargetContext == XGraphicTargetContext.GDI)
-            {
-#if DEBUG
-                double value = Font.GetHeight(graphics._gfx);
-
-                // 2355*(0.3/2048)*96 = 33.11719 
-                double myValue = CellSpace * (_emSize / (96 * UnitsPerEm)) * 96;
-                myValue = CellSpace * _emSize / UnitsPerEm;
-                //Debug.Assert(value == myValue, "??");
-                //Debug.Assert(value - myValue < 1e-3, "??");
-#endif
-                return Font.GetHeight(graphics._gfx);
-            }
-
-            if (graphics.TargetContext == XGraphicTargetContext.WPF)
-            {
-                double value = CellSpace * _emSize / UnitsPerEm;
-                return value;
-            }
-            // ReSharper disable HeuristicUnreachableCode
-            Debug.Fail("Either GDI or WPF.");
-            return 0;
-            // ReSharper restore HeuristicUnreachableCode
 #endif
 #endif
         }
@@ -748,24 +594,6 @@ namespace PdfSharp.Drawing
             return new XFont(font);
         }
 #endif
-#endif
-
-#if WPF
-        /// <summary>
-        /// Gets the WPF font family.
-        /// Can be null.
-        /// </summary>
-        internal WpfFontFamily WpfFontFamily
-        {
-            get { return _wpfFontFamily; }
-        }
-        WpfFontFamily _wpfFontFamily;
-
-        internal WpfTypeface WpfTypeface
-        {
-            get { return _wpfTypeface; }
-        }
-        WpfTypeface _wpfTypeface;
 #endif
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

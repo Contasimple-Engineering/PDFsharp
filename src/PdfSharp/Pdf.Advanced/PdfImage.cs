@@ -37,9 +37,6 @@ using System.Drawing.Imaging;
 #if GDI
 using System.Drawing.Imaging;
 #endif
-#if WPF
-using System.Windows.Media.Imaging;
-#endif
 using PdfSharp.Drawing;
 using PdfSharp.Drawing.Internal;
 using PdfSharp.Pdf.Filters;
@@ -185,18 +182,6 @@ namespace PdfSharp.Pdf.Advanced
                 }
             }
 #endif
-#if WPF
-            // AGHACK
-            //string filename = XImage.GetImageFilename(image._wpfImage);
-            //if (XImage.ReadJpegFile(filename, -1, ref imageBits))
-            //{
-            //  streamLength = imageBits.Length;
-            //}
-            //else
-            //  imageBits = null;
-            memory = new MemoryStream();
-            ownMemory = true;
-#endif
             // THHO4THHO Use ImageImporterJPEG here to avoid redundant code.
 
             if (imageBits == null)
@@ -299,25 +284,6 @@ namespace PdfSharp.Pdf.Advanced
                 }
             }
 #endif
-#if WPF
-            string pixelFormat = _image._wpfImage.Format.ToString();
-            bool isCmyk = _image.IsCmyk;
-            bool isGrey = pixelFormat == "Gray8";
-            if (isCmyk)
-            {
-                // TODO: Test with CMYK JPEG files (so far I only found ImageFlags.ColorSpaceYcck JPEG files ...)
-                Elements[Keys.ColorSpace] = new PdfName("/DeviceCMYK");
-                Elements["/Decode"] = new PdfLiteral("[1 0 1 0 1 0 1 0]");  // Invert colors? Why??
-            }
-            else if (isGrey)
-            {
-                Elements[Keys.ColorSpace] = new PdfName("/DeviceGray");
-            }
-            else
-            {
-                Elements[Keys.ColorSpace] = new PdfName("/DeviceRGB");
-            }
-#endif
         }
 
         /// <summary>
@@ -386,57 +352,6 @@ namespace PdfSharp.Pdf.Advanced
           image.image.Save("$$$.bmp", ImageFormat.Bmp);
 #endif
                     throw new NotImplementedException("Image format not supported.");
-            }
-#endif
-#if WPF // && !GDI
-            string format = _image._wpfImage.Format.ToString();
-            switch (format)
-            {
-                case "Bgr24": //Format24bppRgb:
-                    ReadTrueColorMemoryBitmap(3, 8, false);
-                    break;
-
-                //case .PixelFormat.Format32bppRgb:
-                //  ReadTrueColorMemoryBitmap(4, 8, false);
-                //  break;
-
-                case "Bgra32":  //PixelFormat.Format32bppArgb:
-                    //case PixelFormat.Format32bppPArgb:
-                    ReadTrueColorMemoryBitmap(3, 8, true);
-                    break;
-
-                case "Bgr32":
-                    ReadTrueColorMemoryBitmap(4, 8, false);
-                    break;
-
-                case "Pbgra32":
-                    ReadTrueColorMemoryBitmap(3, 8, true);
-                    break;
-
-                case "Indexed8":  //Format8bppIndexed:
-                case "Gray8":
-                    ReadIndexedMemoryBitmap(8);
-                    break;
-
-                case "Indexed4":  //Format4bppIndexed:
-                case "Gray4":
-                    ReadIndexedMemoryBitmap(4);
-                    break;
-
-                case "Indexed2":
-                    ReadIndexedMemoryBitmap(2);
-                    break;
-
-                case "Indexed1":  //Format1bppIndexed:
-                case "BlackWhite":  //Format1bppIndexed:
-                    ReadIndexedMemoryBitmap(1);
-                    break;
-
-                default:
-#if DEBUGxxx
-                    image.image.Save("$$$.bmp", ImageFormat.Bmp);
-#endif
-                    throw new NotImplementedException("Image format \"" + format + "\" not supported.");
             }
 #endif
         }
@@ -680,11 +595,6 @@ namespace PdfSharp.Pdf.Advanced
 #if GDI
             _image._gdiImage.Save(memory, ImageFormat.Bmp);
 #endif
-#if WPF
-            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(_image._wpfImage));
-            encoder.Save(memory);
-#endif
             // THHO4THHO Use ImageImporterBMP here to avoid redundant code.
 
             int streamLength = (int)memory.Length;
@@ -861,14 +771,6 @@ namespace PdfSharp.Pdf.Advanced
 #if GDI
             _image._gdiImage.Save(memory, ImageFormat.Bmp);
 #endif
-#if WPF
-            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
-            //if (!_image._path.StartsWith("*"))
-            //    encoder.Frames.Add(BitmapFrame.Create(new Uri(_image._path), BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad));
-            //else
-            encoder.Frames.Add(BitmapFrame.Create(_image._wpfImage));
-            encoder.Save(memory);
-#endif
             // THHO4THHO Use ImageImporterBMP here to avoid redundant code.
 
             int streamLength = (int)memory.Length;
@@ -886,22 +788,11 @@ namespace PdfSharp.Pdf.Advanced
                 if (ReadWord(imageBits, 0) != 0x4d42 || // "BM"
                   ReadDWord(imageBits, 2) != streamLength ||
                   ReadDWord(imageBits, 14) != 40 || // sizeof BITMAPINFOHEADER
-#if WPF
-                    // TODOWPF: bug with height and width??? With which files???
                   ReadDWord(imageBits, 18) != width ||
                   ReadDWord(imageBits, 22) != height)
-#else
-                  ReadDWord(imageBits, 18) != width ||
-                  ReadDWord(imageBits, 22) != height)
-#endif
                 {
                     throw new NotImplementedException("ReadIndexedMemoryBitmap: unsupported format");
                 }
-#if WPF
-                // TODOWPF: bug with height and width
-                width = ReadDWord(imageBits, 18);
-                height = ReadDWord(imageBits, 22);
-#endif
                 int fileBits = ReadWord(imageBits, 28);
                 if (fileBits != bits)
                 {

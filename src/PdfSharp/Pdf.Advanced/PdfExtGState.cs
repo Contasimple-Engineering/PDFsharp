@@ -33,8 +33,6 @@ using System.Globalization;
 using System.Drawing;
 using System.Drawing.Imaging;
 #endif
-#if WPF
-#endif
 
 namespace PdfSharp.Pdf.Advanced
 {

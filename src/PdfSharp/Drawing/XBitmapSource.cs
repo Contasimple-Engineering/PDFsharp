@@ -59,22 +59,13 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if (CORE_WITH_GDI || GDI) && !WPF
+#if (CORE_WITH_GDI || GDI)
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Width;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
-#if GDI && WPF
-                int gdiWidth = _gdiImage.Width;
-                int wpfWidth = _wpfImage.PixelWidth;
-                Debug.Assert(gdiWidth == wpfWidth);
-                return wpfWidth;
-#endif
-#if WPF && !GDI
-                return _wpfImage.PixelWidth;
 #endif
             }
         }
@@ -86,22 +77,13 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if (CORE_WITH_GDI || GDI) && !WPF
+#if (CORE_WITH_GDI || GDI)
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Height;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
-#if GDI && WPF
-                int gdiHeight = _gdiImage.Height;
-                int wpfHeight = _wpfImage.PixelHeight;
-                Debug.Assert(gdiHeight == wpfHeight);
-                return wpfHeight;
-#endif
-#if WPF && !GDI
-                return _wpfImage.PixelHeight;
 #endif
             }
         }

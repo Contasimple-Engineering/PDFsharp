@@ -69,17 +69,6 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF
-        /// <summary>
-        /// Initializes a new instance of the XPoint class with the specified point.
-        /// </summary>
-        public XPoint(SysPoint point)
-        {
-            _x = point.X;
-            _y = point.Y;
-        }
-#endif
-
 #if GDI
         /// <summary>
         /// Initializes a new instance of the XPoint class with the specified point.
@@ -212,16 +201,6 @@ namespace PdfSharp.Drawing
         public PointF ToPointF()
         {
             return new PointF((float)_x, (float)_y);
-        }
-#endif
-
-#if WPF
-        /// <summary>
-        /// Converts this XPoint to a System.Windows.Point.
-        /// </summary>
-        public SysPoint ToPoint()
-        {
-            return new SysPoint(_x, _y);
         }
 #endif
 
@@ -380,24 +359,6 @@ namespace PdfSharp.Drawing
         {
             return new XVector(point._x, point._y);
         }
-
-#if WPF
-        /// <summary>
-        /// Performs an implicit conversion from XPoint to Point.
-        /// </summary>
-        public static implicit operator SysPoint(XPoint point)
-        {
-            return new SysPoint(point.X, point.Y);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from Point to XPoint.
-        /// </summary>
-        public static implicit operator XPoint(SysPoint point)
-        {
-            return new XPoint(point.X, point.Y);
-        }
-#endif
 
         /// <summary>
         /// Gets the DebuggerDisplayAttribute text.

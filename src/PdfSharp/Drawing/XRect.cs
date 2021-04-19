@@ -136,19 +136,6 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF
-        /// <summary>
-        /// Initializes a new instance of the XRect class.
-        /// </summary>
-        public XRect(SysRect rect)
-        {
-            _x = rect.X;
-            _y = rect.Y;
-            _width = rect.Width;
-            _height = rect.Height;
-        }
-#endif
-
         /// <summary>
         /// Creates a rectangle from for straight lines.
         /// </summary>
@@ -773,16 +760,6 @@ namespace PdfSharp.Drawing
         /// Performs an implicit  conversion from a System.Drawing.RectangleF to an XRect.
         /// </summary>
         public static implicit operator XRect(RectangleF rect)
-        {
-            return new XRect(rect.X, rect.Y, rect.Width, rect.Height);
-        }
-#endif
-
-#if WPF
-        /// <summary>
-        /// Performs an implicit conversion from System.Windows.Rect to XRect.
-        /// </summary>
-        public static implicit operator XRect(SysRect rect)
         {
             return new XRect(rect.X, rect.Y, rect.Width, rect.Height);
         }

@@ -44,15 +44,6 @@ using System.Drawing.Imaging;
 using PdfSharp.Internal;
 
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-#if !GDI
-using PdfSharp.Internal;
-#endif
-
-#endif
 
 // WPFHACK
 #pragma warning disable 0169

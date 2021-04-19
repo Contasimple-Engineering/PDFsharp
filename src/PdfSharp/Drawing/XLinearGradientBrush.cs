@@ -35,15 +35,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiLinearGradientBrush = System.Drawing.Drawing2D.LinearGradientBrush;
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Media;
-using SysPoint = System.Windows.Point;
-using SysSize = System.Windows.Size;
-using SysRect = System.Windows.Rect;
-using WpfBrush = System.Windows.Media.Brush;
-using WpfLinearGradientBrush = System.Windows.Media.LinearGradientBrush;
-#endif
 
 // ReSharper disable RedundantNameQualifier because it is required for hybrid build
 
@@ -66,15 +57,6 @@ namespace PdfSharp.Drawing
         /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
         /// </summary>
         public XLinearGradientBrush(PointF point1, PointF point2, XColor color1, XColor color2)
-            : this(new XPoint(point1), new XPoint(point2), color1, color2)
-        { }
-#endif
-
-#if WPF
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
-        /// </summary>
-        public XLinearGradientBrush(SysPoint point1, SysPoint point2, XColor color1, XColor color2)
             : this(new XPoint(point1), new XPoint(point2), color1, color2)
         { }
 #endif
@@ -102,15 +84,6 @@ namespace PdfSharp.Drawing
         /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
         /// </summary>
         public XLinearGradientBrush(RectangleF rect, XColor color1, XColor color2, XLinearGradientMode linearGradientMode)
-            : this(new XRect(rect), color1, color2, linearGradientMode)
-        { }
-#endif
-
-#if WPF
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
-        /// </summary>
-        public XLinearGradientBrush(Rect rect, XColor color1, XColor color2, XLinearGradientMode linearGradientMode)
             : this(new XRect(rect), color1, color2, linearGradientMode)
         { }
 #endif
@@ -275,42 +248,6 @@ namespace PdfSharp.Drawing
                 //brush.WrapMode = WrapMode.Clamp;
             }
             finally { Lock.ExitGdiPlus(); }
-            return brush;
-        }
-#endif
-
-#if WPF
-        internal override WpfBrush RealizeWpfBrush()
-        {
-            //if (dirty)
-            //{
-            //  if (brush == null)
-            //    brush = new SolidBrush(color.ToGdiColor());
-            //  else
-            //  {
-            //    brush.Color = color.ToGdiColor();
-            //  }
-            //  dirty = false;
-            //}
-
-            WpfLinearGradientBrush brush;
-            if (_useRect)
-            {
-                brush = new WpfLinearGradientBrush(_color1.ToWpfColor(), _color2.ToWpfColor(), new SysPoint(0, 0), new SysPoint(1, 1));// rect.TopLeft, this.rect.BottomRight);
-                //brush = new System.Drawing.Drawing2D.LinearGradientBrush(rect.ToRectangleF(),
-                //  color1.ToGdiColor(), color2.ToGdiColor(), (LinearGradientMode)linearGradientMode);
-            }
-            else
-            {
-                brush = new System.Windows.Media.LinearGradientBrush(_color1.ToWpfColor(), _color2.ToWpfColor(), _point1, _point2);
-                //brush = new System.Drawing.Drawing2D.LinearGradientBrush(
-                //  point1.ToPointF(), point2.ToPointF(),
-                //  color1.ToGdiColor(), color2.ToGdiColor());
-            }
-            if (!_matrix.IsIdentity)
-            {
-                brush.Transform = new MatrixTransform(_matrix.ToWpfMatrix());
-            }
             return brush;
         }
 #endif

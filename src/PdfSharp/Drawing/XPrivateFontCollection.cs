@@ -267,75 +267,7 @@ namespace PdfSharp.Drawing
         //            // Marshal.FreeCoTaskMem(ip);
         //#endif
 
-        //#if WPF
-        //#endif
         //        }
-
-#if WPF
-        /// <summary>
-        /// Initializes a new instance of the FontFamily class from the specified font family name and an optional base uniform resource identifier (URI) value.
-        /// Sample: Add(new Uri("pack://application:,,,/"), "./myFonts/#FontFamilyName");)
-        /// </summary>
-        /// <param name="baseUri">Specifies the base URI that is used to resolve familyName.</param>
-        /// <param name="familyName">The family name or names that comprise the new FontFamily. Multiple family names should be separated by commas.</param>
-        public static void Add(Uri baseUri, string familyName)
-        {
-            Uri uri = new Uri("pack://application:,,,/");
-
-            // TODO: What means 'Multiple family names should be separated by commas.'?
-            // does not work
-
-
-            if (String.IsNullOrEmpty(familyName))
-                throw new ArgumentNullException("familyName");
-
-            if (familyName.Contains(","))
-                throw new NotImplementedException("Only one family name is supported.");
-
-            // Family name starts right of '#'.
-            int idxHash = familyName.IndexOf('#');
-            if (idxHash < 0)
-                throw new ArgumentException("Family name must contain a '#'. Example './#MyFontFamilyName'", "familyName");
-
-            string key = familyName.Substring(idxHash + 1);
-            if (String.IsNullOrEmpty(key))
-                throw new ArgumentException("familyName has invalid format.");
-
-            if (Singleton._fontFamilies.ContainsKey(key))
-                throw new ArgumentException("An entry with the specified family name already exists.");
-
-#if DEBUG_
-            foreach (WpfFontFamily fontFamily1 in WpfFonts.GetFontFamilies(baseUri, familyName))
-            {
-                ICollection<WpfTypeface> wpfTypefaces = fontFamily1.GetTypefaces();
-                wpfTypefaces.GetType();
-            }
-#endif
-            // Create WPF font family.
-            WpfFontFamily fontFamily = new WpfFontFamily(baseUri, familyName);
-            //System.Windows.Media.FontFamily  x;
-            // Required for new Uri("pack://application:,,,/")
-            // ReSharper disable once ObjectCreationAsStatement
-            //            new System.Windows.Application();
-
-            // Check whether font data really exists
-#if DEBUG
-            ICollection<WpfTypeface> list = fontFamily.GetTypefaces();
-            foreach (WpfTypeface typeFace in list)
-            {
-                Debug.WriteLine(String.Format("{0}, {1}, {2}, {3}, {4}", familyName, typeFace.FaceNames[FontHelper.XmlLanguageEnUs], typeFace.Style, typeFace.Weight, typeFace.Stretch));
-                WpfGlyphTypeface glyphTypeface;
-                if (!typeFace.TryGetGlyphTypeface(out glyphTypeface))
-                {
-                    Debug.WriteLine("    Glyph typeface does not exists.");
-                    //throw new ArgumentException("Font with the specified family name does not exist.");
-                }
-            }
-#endif
-
-            Singleton._fontFamilies.Add(key, fontFamily);
-        }
-#endif
 
         //internal static XGlyphTypeface TryGetXGlyphTypeface(string familyName, XFontStyle style)
         //{
@@ -393,18 +325,6 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF
-        internal static WpfTypeface TryCreateTypeface(string name, XFontStyle style, out WpfFontFamily fontFamily)
-        {
-            if (Singleton._fontFamilies.TryGetValue(name, out fontFamily))
-            {
-                WpfTypeface typeface = FontHelper.CreateTypeface(fontFamily, style);
-                return typeface;
-            }
-            return null;
-        }
-#endif
-
         static string MakeKey(string familyName, XFontStyle style)
         {
             return MakeKey(familyName, (style & XFontStyle.Bold) != 0, (style & XFontStyle.Italic) != 0);
@@ -419,9 +339,6 @@ namespace PdfSharp.Drawing
 #if GDI
         //List<XGlyphTypeface> privateFonts = new List<XGlyphTypeface>();
         readonly Dictionary<string, XFontSource> _fontSources = new Dictionary<string, XFontSource>(StringComparer.OrdinalIgnoreCase);
-#endif
-#if WPF
-        readonly Dictionary<string, WpfFontFamily> _fontFamilies = new Dictionary<string, WpfFontFamily>(StringComparer.OrdinalIgnoreCase);
 #endif
     }
 #endif

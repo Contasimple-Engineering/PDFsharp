@@ -35,9 +35,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 #endif
-#if WPF
-using System.Windows.Media;
-#endif
 using PdfSharp.Drawing.Pdf;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
@@ -256,8 +253,6 @@ namespace PdfSharp.Drawing
                 int length = _pdfForm.Stream.Length;
                 _pdfForm.Elements.SetInteger("/Length", length);
             }
-#endif
-#if WPF
 #endif
         }
 
@@ -538,33 +533,5 @@ namespace PdfSharp.Drawing
 
         internal XGraphicsPdfRenderer PdfRenderer;
 
-#if WPF
-        /// <summary>
-        /// Gets a value indicating whether this image is cmyk.
-        /// </summary>
-        /// <value><c>true</c> if this image is cmyk; otherwise, <c>false</c>.</value>
-        internal override bool IsCmyk
-        {
-            get { return false; } // not supported and not relevant
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this image is JPEG.
-        /// </summary>
-        /// <value><c>true</c> if this image is JPEG; otherwise, <c>false</c>.</value>
-        internal override bool IsJpeg
-        {
-            get { return base.IsJpeg; }// not supported and not relevant
-        }
-
-        /// <summary>
-        /// Gets the JPEG memory stream (if IsJpeg returns true).
-        /// </summary>
-        /// <value>The memory.</value>
-        public override MemoryStream Memory
-        {
-            get { throw new NotImplementedException(); }
-        }
-#endif
     }
 }

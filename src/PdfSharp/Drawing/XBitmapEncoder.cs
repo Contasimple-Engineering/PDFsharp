@@ -106,9 +106,6 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF
-            DiagnosticsHelper.ThrowNotImplementedException("Save...");
-#endif
         }
     }
 }

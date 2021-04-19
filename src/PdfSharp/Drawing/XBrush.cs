@@ -32,9 +32,6 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 #endif
-#if WPF
-using System.Windows.Media;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -72,9 +69,6 @@ namespace PdfSharp.Drawing
             return xbrush;
         }
 #endif
-#endif
-#if WPF
-        internal abstract System.Windows.Media.Brush RealizeWpfBrush();
 #endif
     }
 }

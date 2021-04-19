@@ -55,15 +55,5 @@ namespace PdfSharp.Drawing
             get { return _path._gdipPath; }
         }
 #endif
-
-#if WPF
-        /// <summary>
-        /// Gets the underlying WPF path geometry object.
-        /// </summary>
-        public PathGeometry WpfPath
-        {
-            get { return _path._pathGeometry; }
-        }
-#endif
     }
 }

@@ -167,16 +167,6 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF
-        /// <summary>
-        /// Converts this XSize to a System.Windows.Size.
-        /// </summary>
-        public SysSize ToSize()
-        {
-            return new SysSize(_width, _height);
-        }
-#endif
-
 #if GDI
         /// <summary>
         /// Creates an XSize from a System.Drawing.Size.
@@ -191,16 +181,6 @@ namespace PdfSharp.Drawing
         /// WinForms designer uses it.
         /// </summary>
         public static implicit operator XSize(System.Drawing.Size size)
-        {
-            return new XSize(size.Width, size.Height);
-        }
-#endif
-
-#if WPF
-        /// <summary>
-        /// Creates an XSize from a System.Drawing.Size.
-        /// </summary>
-        public static XSize FromSize(SysSize size)
         {
             return new XSize(size.Width, size.Height);
         }
@@ -318,16 +298,6 @@ namespace PdfSharp.Drawing
         {
             return new XPoint(size._width, size._height);
         }
-
-#if WPF
-        /// <summary>
-        /// Performs an explicit conversion from Size to XSize.
-        /// </summary>
-        public static explicit operator XSize(SysSize size)
-        {
-            return new XSize(size.Width, size.Height);
-        }
-#endif
 
         private static XSize CreateEmptySize()
         {
