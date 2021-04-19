@@ -37,7 +37,6 @@ namespace PdfSharp.Drawing
     /// </summary>
     enum XGraphicTargetContext
     {
-        // NETFX_CORE_TODO
         NONE = 0,
 
         /// <summary>

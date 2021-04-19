@@ -58,12 +58,6 @@ using WpfPen = System.Windows.Media.Pen;
 using WpfBrushes = System.Windows.Media.Brushes;
 #endif
 #endif
-#if NETFX_CORE
-using Windows.UI.Xaml.Media;
-using SysPoint = Windows.Foundation.Point;
-using SysSize = Windows.Foundation.Size;
-using SysRect = Windows.Foundation.Rect;
-#endif
 using PdfSharp.Pdf;
 using PdfSharp.Drawing.Pdf;
 using PdfSharp.Internal;
@@ -520,9 +514,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
             XGraphics gfx = new XGraphics(new Canvas(), size, pageUnit, pageDirection);
             return gfx;
 #endif
-#if NETFX_CORE // NETFX_CORE_TODO
-            return null;
-#endif
         }
 
 #if GDI
@@ -690,10 +681,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #endif
 #if WPF && !GDI
                 DiagnosticsHelper.ThrowNotImplementedException("WPF image");
-                return null;
-#endif
-#if NETFX_CORE
-                DiagnosticsHelper.ThrowNotImplementedException("NETFX_CORE image");
                 return null;
 #endif
             }
@@ -1033,7 +1020,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Draws a series of line segments that connect an array of points.
         /// </summary>
@@ -3680,7 +3667,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
             return size23;
 #endif
 #endif
-#if CORE || NETFX_CORE
+#if CORE
             XSize size = FontHelper.MeasureString(text, font, XStringFormats.Default);
             return size;
 #endif
@@ -4155,7 +4142,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
         public XGraphicsState Save()
         {
             XGraphicsState xState = null;
-#if CORE || NETFX_CORE
+#if CORE
             if (TargetContext == XGraphicTargetContext.CORE || TargetContext == XGraphicTargetContext.NONE)
             {
                 xState = new XGraphicsState();
@@ -4922,7 +4909,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Converts a Point[] into a XPoint[].
         /// </summary>
@@ -4982,7 +4969,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Converts an XPoint[] into a Point[].
         /// </summary>

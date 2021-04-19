@@ -39,18 +39,10 @@ using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Media;
 #endif
-#if !EDF_CORE
 using PdfSharp.Internal;
-#else
-using PdfSharp.Internal;
-#endif
 
 // ReSharper disable RedundantNameQualifier
-#if !EDF_CORE
 namespace PdfSharp.Drawing
-#else
-namespace Edf.Drawing
-#endif
 {
     /// <summary>
     /// Represents a 3-by-3 matrix that represents an affine 2D transformation.

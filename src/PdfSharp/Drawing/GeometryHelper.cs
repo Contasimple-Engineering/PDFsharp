@@ -47,28 +47,20 @@ namespace PdfSharp.Drawing
     /// </summary>
     static class GeometryHelper
     {
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Appends a Bézier segment from a curve.
         /// </summary>
         public static BezierSegment CreateCurveSegment(XPoint pt0, XPoint pt1, XPoint pt2, XPoint pt3, double tension3)
         {
-#if !SILVERLIGHT && !NETFX_CORE
             return new BezierSegment(
                 new SysPoint(pt1.X + tension3 * (pt2.X - pt0.X), pt1.Y + tension3 * (pt2.Y - pt0.Y)),
                 new SysPoint(pt2.X - tension3 * (pt3.X - pt1.X), pt2.Y - tension3 * (pt3.Y - pt1.Y)),
                 new SysPoint(pt2.X, pt2.Y), true);
-#else
-            BezierSegment bezierSegment = new BezierSegment();
-            bezierSegment.Point1 = new SysPoint(pt1.X + tension3 * (pt2.X - pt0.X), pt1.Y + tension3 * (pt2.Y - pt0.Y));
-            bezierSegment.Point2 = new SysPoint(pt2.X - tension3 * (pt3.X - pt1.X), pt2.Y - tension3 * (pt3.Y - pt1.Y));
-            bezierSegment.Point3 = new SysPoint(pt2.X, pt2.Y);
-            return bezierSegment;
-#endif
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Creates a path geometry from a polygon.
         /// </summary>
@@ -79,9 +71,7 @@ namespace PdfSharp.Drawing
             // For correct drawing the start point of the segment must not be the same as the first point.
             for (int idx = 1; idx < count; idx++)
                 seg.Points.Add(new SysPoint(points[idx].X, points[idx].Y));
-#if !SILVERLIGHT &&  !NETFX_CORE
             seg.IsStroked = true;
-#endif
             PathFigure fig = new PathFigure();
             fig.StartPoint = new SysPoint(points[0].X, points[0].Y);
             fig.Segments.Add(seg);
@@ -93,7 +83,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Creates a path geometry from a polygon.
         /// </summary>
@@ -104,14 +94,12 @@ namespace PdfSharp.Drawing
             // For correct drawing the start point of the segment must not be the same as the first point.
             for (int idx = 1; idx < count; idx++)
                 seg.Points.Add(new SysPoint(points[idx].X, points[idx].Y));
-#if !SILVERLIGHT && !NETFX_CORE
             seg.IsStroked = true;
-#endif
             return seg;
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Creates the arc segment from parameters of the GDI+ DrawArc function.
         /// </summary>
@@ -189,18 +177,8 @@ namespace PdfSharp.Drawing
             SysSize size = new SysSize(δx, δy);
             bool isLargeArc = Math.Abs(sweepAngle) >= 180;
             SweepDirection sweepDirection = sweepAngle > 0 ? SweepDirection.Clockwise : SweepDirection.Counterclockwise;
-#if !SILVERLIGHT && !NETFX_CORE
             bool isStroked = true;
             ArcSegment seg = new ArcSegment(destPoint, size, 0, isLargeArc, sweepDirection, isStroked);
-#else
-            ArcSegment seg = new ArcSegment();
-            seg.Point = destPoint;
-            seg.Size = size;
-            seg.RotationAngle = 0;
-            seg.IsLargeArc = isLargeArc;
-            seg.SweepDirection = sweepDirection;
-            // isStroked does not exist in Silverlight 3
-#endif
             return seg;
         }
 #endif
@@ -495,7 +473,7 @@ namespace PdfSharp.Drawing
         // with the MinBar Test Suite from QualityLogic and could not find out why it does not match.
         // My Bezier curves came very close to the arc, but in some cases they do simply not match.
         // So I gave up and use the WPF code.
-#if WPF || NETFX_CORE
+#if WPF
 
         // ReSharper disable InconsistentNaming
         const double FUZZ = 1e-6;           // Relative 0

@@ -64,11 +64,9 @@ namespace PdfSharp.Drawing
             int pageNumber;
             path = ExtractPageNumber(path, out pageNumber);
 
-#if !NETFX_CORE
             path = Path.GetFullPath(path);
             if (!File.Exists(path))
                 throw new FileNotFoundException(PSSR.FileNotFound(path));
-#endif
 
             if (PdfReader.TestPdfFile(path) == 0)
                 throw new ArgumentException("The specified file has no valid PDF file header.", "path");

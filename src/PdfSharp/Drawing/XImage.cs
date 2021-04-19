@@ -39,14 +39,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-#endif
-#if NETFX_CORE
-using Windows.UI.Xaml.Media.Imaging;
-#endif
 using PdfSharp.Drawing.Internal;
 using PdfSharp.Internal;
 using PdfSharp.Pdf.IO;
@@ -172,26 +164,13 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if NETFX_CORE
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XImage"/> class from a WinRT image.
-        /// </summary>
-        XImage(BitmapSource image)
-        {
-            _wrtImage = image;
-            Initialize();
-        }
-#endif
-
         // Useful stuff here: http://stackoverflow.com/questions/350027/setting-wpf-image-source-in-code
         XImage(string path)
         {
-#if !NETFX_CORE
             path = Path.GetFullPath(path);
             if (!File.Exists(path))
                 throw new FileNotFoundException(PSSR.FileNotFound(path));
             //throw new FileNotFoundException(PSSR.FileNotFound(path), path);
-#endif
             _path = path;
 
             //FileStream file = new FileStream(filename, FileMode.Open);
@@ -324,16 +303,6 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if NETFX_CORE
-        /// <summary>
-        /// Conversion from BitmapSource to XImage.
-        /// </summary>
-        public static XImage FromBitmapSource(BitmapSource image)
-        {
-            return new XImage(image);
-        }
-#endif
-
         /// <summary>
         /// Creates an image from the specified file.
         /// </summary>
@@ -444,11 +413,8 @@ namespace PdfSharp.Drawing
 
             if (PdfReader.TestPdfFile(path) > 0)
                 return true;
-#if !NETFX_CORE
+
             return File.Exists(path);
-#else
-            return false;
-#endif
         }
 
         internal XImageState XImageState
@@ -957,9 +923,6 @@ namespace PdfSharp.Drawing
 #if WPF && !GDI
                 return _wpfImage.PixelWidth;
 #endif
-#if NETFX_CORE
-                return 100;
-#endif
             }
         }
 
@@ -997,9 +960,6 @@ namespace PdfSharp.Drawing
                 //#endif
 #if WPF && !GDI
                 return _wpfImage.PixelHeight;
-#endif
-#if NETFX_CORE
-                return _wrtImage.PixelHeight;
 #endif
             }
         }
@@ -1064,11 +1024,6 @@ namespace PdfSharp.Drawing
                 return _wpfImage.PixelWidth * 72 / 96.0;
 #endif
 #endif
-#if NETFX_CORE
-                //var wb = new WriteableBitmap();
-                //GetImagePropertiesAsync
-                return 100;
-#endif
             }
         }
 
@@ -1117,9 +1072,6 @@ namespace PdfSharp.Drawing
                 return _wpfImage.PixelHeight * 72 / 96.0;
 #endif
 #endif
-#if NETFX_CORE
-                return _wrtImage.PixelHeight; //_gdi Image.Width * 72 / _gdiImage.HorizontalResolution;
-#endif
             }
         }
 
@@ -1163,9 +1115,6 @@ namespace PdfSharp.Drawing
 #if WPF && !GDI
                 return _wpfImage.PixelWidth;
 #endif
-#if NETFX_CORE
-                return _wrtImage.PixelWidth;
-#endif
             }
         }
 
@@ -1208,9 +1157,6 @@ namespace PdfSharp.Drawing
                 //#endif
 #if WPF && !GDI
                 return _wpfImage.PixelHeight;
-#endif
-#if NETFX_CORE
-                return _wrtImage.PixelHeight;
 #endif
             }
         }
@@ -1266,9 +1212,6 @@ namespace PdfSharp.Drawing
                 return 96;
 #endif
 #endif
-#if NETFX_CORE
-                return 96;
-#endif
             }
         }
 
@@ -1314,9 +1257,6 @@ namespace PdfSharp.Drawing
                 // AGHACK
                 return 96;
 #endif
-#endif
-#if NETFX_CORE
-                return 96;
 #endif
             }
         }
@@ -1536,9 +1476,6 @@ namespace PdfSharp.Drawing
 #if SILVERLIGHT
         //internal byte[] _bytes;
 #endif
-#endif
-#if NETFX_CORE
-        internal BitmapSource _wrtImage;
 #endif
 
         /// <summary>

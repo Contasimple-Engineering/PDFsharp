@@ -33,22 +33,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Media;
-using SysPoint = System.Windows.Point;
-using SysSize = System.Windows.Size;
-using SysRect = System.Windows.Rect;
-#if !SILVERLIGHT
-using WpfBrushes = System.Windows.Media.Brushes;
-#endif
-#endif
-#if NETFX_CORE
-using Windows.UI.Xaml.Media;
-using SysPoint = Windows.Foundation.Point;
-using SysSize = Windows.Foundation.Size;
-using SysRect = Windows.Foundation.Rect;
-#endif
 using PdfSharp.Internal;
 
 namespace PdfSharp.Drawing
@@ -74,7 +58,7 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
+#if WPF
             _pathGeometry = new PathGeometry();
 #endif
         }
@@ -100,7 +84,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Gets the current path figure.
         /// </summary>
@@ -167,15 +151,8 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             path._pathGeometry = _pathGeometry.Clone();
-#else
-            // AG-HACK
-            throw new InvalidOperationException("Silverlight cannot clone geometry objects.");
-            // TODO: make it manually...
-#pragma warning disable 0162
-#endif
 #endif
             return path;
         }
@@ -1023,7 +1000,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Adds a rectangle with rounded corners to this path.
         /// </summary>
@@ -1114,7 +1091,7 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
+#if WPF 
             double ex = ellipseWidth / 2;
             double ey = ellipseHeight / 2;
             StartFigure();
@@ -1143,89 +1120,29 @@ namespace PdfSharp.Drawing
             //      //figure.Segments.Add(new LineSegment(new SysPoint(x + ex, y), true));
             //#else
 
-#if !SILVERLIGHT && !NETFX_CORE
             figure.Segments.Add(new LineSegment(new SysPoint(x + width - ex, y), true));
-#else
-            figure.Segments.Add(new LineSegment { Point = new SysPoint(x + width - ex, y) });
-#endif
 
             // TODOWPF XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
-#if !SILVERLIGHT && !NETFX_CORE
             figure.Segments.Add(new ArcSegment(new SysPoint(x + width, y + ey), new SysSize(ex, ey), 0, false, SweepDirection.Clockwise, true));
             //figure.Segments.Add(new LineSegment(new SysPoint(x + width, y + ey), true));
-#else
-            figure.Segments.Add(new ArcSegment
-            {
-                Point = new SysPoint(x + width, y + ey),
-                Size = new SysSize(ex, ey),
-                //RotationAngle = 0,
-                //IsLargeArc = false,
-                SweepDirection = SweepDirection.Clockwise
-            });
-#endif
 
-#if !SILVERLIGHT && !NETFX_CORE
             figure.Segments.Add(new LineSegment(new SysPoint(x + width, y + height - ey), true));
-#else
-            figure.Segments.Add(new LineSegment { Point = new SysPoint(x + width, y + height - ey) });
-#endif
 
             // TODOWPF
-#if !SILVERLIGHT && !NETFX_CORE
             figure.Segments.Add(new ArcSegment(new SysPoint(x + width - ex, y + height), new SysSize(ex, ey), 0, false, SweepDirection.Clockwise, true));
             //figure.Segments.Add(new LineSegment(new SysPoint(x + width - ex, y + height), true));
-#else
-            figure.Segments.Add(new ArcSegment
-            {
-                Point = new SysPoint(x + width - ex, y + height),
-                Size = new SysSize(ex, ey),
-                //RotationAngle = 0,
-                //IsLargeArc = false,
-                SweepDirection = SweepDirection.Clockwise
-            });
-#endif
 
-#if !SILVERLIGHT && !NETFX_CORE
             figure.Segments.Add(new LineSegment(new SysPoint(x + ex, y + height), true));
-#else
-            figure.Segments.Add(new LineSegment { Point = new SysPoint(x + ex, y + height) });
-#endif
 
             // TODOWPF
-#if !SILVERLIGHT && !NETFX_CORE
             figure.Segments.Add(new ArcSegment(new SysPoint(x, y + height - ey), new SysSize(ex, ey), 0, false, SweepDirection.Clockwise, true));
             //figure.Segments.Add(new LineSegment(new SysPoint(x, y + height - ey), true));
-#else
-            figure.Segments.Add(new ArcSegment
-            {
-                Point = new SysPoint(x, y + height - ey),
-                Size = new SysSize(ex, ey),
-                //RotationAngle = 0,
-                //IsLargeArc = false,
-                SweepDirection = SweepDirection.Clockwise
-            });
-#endif
 
-#if !SILVERLIGHT && !NETFX_CORE
             figure.Segments.Add(new LineSegment(new SysPoint(x, y + ey), true));
-#else
-            figure.Segments.Add(new LineSegment { Point = new SysPoint(x, y + ey) });
-#endif
 
             // TODOWPF
-#if !SILVERLIGHT && !NETFX_CORE
             figure.Segments.Add(new ArcSegment(new SysPoint(x + ex, y), new SysSize(ex, ey), 0, false, SweepDirection.Clockwise, true));
             //figure.Segments.Add(new LineSegment(new SysPoint(x + ex, y), true));
-#else
-            figure.Segments.Add(new ArcSegment
-            {
-                Point = new SysPoint(x + ex, y),
-                Size = new SysSize(ex, ey),
-                //RotationAngle = 0,
-                //IsLargeArc = false,
-                SweepDirection = SweepDirection.Clockwise
-            });
-#endif
             CloseFigure();
 #endif
         }
@@ -1285,32 +1202,8 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry.AddGeometry(new EllipseGeometry(new Rect(x, y, width, height)));
-#else
-            var figure = new PathFigure();
-            figure.StartPoint = new SysPoint(x, y + height / 2);
-            var segment = new ArcSegment
-            {
-                Point = new SysPoint(x + width, y + height / 2),
-                Size = new SysSize(width / 2, height / 2),
-                IsLargeArc = true,
-                RotationAngle = 180,
-                SweepDirection = SweepDirection.Clockwise,
-            };
-            figure.Segments.Add(segment);
-            segment = new ArcSegment
-            {
-                Point = figure.StartPoint,
-                Size = new SysSize(width / 2, height / 2),
-                IsLargeArc = true,
-                RotationAngle = 180,
-                SweepDirection = SweepDirection.Clockwise,
-            };
-            figure.Segments.Add(segment);
-            _pathGeometry.Figures.Add(figure);
-#endif
             // StartFigure() isn't needed because AddGeometry() implicitly starts a new figure,
             // but CloseFigure() is needed for the next adding not to continue this figure.
             CloseFigure();
@@ -1334,19 +1227,15 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Adds a polygon to this path.
         /// </summary>
         public void AddPolygon(SysPoint[] points)
         {
             // TODO: fill mode unclear here
-#if !SILVERLIGHT && !NETFX_CORE
             _pathGeometry.AddGeometry(GeometryHelper.CreatePolygonGeometry(points, XFillMode.Alternate, true));
             CloseFigure(); // StartFigure() isn't needed because AddGeometry() implicitly starts a new figure, but CloseFigure() is needed for the next adding not to continue this figure.
-#else
-            AddPolygon(XGraphics.MakeXPointArray(points, 0, points.Length));
-#endif
         }
 #endif
 
@@ -1389,25 +1278,8 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry.AddGeometry(GeometryHelper.CreatePolygonGeometry(XGraphics.MakePointArray(points), XFillMode.Alternate, true));
-#else
-            var figure = new PathFigure();
-            figure.StartPoint = new SysPoint(points[0].X, points[0].Y);
-            figure.IsClosed = true;
-
-            PolyLineSegment segment = new PolyLineSegment();
-            int count = points.Length;
-            // For correct drawing the start point of the segment must not be the same as the first point.
-            for (int idx = 1; idx < count; idx++)
-                segment.Points.Add(new SysPoint(points[idx].X, points[idx].Y));
-#if !SILVERLIGHT && !NETFX_CORE
-            seg.IsStroked = true;
-#endif
-            figure.Segments.Add(segment);
-            _pathGeometry.Figures.Add(figure);
-#endif
             // TODO: NOT NEEDED
             //CloseFigure(); // StartFigure() isn't needed because AddGeometry() implicitly starts a new figure, but CloseFigure() is needed for the next adding not to continue this figure.
 #endif
@@ -1464,7 +1336,7 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
+#if WPF
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddPie");
 #endif
         }
@@ -1481,7 +1353,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Adds a closed curve to this path.
         /// </summary>
@@ -1519,7 +1391,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Adds a closed curve to this path.
         /// </summary>
@@ -1563,7 +1435,7 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF ||NETFX_CORE
+#if WPF
             tension /= 3;
 
             StartFigure();
@@ -1603,14 +1475,8 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry.AddGeometry(path._pathGeometry);
-#else
-            // AG-HACK: No AddGeometry in Silverlight version of PathGeometry
-            throw new InvalidOperationException("Silverlight/WinRT cannot merge geometry objects.");
-            // TODO: make it manually by using a GeometryGroup
-#endif
 #endif
         }
 
@@ -1626,7 +1492,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Adds a text string to this path.
         /// </summary>
@@ -2009,7 +1875,7 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
+#if WPF
             PathFigure figure = PeekCurrentFigure;
             if (figure != null && figure.Segments.Count != 0)
                 figure.IsClosed = true;
@@ -2032,7 +1898,7 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
+#if WPF
             PathFigure figure = CurrentPathFigure;
             if (figure.Segments.Count != 0)
             {
@@ -2064,7 +1930,7 @@ namespace PdfSharp.Drawing
                 }
                 finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
+#if WPF
                 _pathGeometry.FillRule = value == XFillMode.Winding ? FillRule.Nonzero : FillRule.EvenOdd;
 #endif
             }
@@ -2090,14 +1956,8 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry = _pathGeometry.GetFlattenedPathGeometry();
-#else
-            // AGHACK
-            throw new InvalidOperationException("Silverlight/WinrRT cannot flatten a geometry.");
-            // TODO: no, yagni
-#endif
 #endif
         }
 
@@ -2117,15 +1977,9 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry = _pathGeometry.GetFlattenedPathGeometry();
             _pathGeometry.Transform = new MatrixTransform(matrix.ToWpfMatrix());
-#else
-            // AGHACK
-            throw new InvalidOperationException("Silverlight/WinRT cannot flatten a geometry.");
-            // TODO: no, yagni
-#endif
 #endif
         }
 
@@ -2148,17 +2002,11 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry = _pathGeometry.GetFlattenedPathGeometry();
             // TODO: matrix handling not yet tested
             if (!matrix.IsIdentity)
                 _pathGeometry.Transform = new MatrixTransform(matrix.ToWpfMatrix());
-#else
-            // AG-HACK
-            throw new InvalidOperationException("Silverlight/WinRT cannot flatten a geometry.");
-            // TODO: no, yagni
-#endif
 #endif
         }
 
@@ -2184,14 +2032,8 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry = _pathGeometry.GetWidenedPathGeometry(pen.RealizeWpfPen());
-#else
-            // AG-HACK
-            throw new InvalidOperationException("Silverlight/WinRT cannot widen a geometry.");
-            // TODO: no, yagni
-#endif
 #endif
         }
 
@@ -2215,14 +2057,8 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry = _pathGeometry.GetWidenedPathGeometry(pen.RealizeWpfPen());
-#else
-            // AG-HACK
-            throw new InvalidOperationException("Silverlight/WinRT cannot widen a geometry.");
-            // TODO: no, yagni
-#endif
 #endif
         }
 
@@ -2246,14 +2082,8 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF || NETFX_CORE
-#if !SILVERLIGHT && !NETFX_CORE
+#if WPF
             _pathGeometry = _pathGeometry.GetWidenedPathGeometry(pen.RealizeWpfPen());
-#else
-            // AG-HACK
-            throw new InvalidOperationException("Silverlight/WinRT cannot widen a geometry.");
-            // TODO: no, yagni
-#endif
 #endif
         }
 
@@ -2279,7 +2109,7 @@ namespace PdfSharp.Drawing
         internal GraphicsPath _gdipPath;
 #endif
 
-#if WPF || NETFX_CORE
+#if WPF
         /// <summary>
         /// Gets access to underlying WPF/WinRT path geometry.
         /// </summary>

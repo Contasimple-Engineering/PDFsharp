@@ -94,9 +94,7 @@
 
 #elif CORE
 // PDFsharp independent of any particular .NET library.
-#elif NETFX_CORE
-// PDFsharp based on 'WinRT'.
 
 #else
-#error Either 'CORE', 'GDI', 'WPF', or 'NETFX_CORE' must be defined.
+#error Either 'CORE', 'GDI' or 'WPF' must be defined.
 #endif

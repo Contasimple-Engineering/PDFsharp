@@ -262,9 +262,6 @@ namespace PdfSharp.Drawing
 #endif
             return FontHelper.IsStyleAvailable(this, xStyle);
 #endif
-#if NETFX_CORE
-            throw new InvalidOperationException("In NETFX_CORE build it is the responsibility of the developer to provide all required font faces.");
-#endif
         }
 
         /// <summary>

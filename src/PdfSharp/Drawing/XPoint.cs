@@ -36,27 +36,9 @@ using System.Runtime.InteropServices;
 #if GDI
 using System.Drawing;
 #endif
-#if WPF
-using System.Windows;
-using SysPoint = System.Windows.Point;
-using SysSize = System.Windows.Size;
-#endif
-#if NETFX_CORE
-using Windows.UI.Xaml.Media;
-using SysPoint = Windows.Foundation.Point;
-using SysSize = Windows.Foundation.Size;
-#endif
-#if !EDF_CORE
 using PdfSharp.Internal;
-#else
-using PdfSharp.Internal;
-#endif
 
-#if !EDF_CORE
 namespace PdfSharp.Drawing
-#else
-namespace Edf.Drawing
-#endif
 {
     /// <summary>
     /// Represents a pair of floating point x- and y-coordinates that defines a point

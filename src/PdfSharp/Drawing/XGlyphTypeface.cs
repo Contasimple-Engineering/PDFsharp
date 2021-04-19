@@ -42,12 +42,6 @@ using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;
 
 #pragma warning disable 649
-#if SILVERLIGHT
-#pragma warning disable 219
-#endif
-#if NETFX_CORE
-#pragma warning disable 649
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -101,42 +95,6 @@ namespace PdfSharp.Drawing
             _key = ComputeKey(familyName, _isBold, _isItalic);
             //_fontFamily =xfont  FontFamilyCache.GetFamilyByName(familyName);
             _fontSource = fontSource;
-
-            Initialize();
-        }
-#endif
-
-#if WPF
-        XGlyphTypeface(string key, XFontFamily fontFamily, XFontSource fontSource, XStyleSimulations styleSimulations, WpfTypeface wpfTypeface, WpfGlyphTypeface wpfGlyphTypeface)
-        {
-            _key = key;
-            _fontFamily = fontFamily;
-            _fontSource = fontSource;
-            _styleSimulations = styleSimulations;
-
-            _fontface = OpenTypeFontface.CetOrCreateFrom(fontSource);
-            Debug.Assert(ReferenceEquals(_fontSource.Fontface, _fontface));
-
-            _wpfTypeface = wpfTypeface;
-            _wpfGlyphTypeface = wpfGlyphTypeface;
-
-            Initialize();
-        }
-#endif
-
-#if NETFX_CORE
-        XGlyphTypeface(string key, XFontFamily fontFamily, XFontSource fontSource, XStyleSimulations styleSimulations)
-        {
-            _key = key;
-            _fontFamily = fontFamily;
-            _fontSource = fontSource;
-            _styleSimulations = styleSimulations;
-
-            _fontface = OpenTypeFontface.CetOrCreateFrom(fontSource);
-            Debug.Assert(ReferenceEquals(_fontSource.Fontface, _fontface));
-
-            //_wpfTypeface = wpfTypeface;
-            //_wpfGlyphTypeface = wpfGlyphTypeface;
 
             Initialize();
         }
@@ -196,9 +154,6 @@ namespace PdfSharp.Drawing
                     fontFamily = XFontFamily.GetOrCreateFromWpf(new WpfFontFamily(familyName));
 #endif
 #endif
-#if NETFX_CORE
-                    fontFamily = null;
-#endif
                 }
                 else
                 {
@@ -218,9 +173,6 @@ namespace PdfSharp.Drawing
 #endif
 #if WPF
                 glyphTypeface = new XGlyphTypeface(typefaceKey, fontFamily, fontSource, fontResolverInfo.StyleSimulations, wpfTypeface, wpfGlyphTypeface);
-#endif
-#if NETFX_CORE
-                glyphTypeface = new XGlyphTypeface(typefaceKey, fontFamily, fontSource, fontResolverInfo.StyleSimulations);
 #endif
                 GlyphTypefaceCache.AddGlyphTypeface(glyphTypeface);
             }

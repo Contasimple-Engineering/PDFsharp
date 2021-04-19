@@ -29,17 +29,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-#if !EDF_CORE
 using PdfSharp.Drawing;
-#else
-using PdfSharp.Drawing;
-#endif
 
-#if !EDF_CORE
 namespace PdfSharp.Internal
-#else
-namespace Edf.Internal
-#endif
 {
     /// <summary>
     /// Some floating point utilities. Partially reflected from WPF, later equalized with original source code.

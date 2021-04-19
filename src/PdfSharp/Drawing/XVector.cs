@@ -41,11 +41,7 @@ using System.Windows.Media;
 
 #pragma warning disable 1591
 
-#if !EDF_CORE
 namespace PdfSharp.Drawing
-#else
-namespace Edf.Drawing
-#endif
 {
     /// <summary>
     /// Represents a two-dimensional vector specified by x- and y-coordinates.

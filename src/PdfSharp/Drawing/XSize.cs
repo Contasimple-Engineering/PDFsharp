@@ -44,11 +44,7 @@ using Windows.UI.Xaml.Media;
 using SysPoint = Windows.Foundation.Point;
 using SysSize = Windows.Foundation.Size;
 #endif
-#if !EDF_CORE
 using PdfSharp.Internal;
-#else
-using PdfSharp.Internal;
-#endif
 
 namespace PdfSharp.Drawing
 {
