@@ -538,7 +538,7 @@ namespace PdfSharp.Drawing
 
         internal XGraphicsPdfRenderer PdfRenderer;
 
-#if WPF && !SILVERLIGHT
+#if WPF
         /// <summary>
         /// Gets a value indicating whether this image is cmyk.
         /// </summary>

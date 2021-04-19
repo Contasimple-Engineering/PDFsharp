@@ -92,7 +92,7 @@ namespace PdfSharp.Fonts
             GdiFont gdiFont;
             XFontSource fontSource = CreateFontSource(familyName, fontResolvingOptions, out gdiFont, typefaceKey);
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
             WpfFontFamily wpfFontFamily;
             WpfTypeface wpfTypeface;
             WpfGlyphTypeface wpfGlyphTypeface;
@@ -112,7 +112,7 @@ namespace PdfSharp.Fonts
                 // TODO: Support style simulation for GDI+ platform fonts.
                 fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, fontResolvingOptions.MustSimulateBold, fontResolvingOptions.MustSimulateItalic, gdiFont);
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
                 fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, fontResolvingOptions.MustSimulateBold, fontResolvingOptions.MustSimulateItalic,
                     wpfFontFamily, wpfTypeface, wpfGlyphTypeface);
 #endif
@@ -124,7 +124,7 @@ namespace PdfSharp.Fonts
                 bool mustSimulateItalic = gdiFont.Italic && !fontSource.Fontface.os2.IsItalic;
                 fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, mustSimulateBold, mustSimulateItalic, gdiFont);
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
                 // WPF knows what styles have to be simulated.
                 bool mustSimulateBold = (wpfGlyphTypeface.StyleSimulations & WpfStyleSimulations.BoldSimulation) == WpfStyleSimulations.BoldSimulation;
                 bool mustSimulateItalic = (wpfGlyphTypeface.StyleSimulations & WpfStyleSimulations.ItalicSimulation) == WpfStyleSimulations.ItalicSimulation;
@@ -253,7 +253,7 @@ namespace PdfSharp.Fonts
         }
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         /// <summary>
         /// Create a WPF GlyphTypeface and retrieve font data from it.
         /// </summary>

@@ -215,13 +215,9 @@ namespace PdfSharp.Drawing.BarCodes
                 char newenc = enc;        // suggest new encoding
                 if (targetLength - targetposition <= 1 && (enc == 'c' || enc == 't') || targetLength - targetposition <= 2 && enc == 'x')
                     enc = 'a';             // auto revert to ASCII
-#if !SILVERLIGHT
                 // StL: Who wrote this nonsense?
                 //newenc = char.Parse(encoding[sourceposition].ToString(CultureInfo.InvariantCulture).ToLower());
                 newenc = char.ToLower(encoding[sourceposition]);
-#else
-        throw new NotImplementedException("char.Parse");
-#endif
                 switch (newenc)
                 {                         // encode character
                     case 'c':                // C40

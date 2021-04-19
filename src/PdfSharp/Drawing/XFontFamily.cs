@@ -217,7 +217,7 @@ namespace PdfSharp.Drawing
             int gdiValue = _gdiFamily.GetLineSpacing((FontStyle)style);
             Debug.Assert(gdiValue == result);
 #endif
-#if DEBUG_ && WPF && !SILVERLIGHT
+#if DEBUG_ && WPF
             int wpfValue = (int)Math.Round(_wpfFamily.LineSpacing * GetEmHeight(style));
             Debug.Assert(wpfValue == result);
 #endif

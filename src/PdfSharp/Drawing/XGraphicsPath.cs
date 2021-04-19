@@ -219,22 +219,13 @@ namespace PdfSharp.Drawing
             if (figure.Segments.Count == 0)
             {
                 figure.StartPoint = new SysPoint(x1, y1);
-#if !SILVERLIGHT
                 var lineSegment = new LineSegment(new SysPoint(x2, y2), true);
-#else
-                var lineSegment = new LineSegment { Point = new Point(x2, y2) };
-#endif
                 figure.Segments.Add(lineSegment);
             }
             else
             {
-#if !SILVERLIGHT
                 var lineSegment1 = new LineSegment(new SysPoint(x1, y1), true);
                 var lineSegment2 = new LineSegment(new SysPoint(x2, y2), true);
-#else
-                var lineSegment1 = new LineSegment { Point = new Point(x1, y1) };
-                var lineSegment2 = new LineSegment { Point = new Point(x2, y2) };
-#endif
                 figure.Segments.Add(lineSegment1);
                 figure.Segments.Add(lineSegment2);
             }
@@ -304,12 +295,7 @@ namespace PdfSharp.Drawing
                 figure.StartPoint = new SysPoint(points[0].X, points[0].Y);
                 for (int idx = 1; idx < count; idx++)
                 {
-#if !SILVERLIGHT
                     LineSegment lineSegment = new LineSegment(new SysPoint(points[idx].X, points[idx].Y), true);
-#else
-                    LineSegment lineSegment = new LineSegment();
-                    lineSegment.Point = new Point(points[idx].X, points[idx].Y); // ,true?
-#endif
                     figure.Segments.Add(lineSegment);
                 }
             }
@@ -318,12 +304,7 @@ namespace PdfSharp.Drawing
                 for (int idx = 0; idx < count; idx++)
                 {
                     // figure.Segments.Add(new LineSegment(new SysPoint(points[idx].x, points[idx].y), true));
-#if !SILVERLIGHT
                     LineSegment lineSegment = new LineSegment(new SysPoint(points[idx].X, points[idx].Y), true);
-#else
-                    LineSegment lineSegment = new LineSegment();
-                    lineSegment.Point = new Point(points[idx].X, points[idx].Y); // ,true?
-#endif
                     figure.Segments.Add(lineSegment);
                 }
             }
@@ -394,29 +375,17 @@ namespace PdfSharp.Drawing
             else
             {
                 // figure.Segments.Add(new LineSegment(new SysPoint(x1, y1), true));
-#if !SILVERLIGHT
                 LineSegment lineSegment = new LineSegment(new SysPoint(x1, y1), true);
-#else
-                LineSegment lineSegment = new LineSegment();
-                lineSegment.Point = new Point(x1, y1);
-#endif
                 figure.Segments.Add(lineSegment);
             }
             //figure.Segments.Add(new BezierSegment(
             //  new SysPoint(x2, y2),
             //  new SysPoint(x3, y3),
             //  new SysPoint(x4, y4), true));
-#if !SILVERLIGHT
             BezierSegment bezierSegment = new BezierSegment(
                 new SysPoint(x2, y2),
                 new SysPoint(x3, y3),
                 new SysPoint(x4, y4), true);
-#else
-            BezierSegment bezierSegment = new BezierSegment();
-            bezierSegment.Point1 = new Point(x2, y2);
-            bezierSegment.Point2 = new Point(x3, y3);
-            bezierSegment.Point3 = new Point(x4, y4);
-#endif
             figure.Segments.Add(bezierSegment);
 #endif
         }
@@ -492,12 +461,7 @@ namespace PdfSharp.Drawing
             else
             {
                 // figure.Segments.Add(new LineSegment(new SysPoint(points[0].x, points[0].y), true));
-#if !SILVERLIGHT
                 LineSegment lineSegment = new LineSegment(new SysPoint(points[0].X, points[0].Y), true);
-#else
-                LineSegment lineSegment = new LineSegment();
-                lineSegment.Point = new Point(points[0].X, points[0].Y);
-#endif
                 figure.Segments.Add(lineSegment);
             }
             for (int idx = 1; idx < count; idx += 3)
@@ -506,17 +470,10 @@ namespace PdfSharp.Drawing
                 //                      new SysPoint(points[idx].x, points[idx].y),
                 //                      new SysPoint(points[idx + 1].x, points[idx + 1].y),
                 //                      new SysPoint(points[idx + 2].x, points[idx + 2].y), true));
-#if !SILVERLIGHT
                 BezierSegment bezierSegment = new BezierSegment(
                                       new SysPoint(points[idx].X, points[idx].Y),
                                       new SysPoint(points[idx + 1].X, points[idx + 1].Y),
                                       new SysPoint(points[idx + 2].X, points[idx + 2].Y), true);
-#else
-                BezierSegment bezierSegment = new BezierSegment();
-                bezierSegment.Point1 = new Point(points[idx].X, points[idx].Y);
-                bezierSegment.Point2 = new Point(points[idx + 1].X, points[idx + 1].Y);
-                bezierSegment.Point3 = new Point(points[idx + 2].X, points[idx + 2].Y);
-#endif
                 figure.Segments.Add(bezierSegment);
             }
 #endif
@@ -620,12 +577,7 @@ namespace PdfSharp.Drawing
             else
             {
                 // figure.Segments.Add(new LineSegment(new SysPoint(points[0].x, points[0].y), true));
-#if !SILVERLIGHT
                 LineSegment lineSegment = new LineSegment(new SysPoint(points[0].X, points[0].Y), true);
-#else
-                LineSegment lineSegment = new LineSegment();
-                lineSegment.Point = new Point(points[0].X, points[0].Y);
-#endif
                 figure.Segments.Add(lineSegment);
             }
 
@@ -748,12 +700,8 @@ namespace PdfSharp.Drawing
                 figure.StartPoint = startPoint;
             else
             {
-                //#if !SILVERLIGHT
-                //                LineSegment lineSegment = new LineSegment(startPoint, true);
-                //#else
                 LineSegment lineSegment = new LineSegment();
                 lineSegment.Point = startPoint;
-                //#endif
                 figure.Segments.Add(lineSegment);
             }
 
@@ -791,26 +739,12 @@ namespace PdfSharp.Drawing
             else
             {
                 // figure.Segments.Add(new LineSegment(point1.ToPoint(), true));
-#if !SILVERLIGHT
                 LineSegment lineSegment = new LineSegment(point1.ToPoint(), true);
-#else
-                LineSegment lineSegment = new LineSegment();
-                lineSegment.Point = point1.ToPoint();
-#endif
                 figure.Segments.Add(lineSegment);
             }
 
             // figure.Segments.Add(new ArcSegment(point2.ToPoint(), size.ToSize(), rotationAngle, isLargeArg, sweepDirection, true));
-#if !SILVERLIGHT
             ArcSegment arcSegment = new ArcSegment(point2.ToPoint(), size.ToSize(), rotationAngle, isLargeArg, (SweepDirection)sweepDirection, true);
-#else
-            ArcSegment arcSegment = new ArcSegment();
-            arcSegment.Point = point2.ToPoint();
-            arcSegment.Size = size.ToSize();
-            arcSegment.RotationAngle = rotationAngle;
-            arcSegment.IsLargeArc = isLargeArg;
-            arcSegment.SweepDirection = (SweepDirection)sweepDirection;
-#endif
             figure.Segments.Add(arcSegment);
 #endif
         }
@@ -873,18 +807,9 @@ namespace PdfSharp.Drawing
             // figure.Segments.Add(new LineSegment(new SysPoint(rect.x + rect.width, rect.y), true));
             // figure.Segments.Add(new LineSegment(new SysPoint(rect.x + rect.width, rect.y + rect.height), true));
             // figure.Segments.Add(new LineSegment(new SysPoint(rect.x, rect.y + rect.height), true));
-#if !SILVERLIGHT
             LineSegment lineSegment1 = new LineSegment(new SysPoint(rect.X + rect.Width, rect.Y), true);
             LineSegment lineSegment2 = new LineSegment(new SysPoint(rect.X + rect.Width, rect.Y + rect.Height), true);
             LineSegment lineSegment3 = new LineSegment(new SysPoint(rect.X, rect.Y + rect.Height), true);
-#else
-            LineSegment lineSegment1 = new LineSegment();
-            lineSegment1.Point = new Point(rect.X + rect.Width, rect.Y);
-            LineSegment lineSegment2 = new LineSegment();
-            lineSegment2.Point = new Point(rect.X + rect.Width, rect.Y + rect.Height);
-            LineSegment lineSegment3 = new LineSegment();
-            lineSegment3.Point = new Point(rect.X, rect.Y + rect.Height);
-#endif
             figure.Segments.Add(lineSegment1);
             figure.Segments.Add(lineSegment2);
             figure.Segments.Add(lineSegment3);
@@ -968,18 +893,9 @@ namespace PdfSharp.Drawing
                 // figure.Segments.Add(new LineSegment(new SysPoint(rect.x + rect.width, rect.y), true));
                 // figure.Segments.Add(new LineSegment(new SysPoint(rect.x + rect.width, rect.y + rect.height), true));
                 // figure.Segments.Add(new LineSegment(new SysPoint(rect.x, rect.y + rect.height), true));
-#if !SILVERLIGHT
                 LineSegment lineSegment1 = new LineSegment(new SysPoint(rect.X + rect.Width, rect.Y), true);
                 LineSegment lineSegment2 = new LineSegment(new SysPoint(rect.X + rect.Width, rect.Y + rect.Height), true);
                 LineSegment lineSegment3 = new LineSegment(new SysPoint(rect.X, rect.Y + rect.Height), true);
-#else
-                LineSegment lineSegment1 = new LineSegment();
-                lineSegment1.Point = new Point(rect.X + rect.Width, rect.Y);
-                LineSegment lineSegment2 = new LineSegment();
-                lineSegment2.Point = new Point(rect.X + rect.Width, rect.Y + rect.Height);
-                LineSegment lineSegment3 = new LineSegment();
-                lineSegment3.Point = new Point(rect.X, rect.Y + rect.Height);
-#endif
                 figure.Segments.Add(lineSegment1);
                 figure.Segments.Add(lineSegment2);
                 figure.Segments.Add(lineSegment3);
@@ -1097,28 +1013,6 @@ namespace PdfSharp.Drawing
             StartFigure();
             PathFigure figure = CurrentPathFigure;
             figure.StartPoint = new SysPoint(x + ex, y);
-
-            //#if !SILVERLIGHT
-            //      figure.Segments.Add(new LineSegment(new SysPoint(x + width - ex, y), true));
-            //      // TODOWPF XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
-            //      figure.Segments.Add(new ArcSegment(new SysPoint(x + width, y + ey), new SysSize(ex, ey), 0, false, SweepDirection.Clockwise, true));
-            //      //figure.Segments.Add(new LineSegment(new SysPoint(x + width, y + ey), true));
-
-            //      figure.Segments.Add(new LineSegment(new SysPoint(x + width, y + height - ey), true));
-            //      // TODOWPF
-            //      figure.Segments.Add(new ArcSegment(new SysPoint(x + width - ex, y + height), new SysSize(ex, ey), 0, false, SweepDirection.Clockwise, true));
-            //      //figure.Segments.Add(new LineSegment(new SysPoint(x + width - ex, y + height), true));
-
-            //      figure.Segments.Add(new LineSegment(new SysPoint(x + ex, y + height), true));
-            //      // TODOWPF
-            //      figure.Segments.Add(new ArcSegment(new SysPoint(x, y + height - ey), new SysSize(ex, ey), 0, false, SweepDirection.Clockwise, true));
-            //      //figure.Segments.Add(new LineSegment(new SysPoint(x, y + height - ey), true));
-
-            //      figure.Segments.Add(new LineSegment(new SysPoint(x, y + ey), true));
-            //      // TODOWPF
-            //      figure.Segments.Add(new ArcSegment(new SysPoint(x + ex, y), new SysSize(ex, ey), 0, false, SweepDirection.Clockwise, true));
-            //      //figure.Segments.Add(new LineSegment(new SysPoint(x + ex, y), true));
-            //#else
 
             figure.Segments.Add(new LineSegment(new SysPoint(x + width - ex, y), true));
 
@@ -1540,7 +1434,6 @@ namespace PdfSharp.Drawing
 #if WPF
                 if (family.WpfFamily == null)
                     throw new NotFiniteNumberException(PSSR.NotImplementedForFontsRetrievedWithFontResolver(family.Name));
-#if !SILVERLIGHT
                 XFont font = new XFont(family.Name, emSize, style);
 
                 double x = origin.X;
@@ -1590,11 +1483,6 @@ namespace PdfSharp.Drawing
 
                 Geometry geo = formattedText.BuildGeometry(new XPoint(x, y));
                 _pathGeometry.AddGeometry(geo);
-#else
-                // AG-HACK
-                throw new InvalidOperationException("Silverlight cannot create geometry of glyphs.");
-                // TODO: Get the outline directly from the font.
-#endif
 #endif
             }
             catch
@@ -1729,7 +1617,7 @@ namespace PdfSharp.Drawing
 #if WPF && !GDI
             if (family.WpfFamily == null)
                 throw new NotFiniteNumberException(PSSR.NotImplementedForFontsRetrievedWithFontResolver(family.Name));
-#if !SILVERLIGHT
+
             // Just a first sketch, but currently we do not need it and there is enough to do...
             double x = layoutRect.X;
             double y = layoutRect.Y;
@@ -1849,11 +1737,6 @@ namespace PdfSharp.Drawing
 
             Geometry geo = formattedText.BuildGeometry(new Point(x, y));
             _pathGeometry.AddGeometry(geo);
-#else
-            // AG-HACK
-            throw new InvalidOperationException("Silverlight cannot create geometry of glyphs.");
-            // TODO: no, yagni
-#endif
 #endif
         }
 

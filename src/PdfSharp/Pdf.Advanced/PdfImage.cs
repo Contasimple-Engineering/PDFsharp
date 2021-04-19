@@ -62,7 +62,6 @@ namespace PdfSharp.Pdf.Advanced
 
             _image = image;
 
-#if !SILVERLIGHT
             ////// TODO: identify images used multiple times. If the image already exists use the same XRef.
             ////_defaultName = PdfImageTable.NextImageName;
 
@@ -91,9 +90,6 @@ namespace PdfSharp.Pdf.Advanced
                     Debug.Assert(false, "Unexpected image type.");
                     break;
             }
-#else
-            InitializeAg();
-#endif
         }
 
         /// <summary>
@@ -393,11 +389,7 @@ namespace PdfSharp.Pdf.Advanced
             }
 #endif
 #if WPF // && !GDI
-#if !SILVERLIGHT
             string format = _image._wpfImage.Format.ToString();
-#else
-            string format = "Bgr24";
-#endif
             switch (format)
             {
                 case "Bgr24": //Format24bppRgb:
@@ -689,14 +681,9 @@ namespace PdfSharp.Pdf.Advanced
             _image._gdiImage.Save(memory, ImageFormat.Bmp);
 #endif
 #if WPF
-#if !SILVERLIGHT
             BmpBitmapEncoder encoder = new BmpBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(_image._wpfImage));
             encoder.Save(memory);
-#else
-            // AGHACK
-            GetType();
-#endif
 #endif
             // THHO4THHO Use ImageImporterBMP here to avoid redundant code.
 
@@ -875,17 +862,12 @@ namespace PdfSharp.Pdf.Advanced
             _image._gdiImage.Save(memory, ImageFormat.Bmp);
 #endif
 #if WPF
-#if !SILVERLIGHT
             BmpBitmapEncoder encoder = new BmpBitmapEncoder();
             //if (!_image._path.StartsWith("*"))
             //    encoder.Frames.Add(BitmapFrame.Create(new Uri(_image._path), BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad));
             //else
             encoder.Frames.Add(BitmapFrame.Create(_image._wpfImage));
             encoder.Save(memory);
-#else
-            // AGHACK
-            GetType();
-#endif
 #endif
             // THHO4THHO Use ImageImporterBMP here to avoid redundant code.
 

@@ -41,20 +41,12 @@ using GdiFont = System.Drawing.Font;
 using GdiFontStyle = System.Drawing.FontStyle;
 using GdiPrivateFontCollection = System.Drawing.Text.PrivateFontCollection;
 #endif
-#if WPF
-using System.Windows.Markup;
-using WpfFonts = System.Windows.Media.Fonts;
-using WpfFontFamily = System.Windows.Media.FontFamily;
-using WpfTypeface = System.Windows.Media.Typeface;
-using WpfGlyphTypeface = System.Windows.Media.GlyphTypeface;
-#endif
 
 namespace PdfSharp.Drawing
 {
 #if true
     ///<summary>
     /// Makes fonts that are not installed on the system available within the current application domain.<br/>
-    /// In Silverlight required for all fonts used in PDF documents.
     /// </summary>
     public sealed class XPrivateFontCollection
     {
@@ -312,7 +304,6 @@ namespace PdfSharp.Drawing
             if (Singleton._fontFamilies.ContainsKey(key))
                 throw new ArgumentException("An entry with the specified family name already exists.");
 
-#if !SILVERLIGHT
 #if DEBUG_
             foreach (WpfFontFamily fontFamily1 in WpfFonts.GetFontFamilies(baseUri, familyName))
             {
@@ -327,12 +318,8 @@ namespace PdfSharp.Drawing
             // ReSharper disable once ObjectCreationAsStatement
             //            new System.Windows.Application();
 
-#else
-            System.Windows.Media.FontFamily fontFamily = new System.Windows.Media.FontFamily(familyName);
-#endif
-
             // Check whether font data really exists
-#if DEBUG && !SILVERLIGHT
+#if DEBUG
             ICollection<WpfTypeface> list = fontFamily.GetTypefaces();
             foreach (WpfTypeface typeFace in list)
             {
@@ -406,7 +393,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         internal static WpfTypeface TryCreateTypeface(string name, XFontStyle style, out WpfFontFamily fontFamily)
         {
             if (Singleton._fontFamilies.TryGetValue(name, out fontFamily))

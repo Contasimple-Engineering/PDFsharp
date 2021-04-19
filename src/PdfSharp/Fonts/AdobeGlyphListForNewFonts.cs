@@ -30,7 +30,6 @@
 namespace PdfSharp.Fonts
 {
 #if true_
-#if !SILVERLIGHT
   /// <summary>
   /// Testing only
   /// </summary>
@@ -4218,6 +4217,5 @@ namespace PdfSharp.Fonts
     /// </summary>
     public const char zeta = '\u03B6';
   }
-#endif
 #endif
 }

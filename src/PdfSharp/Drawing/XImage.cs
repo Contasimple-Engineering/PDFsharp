@@ -64,7 +64,7 @@ namespace PdfSharp.Drawing
     /// </summary>
     public class XImage : IDisposable
     {
-        // The hierarchy is adapted to WPF/Silverlight/WinRT
+        // The hierarchy is adapted to WPF/WinRT
         //
         // XImage                           <-- ImageSource
         //   XForm
@@ -149,7 +149,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public static BitmapImage BitmapFromUri(Uri uri)
         {
-#if !SILVERLIGHT
             // Using new BitmapImage(uri) will leave a lock on the file, leading to problems with temporary image files in server environments.
             // We use BitmapCacheOption.OnLoad to prevent this lock.
             BitmapImage bitmap = new BitmapImage();
@@ -158,9 +157,6 @@ namespace PdfSharp.Drawing
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
             bitmap.EndInit();
             return bitmap;
-#else
-            return new BitmapImage(uri);
-#endif
         }
 #endif
 
@@ -186,18 +182,12 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
             //BitmapSource.Create()
             // BUG: BitmapImage locks the file
             //_wpfImage = new BitmapImage(new Uri(path));  // AGHACK
             // Suggested change from forum to prevent locking.
             _wpfImage = BitmapFromUri(new Uri(path));
-#endif
-#if WPF && SILVERLIGHT
-            //BitmapSource.Create()
-            // BUG: BitmapImage locks the file
-            //_wpfImage = new BitmapImage(new Uri(path));  // AGHACK
-            //Debug-Break.Break();
 #endif
 
 #if true_
@@ -305,7 +295,6 @@ namespace PdfSharp.Drawing
 
         /// <summary>
         /// Creates an image from the specified stream.<br/>
-        /// Silverlight supports PNG and JPEG only.
         /// </summary>
         /// <param name="stream">The stream containing a BMP, PNG, GIF, JPEG, TIFF, or PDF file.</param>
         public static XImage FromStream(Stream stream)
@@ -347,7 +336,6 @@ namespace PdfSharp.Drawing
 
         /// <summary>
         /// Creates an image from the specified stream.<br/>
-        /// Silverlight supports PNG and JPEF only.
         /// </summary>
         /// <param name="stream">The stream containing a BMP, PNG, GIF, JPEG, TIFF, or PDF file.</param>
         /// <param name="platformIndependent">Uses an platform-independent implementation if set to true.
@@ -528,7 +516,6 @@ namespace PdfSharp.Drawing
             }
 #endif
 #if WPF
-#if !SILVERLIGHT
             if (_wpfImage != null)
             {
                 //string filename = GetImageFilename(_wpfImage);
@@ -584,67 +571,6 @@ namespace PdfSharp.Drawing
                         break;// throw new InvalidOperationException("Unsupported image format.");
                 }
             }
-#else
-            if (_wpfImage != null)
-            {
-                // TODO improve implementation for Silverlight.
-
-                //string pixelFormat = "jpg"; //_wpfImage...Format.ToString();
-                //string filename = GetImageFilename(_wpfImage);
-                // WPF treats all images as images.
-                // We give JPEG images a special treatment.
-                // Test if it's a JPEG:
-                bool isJpeg = true; // IsJpeg; // TestJpeg(filename);
-                if (isJpeg)
-                {
-                    _format = XImageFormat.Jpeg;
-                    return;
-                }
-
-                /*
-                switch (pixelFormat)
-                {
-                    case "Bgr32":
-                    case "Bgra32":
-                    case "Pbgra32":
-                        _format = XImageFormat.Png;
-                        break;
-
-                    //case "{B96B3CAE-0728-11D3-9D7B-0000F81EF32E}":  // jpeg
-                    //  format = XImageFormat.Jpeg;
-                    //  break;
-
-                    //case "{B96B3CB0-0728-11D3-9D7B-0000F81EF32E}":  // gif
-                    case "BlackWhite":
-                    case "Indexed1":
-                    case "Indexed4":
-                    case "Indexed8":
-                    case "Gray8":
-                        _format = XImageFormat.Gif;
-                        break;
-
-                    //case "{B96B3CB1-0728-11D3-9D7B-0000F81EF32E}":  // tiff
-                    //  format = XImageFormat.Tiff;
-                    //  break;
-
-                    //case "{B96B3CB5-0728-11D3-9D7B-0000F81EF32E}":  // icon
-                    //  format = XImageFormat.Icon;
-                    //  break;
-
-                    //case "{B96B3CAC-0728-11D3-9D7B-0000F81EF32E}":  // emf
-                    //case "{B96B3CAD-0728-11D3-9D7B-0000F81EF32E}":  // wmf
-                    //case "{B96B3CB2-0728-11D3-9D7B-0000F81EF32E}":  // exif
-                    //case "{B96B3CB3-0728-11D3-9D7B-0000F81EF32E}":  // photoCD
-                    //case "{B96B3CB4-0728-11D3-9D7B-0000F81EF32E}":  // flashPIX
-
-                    default:
-                        Debug.Assert(false, "Unknown pixel format: " + pixelFormat);
-                        _format = XImageFormat.Gif;
-                        break;// throw new InvalidOperationException("Unsupported image format.");
-                }
-                 */
-            }
-#endif
 #endif
         }
 
@@ -1005,13 +931,8 @@ namespace PdfSharp.Drawing
                 //                return _gdiImage.Width * 72 / _gdiImage.HorizontalResolution;
                 //#endif
 #if WPF && !GDI
-#if !SILVERLIGHT
                 Debug.Assert(Math.Abs(_wpfImage.PixelWidth * 72 / _wpfImage.DpiX - _wpfImage.Width * 72.0 / 96.0) < 0.001);
                 return _wpfImage.Width * 72.0 / 96.0;
-#else
-                // AGHACK
-                return _wpfImage.PixelWidth * 72 / 96.0;
-#endif
 #endif
             }
         }
@@ -1053,13 +974,8 @@ namespace PdfSharp.Drawing
                 //                return _gdiImage.Height * 72 / _gdiImage.HorizontalResolution;
                 //#endif
 #if WPF && !GDI
-#if !SILVERLIGHT
                 Debug.Assert(Math.Abs(_wpfImage.PixelHeight * 72 / _wpfImage.DpiY - _wpfImage.Height * 72.0 / 96.0) < 0.001);
                 return _wpfImage.Height * 72.0 / 96.0;
-#else
-                // AGHACK
-                return _wpfImage.PixelHeight * 72 / 96.0;
-#endif
 #endif
             }
         }
@@ -1194,12 +1110,7 @@ namespace PdfSharp.Drawing
                 //                return _gdiImage.HorizontalResolution;
                 //#endif
 #if WPF && !GDI
-#if !SILVERLIGHT
                 return _wpfImage.DpiX; //.PixelWidth * 96.0 / _wpfImage.Width;
-#else
-                // AGHACK
-                return 96;
-#endif
 #endif
             }
         }
@@ -1240,12 +1151,7 @@ namespace PdfSharp.Drawing
                 //                return _gdiImage.VerticalResolution;
                 //#endif
 #if WPF && !GDI
-#if !SILVERLIGHT
                 return _wpfImage.DpiY; //.PixelHeight * 96.0 / _wpfImage.Height;
-#else
-                // AGHACK
-                return 96;
-#endif
 #endif
             }
         }
@@ -1275,7 +1181,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         internal virtual bool IsJpeg
         {
-#if !SILVERLIGHT
             //get { if (!isJpeg.HasValue) InitializeGdiHelper(); return isJpeg.HasValue ? isJpeg.Value : false; }
             get
             {
@@ -1284,10 +1189,6 @@ namespace PdfSharp.Drawing
                 return _isJpeg.HasValue ? _isJpeg.Value : false;
             }
             //set { isJpeg = value; }
-#else
-            // AGHACK
-            get { return true; }
-#endif
         }
         private bool? _isJpeg;
 
@@ -1296,16 +1197,11 @@ namespace PdfSharp.Drawing
         /// </summary>
         internal virtual bool IsCmyk
         {
-#if !SILVERLIGHT
             get { if (!_isCmyk.HasValue) InitializeGdiHelper(); return _isCmyk.HasValue ? _isCmyk.Value : false; }
             //set { isCmyk = value; }
-#else
-            get { return false; } // AGHACK
-#endif
         }
         private bool? _isCmyk;
 
-#if !SILVERLIGHT
         /// <summary>
         /// Gets the JPEG memory stream (if IsJpeg returns true).
         /// </summary>
@@ -1400,7 +1296,6 @@ namespace PdfSharp.Drawing
                 }
             }
         }
-#endif
 #endif
 
 #if DEBUG_

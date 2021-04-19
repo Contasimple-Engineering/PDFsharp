@@ -108,7 +108,7 @@ namespace PdfSharp.Drawing
 #if GDI
             // Nothing to do.
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
             // Nothing to do.
 #endif
         }
@@ -122,7 +122,7 @@ namespace PdfSharp.Drawing
 #if GDI
             // Nothing to do.
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
             // Pop all objects pushed in this state.
             if (_gfx.TargetContext == XGraphicTargetContext.WPF)
             {
@@ -145,7 +145,7 @@ namespace PdfSharp.Drawing
         public GraphicsState GdiGraphicsState;
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         public void PushTransform(MatrixTransform transform)
         {
             _gfx._dc.PushTransform(transform);

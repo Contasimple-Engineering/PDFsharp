@@ -34,11 +34,6 @@ using PdfSharp.Internal;
 using System.Drawing;
 using GdiFontFamily = System.Drawing.FontFamily;
 #endif
-#if WPF
-using System.Windows.Media;
-using System.Windows.Markup;
-using WpfFontFamily = System.Windows.Media.FontFamily;
-#endif
 
 // ReSharper disable ConvertToAutoProperty
 // ReSharper disable ConvertPropertyToExpressionBody
@@ -70,13 +65,6 @@ namespace PdfSharp.Drawing
                 _name = _gdiFontFamily.Name;
             }
 #endif
-#if WPF
-            if (createPlatformObjects)
-            {
-                _wpfFontFamily = new WpfFontFamily(familyName);
-                _name = _wpfFontFamily.FamilyNames[FontHelper.XmlLanguageEnUs];
-            }
-#endif
         }
 
 #if CORE || GDI
@@ -84,22 +72,6 @@ namespace PdfSharp.Drawing
         {
             _sourceName = _name = gdiFontFamily.Name;
             _gdiFontFamily = gdiFontFamily;
-#if WPF
-            // Hybrid build only.
-            _wpfFontFamily = new WpfFontFamily(gdiFontFamily.Name);
-#endif
-        }
-#endif
-
-#if WPF
-        FontFamilyInternal(WpfFontFamily wpfFontFamily)
-        {
-            _sourceName = _name = wpfFontFamily.Source;
-            _wpfFontFamily = wpfFontFamily;
-#if GDI
-            // Hybrid build only.
-            _gdiFontFamily = new GdiFontFamily(_sourceName);
-#endif
         }
 #endif
 
@@ -133,15 +105,6 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF
-        internal static FontFamilyInternal GetOrCreateFromWpf(WpfFontFamily wpfFontFamily)
-        {
-            FontFamilyInternal fontFamily = new FontFamilyInternal(wpfFontFamily);
-            fontFamily = FontFamilyCache.CacheOrGetFontFamily(fontFamily);
-            return fontFamily;
-        }
-#endif
-
         /// <summary>
         /// Gets the family name this family was originally created with.
         /// </summary>
@@ -171,18 +134,6 @@ namespace PdfSharp.Drawing
             get { return _gdiFontFamily; }
         }
         readonly GdiFontFamily _gdiFontFamily;
-#endif
-
-#if WPF
-        /// <summary>
-        /// Gets the underlying WPF font family object.
-        /// Is null if the font was created by a font resolver.
-        /// </summary>
-        public WpfFontFamily WpfFamily
-        {
-            get { return _wpfFontFamily; }
-        }
-        readonly WpfFontFamily _wpfFontFamily;
 #endif
 
         /// <summary>

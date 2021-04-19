@@ -165,7 +165,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         /// <summary>
         /// Initializes a new instance of the <see cref="XFont"/> class from a System.Windows.Media.FontFamily.
         /// </summary>
@@ -185,12 +185,7 @@ namespace PdfSharp.Drawing
         /// <param name="pdfOptions">Additional PDF options.</param>
         public XFont(WpfFontFamily fontFamily, double emSize, XFontStyle style, XPdfFontOptions pdfOptions)
         {
-#if !SILVERLIGHT
             _familyName = fontFamily.FamilyNames[XmlLanguage.GetLanguage("en-US")];
-#else
-            // Best we can do in Silverlight.
-            _familyName = fontFamily.Source;
-#endif
             _wpfFontFamily = fontFamily;
             _emSize = emSize;
             _style = style;
@@ -279,7 +274,7 @@ namespace PdfSharp.Drawing
             XFontSource fontSource;  // Not needed here.
             _gdiFont = FontHelper.CreateFont(_familyName, (float)_emSize, (GdiFontStyle)(_style & XFontStyle.BoldItalic), out fontSource);
 #endif
-#if WPF && !SILVERLIGHT  // Pure WPF
+#if WPF  // Pure WPF
             _wpfFontFamily = _glyphTypeface.FontFamily.WpfFamily;
             _wpfTypeface = _glyphTypeface.WpfTypeface;
 
@@ -289,7 +284,7 @@ namespace PdfSharp.Drawing
             if (_wpfTypeface == null)
                 _wpfTypeface = FontHelper.CreateTypeface(WpfFontFamily, _style);
 #endif
-#if WPF && SILVERLIGHT_  // Pure Silverlight 5
+#if WPF
             if (GlyphTypeface == null)
             {
                 //Debug.Assert(Typeface == null);
@@ -355,7 +350,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         void InitializeFromWpf()
         {
             if (_wpfFontFamily != null)
@@ -414,7 +409,7 @@ namespace PdfSharp.Drawing
             int gdiValueLineSpacing = Font.FontFamily.GetLineSpacing(Font.Style);
             Debug.Assert(gdiValueLineSpacing == CellSpace);
 #endif
-#if DEBUG_ && WPF && !SILVERLIGHT
+#if DEBUG_ && WPF
             int wpfValueLineSpacing = (int)Math.Round(Family.LineSpacing * _descriptor.UnitsPerEm);
             Debug.Assert(wpfValueLineSpacing == CellSpace);
 #endif

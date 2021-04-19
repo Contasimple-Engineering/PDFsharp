@@ -54,9 +54,7 @@ using SysRect = System.Windows.Rect;
 using SysMatrix = System.Windows.Media.Matrix;
 using WpfBrush = System.Windows.Media.Brush;
 using WpfPen = System.Windows.Media.Pen;
-#if !SILVERLIGHT
 using WpfBrushes = System.Windows.Media.Brushes;
-#endif
 #endif
 using PdfSharp.Pdf;
 using PdfSharp.Drawing.Pdf;
@@ -148,7 +146,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
         }
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         /// <summary>
         /// Initializes a new instance of the XGraphics class.
         /// </summary>
@@ -216,7 +214,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
             if (canvas == null)
                 canvas = new Canvas();
 
-#if !SILVERLIGHT
             // Create DrawingVisual as container for the content of the page.
             _dv = new DrawingVisual();
             // Create a host that shows the visual.
@@ -233,9 +230,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
             ////////brush.Viewport=new Rect(new Point(), (Size)size);
             //////brush.AutoLayoutContent = true;
             //////canvas.Background = brush;
-#else
-            _dc = new AgDrawingContext(canvas);
-#endif
 
             _gsStack = new GraphicsStateStack(this);
             TargetContext = XGraphicTargetContext.WPF;
@@ -459,7 +453,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #endif
 #if WPF && !GDI
             TargetContext = XGraphicTargetContext.WPF;
-#if !SILVERLIGHT
             // If form.Owner is null create a meta file.
             if (form.Owner == null)
             {
@@ -476,10 +469,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
                 _renderer = new PdfSharp.Drawing.Pdf.XGraphicsPdfRenderer(form, this);
             _pageSize = form.Size;
             Initialize();
-#else
-            throw new NotImplementedException(); // AGHACK
-            //Initialize();
-#endif
 #endif
         }
 
@@ -546,7 +535,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
         //}
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         /// <summary>
         /// Creates a new instance of the XGraphics class from a System.Windows.Media.DrawingContext object.
         /// </summary>
@@ -761,14 +750,8 @@ namespace PdfSharp.Drawing  // #??? Clean up
                     }
                     if (!matrix.IsIdentity)
                     {
-#if !SILVERLIGHT
                         MatrixTransform transform = new MatrixTransform((SysMatrix)matrix);
                         _dc.PushTransform(transform);
-#else
-                        MatrixTransform transform2 = new MatrixTransform();
-                        transform2.Matrix = (SysMatrix)matrix;
-                        _dc.PushTransform(transform2);
-#endif
                     }
                 }
             }
@@ -827,13 +810,11 @@ namespace PdfSharp.Drawing  // #??? Clean up
                 if (_dc != null)
                 {
                     _dc.Close();
-#if !SILVERLIGHT
                     // Free resources. Only needed when running on a server, but does no harm with desktop applications.
                     // Needed on server, but causes harm with WPF desktop application. So now what?
                     //_dc.Dispatcher.InvokeShutdown();
 
                     _dv = null;
-#endif
                 }
 #endif
                 _drawGraphics = false;
@@ -1078,16 +1059,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #if WPF
                 if (TargetContext == XGraphicTargetContext.WPF)
                 {
-#if !SILVERLIGHT
                     PolyLineSegment seg = new PolyLineSegment(XGraphics.MakePointArray(points), true);
-#else
-                    Point[] pts = XGraphics.MakePointArray(points);
-                    PointCollection collection = new PointCollection();
-                    foreach (Point point in pts)
-                        collection.Add(point);
-                    PolyLineSegment seg = new PolyLineSegment();
-                    seg.Points = collection;
-#endif
                     PathFigure figure = new PathFigure();
                     figure.IsFilled = false;
                     figure.StartPoint = new SysPoint(points[0].X, points[0].Y);
@@ -1193,14 +1165,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #if WPF
                 if (TargetContext == XGraphicTargetContext.WPF)
                 {
-#if !SILVERLIGHT
                     BezierSegment seg = new BezierSegment(new SysPoint(x2, y2), new SysPoint(x3, y3), new SysPoint(x4, y4), true);
-#else
-                    BezierSegment seg = new BezierSegment();
-                    seg.Point1 = new SysPoint(x2, y2);
-                    seg.Point2 = new SysPoint(x3, y3);
-                    seg.Point3 = new SysPoint(x4, y4);
-#endif
                     PathFigure figure = new PathFigure();
                     figure.StartPoint = new SysPoint(x1, y1);
                     figure.Segments.Add(seg);
@@ -1283,17 +1248,10 @@ namespace PdfSharp.Drawing  // #??? Clean up
                     figure.StartPoint = new SysPoint(points[0].X, points[0].Y);
                     for (int idx = 1; idx < count; idx += 3)
                     {
-#if !SILVERLIGHT
                         BezierSegment seg = new BezierSegment(
                             new SysPoint(points[idx].X, points[idx].Y),
                             new SysPoint(points[idx + 1].X, points[idx + 1].Y),
                             new SysPoint(points[idx + 2].X, points[idx + 2].Y), true);
-#else
-                        BezierSegment seg = new BezierSegment();
-                        seg.Point1 = new SysPoint(points[idx].X, points[idx].Y);
-                        seg.Point2 = new SysPoint(points[idx + 1].X, points[idx + 1].Y);
-                        seg.Point3 = new SysPoint(points[idx + 2].X, points[idx + 2].Y);
-#endif
                         figure.Segments.Add(seg);
                     }
                     PathGeometry geo = new PathGeometry();
@@ -2771,11 +2729,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
                     ArcSegment arc = GeometryHelper.CreateArcSegment(x, y, width, height, startAngle, sweepAngle, out startArc);
                     PathFigure figure = new PathFigure();
                     figure.StartPoint = center;
-#if !SILVERLIGHT
                     LineSegment seg = new LineSegment(startArc, true);
-#else
-                    LineSegment seg = new LineSegment { Point = startArc };
-#endif
                     figure.Segments.Add(seg);
                     figure.Segments.Add(arc);
                     figure.IsClosed = true;
@@ -3413,7 +3367,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #if WPF
                 if (TargetContext == XGraphicTargetContext.WPF)
                 {
-#if !SILVERLIGHT
                     double x = layoutRectangle.X;
                     double y = layoutRectangle.Y;
 
@@ -3518,9 +3471,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 
                     //_dc.DrawText(formattedText, layoutRectangle.Location.ToPoint());
                     _dc.DrawText(formattedText, new SysPoint(x, y));
-#else
-                    _dc.DrawString(this, text, font, brush, layoutRectangle, format);
-#endif
                 }
 #endif
             }
@@ -3566,7 +3516,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
             return FontHelper.MeasureString(text, font, XStringFormats.Default);
 #endif
 #if WPF && !GDI
-#if !SILVERLIGHT
 #if DEBUG
             FormattedText formattedText = FontHelper.CreateFormattedText(text, font.WpfTypeface, font.Size, WpfBrushes.Black);
             XSize size1 = FontHelper.MeasureString(text, font, null);
@@ -3575,11 +3524,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
             return size1;
 #else
             // Same as above, but without code needed for Debug.Assert.
-            XSize size1 = FontHelper.MeasureString(text, font, null);
-            return size1;
-#endif
-#else
-            // Use the WPF code also for Silverlight.
             XSize size1 = FontHelper.MeasureString(text, font, null);
             return size1;
 #endif
@@ -4038,13 +3982,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
                 double y = rect.Y;
                 double width = rect.Width;
                 double height = rect.Height;
-#if !SILVERLIGHT
                 WpfPen pen = new WpfPen(WpfBrushes.Red, 1);
-#else
-                WpfPen pen = new WpfPen();
-                pen.Brush = new SolidColorBrush(Colors.Red);
-                pen.Thickness = 1;
-#endif
                 _dc.DrawRectangle(null, pen, new Rect(x, y, width, height));
                 _dc.DrawLine(pen, new SysPoint(x, y), new SysPoint(x + width, y + height));
                 _dc.DrawLine(pen, new SysPoint(x + width, y), new SysPoint(x, y + height));
@@ -4671,12 +4609,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
 #if WPF
             if (TargetContext == XGraphicTargetContext.WPF)
             {
-#if !SILVERLIGHT
                 MatrixTransform mt = new MatrixTransform(transform.ToWpfMatrix());
-#else
-                MatrixTransform mt = new MatrixTransform();
-                mt.Matrix = transform.ToWpfMatrix();
-#endif
                 if (order == XMatrixOrder.Append)
                     mt = (MatrixTransform)mt.Inverse;
                 _gsStack.Current.PushTransform(mt);
@@ -5033,12 +4966,8 @@ namespace PdfSharp.Drawing  // #??? Clean up
         /// <summary>
         /// Always defined System.Drawing.Graphics object. Used as 'query context' for PDF pages.
         /// </summary>
-#if !SILVERLIGHT
         DrawingVisual _dv;
         internal DrawingContext _dc;
-#else
-        internal AgDrawingContext _dc;
-#endif
 #endif
 
         /// <summary>

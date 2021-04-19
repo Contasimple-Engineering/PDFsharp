@@ -144,15 +144,11 @@ namespace PdfSharp.Drawing
                     fontFamily = XFontFamily.GetOrCreateFromGdi(gdiFont);
 #endif
 #if WPF
-#if !SILVERLIGHT
                     // Reuse WPF font family created from platform font resolver.
                     wpfFontFamily = platformFontResolverInfo.WpfFontFamily;
                     wpfTypeface = platformFontResolverInfo.WpfTypeface;
                     wpfGlyphTypeface = platformFontResolverInfo.WpfGlyphTypeface;
                     fontFamily = XFontFamily.GetOrCreateFromWpf(wpfFontFamily);
-#else
-                    fontFamily = XFontFamily.GetOrCreateFromWpf(new WpfFontFamily(familyName));
-#endif
 #endif
                 }
                 else
@@ -209,7 +205,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         public static XGlyphTypeface GetOrCreateFromWpf(WpfTypeface wpfTypeface)
         {
 #if DEBUG
@@ -440,7 +436,7 @@ namespace PdfSharp.Drawing
             return key;
         }
 #endif
-#if WPF && !SILVERLIGHT
+#if WPF
         internal static string ComputeKey(WpfGlyphTypeface wpfGlyphTypeface)
         {
             string name1 = wpfGlyphTypeface.DesignerNames[FontHelper.CultureInfoEnUs];

@@ -173,7 +173,7 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if WPF && !SILVERLIGHT
+#if WPF
         internal static XFontSource GetOrCreateFromWpf(string typefaceKey, WpfGlyphTypeface wpfGlyphTypeface)
         {
             byte[] bytes = ReadFontBytesFromWpf(wpfGlyphTypeface);

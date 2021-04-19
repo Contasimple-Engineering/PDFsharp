@@ -332,7 +332,6 @@ namespace PdfSharp.Drawing
 #if WPF
         internal WpfPen RealizeWpfPen()
         {
-#if !SILVERLIGHT
             if (_dirty || !_dirty) // TODOWPF: XPen is frozen by design, WPF Pen can change
             {
                 //if (_wpfPen == null)
@@ -381,11 +380,6 @@ namespace PdfSharp.Drawing
                     }
                 }
             }
-#else
-      _wpfPen = new System.Windows.Media.Pen();
-      _wpfPen.Brush = new SolidColorBrush(_color.ToWpfColor());
-      _wpfPen.Thickness = _width;
-#endif
             return _wpfPen;
         }
 #endif
