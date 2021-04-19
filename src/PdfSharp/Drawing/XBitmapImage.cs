@@ -53,11 +53,6 @@ using PdfSharp.Internal;
 #endif
 
 #endif
-#if NETFX_CORE
-using Windows.UI.Xaml.Media.Imaging;
-using PdfSharp.Internal;
-
-#endif
 
 // WPFHACK
 #pragma warning disable 0169
@@ -85,12 +80,6 @@ namespace PdfSharp.Drawing
                 _gdiImage = new Bitmap(width, height);
             }
             finally { Lock.ExitGdiPlus(); }
-#endif
-#if WPF
-            DiagnosticsHelper.ThrowNotImplementedException("CreateBitmap");
-#endif
-#if NETFX_CORE
-            DiagnosticsHelper.ThrowNotImplementedException("CreateBitmap");
 #endif
 #if CORE || GDI && !WPF // Prevent unreachable code error
             Initialize();

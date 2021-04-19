@@ -37,18 +37,6 @@ using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFont = System.Drawing.Font;
 using GdiFontStyle = System.Drawing.FontStyle;
 #endif
-#if WPF
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Media;
-using WpfFontFamily = System.Windows.Media.FontFamily;
-using WpfTypeface = System.Windows.Media.Typeface;
-using WpfGlyphTypeface = System.Windows.Media.GlyphTypeface;
-using WpfStyleSimulations = System.Windows.Media.StyleSimulations;
-#endif
-#if UWP
-using Windows.UI.Xaml.Media;
-#endif
 using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;
@@ -184,9 +172,6 @@ namespace PdfSharp.Drawing
                 WpfFontFamily wpfFontFamily = null;
                 WpfTypeface wpfTypeface = null;
                 WpfGlyphTypeface wpfGlyphTypeface = null;
-#endif
-#if UWP
-                // Nothing to do.
 #endif
                 // Now create the font family at the first.
                 XFontFamily fontFamily;

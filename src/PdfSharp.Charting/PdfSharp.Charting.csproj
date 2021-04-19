@@ -30,12 +30,6 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\PdfSharp.Charting.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>StrongnameKey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -137,9 +131,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Messages.de.restext" />
     <EmbeddedResource Include="Resources\Messages.restext" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="StrongnameKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PdfSharp\PdfSharp.csproj">

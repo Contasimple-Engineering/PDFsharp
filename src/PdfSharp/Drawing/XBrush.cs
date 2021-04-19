@@ -35,10 +35,6 @@ using System.Drawing.Drawing2D;
 #if WPF
 using System.Windows.Media;
 #endif
-#if UWP
-using Microsoft.Graphics.Canvas.Brushes;
-using UwpColor = Windows.UI.Color;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -79,9 +75,6 @@ namespace PdfSharp.Drawing
 #endif
 #if WPF
         internal abstract System.Windows.Media.Brush RealizeWpfBrush();
-#endif
-#if UWP
-        internal abstract ICanvasBrush RealizeCanvasBrush();
 #endif
     }
 }

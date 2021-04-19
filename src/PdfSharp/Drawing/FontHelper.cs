@@ -50,10 +50,6 @@ using WpfFontFamily = System.Windows.Media.FontFamily;
 using WpfTypeface = System.Windows.Media.Typeface;
 using WpfGlyphTypeface = System.Windows.Media.GlyphTypeface;
 #endif
-#if NETFX_CORE
-using Windows.UI.Text;
-using Windows.UI.Xaml.Media;
-#endif
 using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 

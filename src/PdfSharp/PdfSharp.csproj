@@ -35,12 +35,6 @@
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Release\PdfSharp.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>StrongnameKey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -388,7 +382,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Messages.de.restext" />
     <EmbeddedResource Include="Resources\Messages.restext" />
-    <None Include="StrongnameKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SharpZipLib\ReadMe.txt" />

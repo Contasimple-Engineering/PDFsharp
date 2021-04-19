@@ -34,12 +34,6 @@ using System.ComponentModel;
 #if GDI
 using System.Drawing;
 #endif
-#if WPF
-using WpfColor = System.Windows.Media.Color;
-#endif
-#if UWP
-using UwpColor = Windows.UI.Color;
-#endif
 
 
 // ReSharper disable RedundantNameQualifier
@@ -142,12 +136,6 @@ namespace PdfSharp.Drawing
         { }
 #endif
 
-#if UWP
-        XColor(UwpColor color)
-            : this(color.A, color.R, color.G, color.B)
-        { }
-#endif
-
         internal XColor(XKnownColor knownColor)
             : this(XKnownColorTable.KnownColorToArgb(knownColor))
         { }
@@ -219,16 +207,6 @@ namespace PdfSharp.Drawing
         }
 #endif
 
-#if UWP
-        /// <summary>
-        /// Creates an XColor structure from the specified Windows.UI.Color.
-        /// </summary>
-        public static XColor FromArgb(UwpColor color)
-        {
-            return new XColor(color);
-        }
-#endif
-
         /// <summary>
         /// Creates an XColor structure from the specified alpha value and color.
         /// </summary>
@@ -254,17 +232,6 @@ namespace PdfSharp.Drawing
         /// Creates an XColor structure from the specified alpha value and color.
         /// </summary>
         public static XColor FromArgb(int alpha, WpfColor color)
-        {
-            // Cast required to use correct constructor.
-            return new XColor((byte)alpha, color.R, color.G, color.B);
-        }
-#endif
-
-#if UWP
-        /// <summary>
-        /// Creates an XColor structure from the specified alpha value and color.
-        /// </summary>
-        public static XColor FromArgb(int alpha, UwpColor color)
         {
             // Cast required to use correct constructor.
             return new XColor((byte)alpha, color.R, color.G, color.B);
@@ -382,16 +349,6 @@ namespace PdfSharp.Drawing
         public WpfColor ToWpfColor()
         {
             return WpfColor.FromArgb((byte)(_a * 255), _r, _g, _b);
-        }
-#endif
-
-#if UWP
-        ///<summary>
-        /// Creates a Windows.UI.Color object from this color.
-        /// </summary>
-        public UwpColor ToUwpColor()
-        {
-            return UwpColor.FromArgb((byte)(_a * 255), _r, _g, _b);
         }
 #endif
 
