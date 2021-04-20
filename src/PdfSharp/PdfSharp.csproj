@@ -377,7 +377,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Drawing\internal\" />
-    <Folder Include="Resources\" />
     <Folder Include="SharpZipLib\SharpZip\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

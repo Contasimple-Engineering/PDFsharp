@@ -36,7 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\PdfSharp\root\VersionInfo.cs">
-      <Link>root\VersionInfo.cs</Link>
+      <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Charting.Renderers\AreaChartRenderer.cs" />
     <Compile Include="Charting.Renderers\AreaPlotAreaRenderer.cs" />
@@ -129,14 +129,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Messages.de.restext" />
-    <EmbeddedResource Include="Resources\Messages.restext" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\PdfSharp\PdfSharp.csproj">
       <Project>{5a6055bc-bf86-4fdd-9f62-0109db7a303b}</Project>
       <Name>PdfSharp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

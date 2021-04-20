@@ -50,5 +50,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture(PdfSharp.ProductVersionInfo.Culture)]
 
 [assembly: ComVisible(false)]
-//[assembly: AssemblyDelaySign(false)]
-//[assembly: AssemblyKeyName("")]
