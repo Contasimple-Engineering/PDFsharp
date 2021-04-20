@@ -63,6 +63,9 @@ namespace PdfSharp.Pdf
         public PdfDocument()
         {
             //PdfDocument.Gob.AttatchDocument(Handle);
+#if NETSTANDARD2_0
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+#endif
 
             _creation = DateTime.Now;
             _state = DocumentState.Created;
@@ -80,6 +83,9 @@ namespace PdfSharp.Pdf
         public PdfDocument(string filename)
         {
             //PdfDocument.Gob.AttatchDocument(Handle);
+#if NETSTANDARD2_0
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+#endif
 
             _creation = DateTime.Now;
             _state = DocumentState.Created;
@@ -99,6 +105,9 @@ namespace PdfSharp.Pdf
         public PdfDocument(Stream outputStream)
         {
             //PdfDocument.Gob.AttatchDocument(Handle);
+#if NETSTANDARD2_0
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+#endif
 
             _creation = DateTime.Now;
             _state = DocumentState.Created;
@@ -111,6 +120,9 @@ namespace PdfSharp.Pdf
         internal PdfDocument(Lexer lexer)
         {
             //PdfDocument.Gob.AttatchDocument(Handle);
+#if NETSTANDARD2_0
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+#endif
 
             _creation = DateTime.Now;
             _state = DocumentState.Imported;

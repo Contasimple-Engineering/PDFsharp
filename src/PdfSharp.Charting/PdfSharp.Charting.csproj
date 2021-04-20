@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net20</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6F98A822-41B0-4C7A-85A6-E95C1D3E88EF}</ProjectGuid>
@@ -37,6 +37,10 @@
     <Compile Include="..\PdfSharp\root\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+	<PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PdfSharp\PdfSharp.csproj" />
