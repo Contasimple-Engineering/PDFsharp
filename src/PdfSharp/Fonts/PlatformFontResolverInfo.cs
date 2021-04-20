@@ -27,11 +27,8 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if CORE
 using System.Drawing;
 using GdiFont = System.Drawing.Font;
-
-#endif
 
 namespace PdfSharp.Fonts
 {
@@ -40,20 +37,16 @@ namespace PdfSharp.Fonts
     /// </summary>
     internal class PlatformFontResolverInfo : FontResolverInfo
     {
-#if CORE
         public PlatformFontResolverInfo(string faceName, bool mustSimulateBold, bool mustSimulateItalic, GdiFont gdiFont)
             : base(faceName, mustSimulateBold, mustSimulateItalic)
         {
             _gdiFont = gdiFont;
         }
-#endif
 
-#if CORE
         public Font GdiFont
         {
             get { return _gdiFont; }
         }
         readonly Font _gdiFont;
-#endif
     }
 }

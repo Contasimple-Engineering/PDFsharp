@@ -223,9 +223,6 @@ namespace PdfSharp
         /// The technology tag of the product:
         /// (none) Pure .NET
         /// </summary>
-#if CORE
-        // .NET without
-        public const string Technology = "";  // no extension
-#endif
+        public const string Technology = "";
     }
 }

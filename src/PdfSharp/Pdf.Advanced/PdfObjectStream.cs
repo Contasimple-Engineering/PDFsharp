@@ -48,7 +48,7 @@ namespace PdfSharp.Pdf.Advanced
         public PdfObjectStream(PdfDocument document)
             : base(document)
         {
-#if DEBUG && CORE
+#if DEBUG
             if (Internal.PdfDiagnostics.TraceObjectStreams)
             {
                 Debug.WriteLine("PdfObjectStream(document) created.");
@@ -69,7 +69,7 @@ namespace PdfSharp.Pdf.Advanced
             Parser parser = new Parser(null, new MemoryStream(Stream.Value));
             _header = parser.ReadObjectStreamHeader(n, first);
 
-#if DEBUG && CORE
+#if DEBUG
             if (Internal.PdfDiagnostics.TraceObjectStreams)
             {
                 Debug.WriteLine(String.Format("PdfObjectStream(document) created. Header item count: {0}", _header.GetLength(0)));
@@ -163,7 +163,7 @@ namespace PdfSharp.Pdf.Advanced
         }
     }
 
-#if DEBUG && CORE
+#if DEBUG
     static class ObjectStreamDiagnostics
     {
         public static void AddObjectStreamXRef()

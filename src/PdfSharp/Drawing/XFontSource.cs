@@ -33,10 +33,8 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using PdfSharp.Fonts;
-#if CORE
 using GdiFont = System.Drawing.Font;
 using GdiFontStyle = System.Drawing.FontStyle;
-#endif
 using PdfSharp.Internal;
 using PdfSharp.Fonts.OpenType;
 
@@ -82,7 +80,6 @@ namespace PdfSharp.Drawing
             return fontSource;
         }
 
-#if CORE
         internal static XFontSource GetOrCreateFromGdi(string typefaceKey, GdiFont gdiFont)
         {
             byte[] bytes = ReadFontBytesFromGdi(gdiFont);
@@ -99,33 +96,9 @@ namespace PdfSharp.Drawing
             //Debug.Assert(error == 0);
 
             IntPtr hfont = gdiFont.ToHfont();
-#if true
+
             IntPtr hdc = NativeMethods.GetDC(IntPtr.Zero);
-#else
-            NativeMethods.LOGFONT logFont = new NativeMethods.LOGFONT();
-            logFont.lfHeight = 30;
-            logFont.lfWidth = 0;
-            logFont.lfEscapement = 0;
-            logFont.lfOrientation = 0;
-            logFont.lfWeight = 400;
-            logFont.lfItalic = 0;
-            logFont.lfUnderline = 0;
-            logFont.lfStrikeOut = 0;
-            logFont.lfCharSet = 0;
-            logFont.lfOutPrecision = 0;
-            logFont.lfClipPrecision = 0;
-            logFont.lfQuality = 0;
-            logFont.lfPitchAndFamily = 0;
-            logFont.lfFaceName = "Arial";
 
-            gdiFont.ToLogFont(logFont);
-
-            hfont = NativeMethods.CreateFontIndirect(logFont);
-
-
-            // IntPtr hdc = NativeMethods.CreateDC("DISPLAY", null, null, IntPtr.Zero);
-            IntPtr hdc = NativeMethods.CreateCompatibleDC(IntPtr.Zero);
-#endif
             error = Marshal.GetLastWin32Error();
             //Debug.Assert(error == 0);
 
@@ -163,7 +136,6 @@ namespace PdfSharp.Drawing
 
             return bytes;
         }
-#endif
 
         static XFontSource GetOrCreateFrom(string typefaceKey, byte[] fontBytes)
         {

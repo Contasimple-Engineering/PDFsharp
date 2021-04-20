@@ -27,9 +27,6 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if CORE
-#endif
-
 using System.Diagnostics;
 using PdfSharp.Internal;
 
@@ -50,14 +47,12 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if (CORE_WITH_GDI)
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Width;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -68,14 +63,12 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if (CORE_WITH_GDI)
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Height;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
     }

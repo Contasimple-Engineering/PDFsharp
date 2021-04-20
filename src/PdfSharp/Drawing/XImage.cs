@@ -31,9 +31,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using PdfSharp.Pdf;
-#if CORE
 using System.Drawing;
-#endif
 using PdfSharp.Drawing.Internal;
 using PdfSharp.Internal;
 using PdfSharp.Pdf.IO;
@@ -77,7 +75,6 @@ namespace PdfSharp.Drawing
         protected XImage()
         { }
 
-#if CORE
         /// <summary>
         /// Initializes a new instance of the <see cref="XImage"/> class from an image read by ImageImporter.
         /// </summary>
@@ -91,7 +88,6 @@ namespace PdfSharp.Drawing
             _importedImage = image;
             Initialize();
         }
-#endif
 
         // Useful stuff here: http://stackoverflow.com/questions/350027/setting-wpf-image-source-in-code
         XImage(string path)
@@ -107,14 +103,12 @@ namespace PdfSharp.Drawing
             //Bits = new byte[BitsLength];
             //file.Read(Bits, 0, BitsLength);
             //file.Close();
-#if CORE_WITH_GDI
             try
             {
                 Lock.EnterGdiPlus();
                 _gdiImage = Image.FromFile(path);
             }
             finally { Lock.ExitGdiPlus(); }
-#endif
 
 #if true_
             float vres = image.VerticalResolution;
@@ -135,8 +129,6 @@ namespace PdfSharp.Drawing
             _path = "*" + Guid.NewGuid().ToString("B");
 
             // TODO: Create a fingerprint of the bytes in the stream to identify identical images.
-            // TODO: Merge code for CORE_WITH_GDI and GDI.
-#if CORE_WITH_GDI
             // Create a GDI+ image.
             try
             {
@@ -144,7 +136,6 @@ namespace PdfSharp.Drawing
                 _gdiImage = Image.FromStream(stream);
             }
             finally { Lock.ExitGdiPlus(); }
-#endif
 
 #if true_
             float vres = image.VerticalResolution;
@@ -187,7 +178,6 @@ namespace PdfSharp.Drawing
         }
 
 #if DEBUG
-#if CORE
         /// <summary>
         /// Creates an image from the specified file.
         /// </summary>
@@ -238,10 +228,8 @@ namespace PdfSharp.Drawing
             return image;
         }
 #endif
-#endif
 
 #if DEBUG
-#if CORE
         /// <summary>
         /// Creates an image.
         /// </summary>
@@ -254,7 +242,6 @@ namespace PdfSharp.Drawing
 
             return new XImage(image);
         }
-#endif
 #endif
 
         /// <summary>
@@ -282,7 +269,6 @@ namespace PdfSharp.Drawing
 
         internal void Initialize()
         {
-#if CORE
             if (_importedImage != null)
             {
                 ImportedImageJpeg iiJpeg = _importedImage as ImportedImageJpeg;
@@ -293,9 +279,7 @@ namespace PdfSharp.Drawing
                     _format = XImageFormat.Png;
                 return;
             }
-#endif
 
-#if CORE_WITH_GDI
             if (_gdiImage != null)
             {
                 // ImageFormat has no overridden Equals function.
@@ -345,7 +329,6 @@ namespace PdfSharp.Drawing
                 }
                 return;
             }
-#endif
         }
 
         /// <summary>
@@ -365,14 +348,11 @@ namespace PdfSharp.Drawing
             if (!_disposed)
                 _disposed = true;
 
-#if CORE
             //if (_importedImage != null)
             {
                 _importedImage = null;
             }
-#endif
 
-#if CORE_WITH_GDI
             if (_gdiImage != null)
             {
                 try
@@ -383,7 +363,6 @@ namespace PdfSharp.Drawing
                 }
                 finally { Lock.ExitGdiPlus(); }
             }
-#endif
         }
         bool _disposed;
 
@@ -395,21 +374,17 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE
                 if (_importedImage != null)
                 {
                     return _importedImage.Information.Width;
                 }
-#endif
 
-#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Width;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -421,25 +396,20 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE_WITH_GDI
                 if (_importedImage != null)
                 {
                     return _importedImage.Information.Height;
                 }
-#endif
 
-#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Height;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
-#if CORE
         /// <summary>
         /// The factor for conversion from DPM to PointWidth or PointHeight.
         /// 72 points per inch, 1000 mm per meter, 25.4 mm per inch => 72 * 1000 / 25.4.
@@ -451,7 +421,6 @@ namespace PdfSharp.Drawing
         /// 1000 mm per meter, 25.4 mm per inch => 1000 / 25.4.
         /// </summary>
         private const decimal FactorDPM = 1000 / 25.4m;
-#endif
 
         /// <summary>
         /// Gets the width of the image in point.
@@ -460,7 +429,6 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE
                 if (_importedImage != null)
                 {
                     if (_importedImage.Information.HorizontalDPM > 0)
@@ -470,16 +438,13 @@ namespace PdfSharp.Drawing
                     // Assume 72 DPI if information not available.
                     return _importedImage.Information.Width;
                 }
-#endif
 
-#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Width * 72 / _gdiImage.HorizontalResolution;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -490,7 +455,6 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE
                 if (_importedImage != null)
                 {
                     if (_importedImage.Information.VerticalDPM > 0)
@@ -500,16 +464,13 @@ namespace PdfSharp.Drawing
                     // Assume 72 DPI if information not available.
                     return _importedImage.Information.Width;
                 }
-#endif
 
-#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Height * 72 / _gdiImage.HorizontalResolution;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -520,19 +481,15 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE
                 if (_importedImage != null)
                     return (int)_importedImage.Information.Width;
-#endif
 
-#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Width;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -543,19 +500,15 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE
                 if (_importedImage != null)
                     return (int)_importedImage.Information.Height;
-#endif
 
-#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.Height;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -574,7 +527,6 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE
                 if (_importedImage != null)
                 {
                     if (_importedImage.Information.HorizontalDPI > 0)
@@ -583,16 +535,13 @@ namespace PdfSharp.Drawing
                         return (double)(_importedImage.Information.HorizontalDPM / FactorDPM);
                     return 72;
                 }
-#endif
 
-#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.HorizontalResolution;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -603,7 +552,6 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE
                 if (_importedImage != null)
                 {
                     if (_importedImage.Information.VerticalDPI > 0)
@@ -612,16 +560,13 @@ namespace PdfSharp.Drawing
                         return (double)(_importedImage.Information.VerticalDPM / FactorDPM);
                     return 72;
                 }
-#endif
 
-#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
                     return _gdiImage.VerticalResolution;
                 }
                 finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -694,13 +639,9 @@ namespace PdfSharp.Drawing
         }
         XGraphics _associatedGraphics;
 
-#if CORE
         internal ImportedImage _importedImage;
-#endif
 
-#if CORE_WITH_GDI
         internal Image _gdiImage;
-#endif
 
         /// <summary>
         /// If path starts with '*' the image is created from a stream and the path is a GUID.

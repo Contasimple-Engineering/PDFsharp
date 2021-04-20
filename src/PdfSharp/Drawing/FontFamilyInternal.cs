@@ -30,10 +30,8 @@
 using System.Diagnostics;
 using System.Globalization;
 using PdfSharp.Internal;
-#if CORE
 using System.Drawing;
 using GdiFontFamily = System.Drawing.FontFamily;
-#endif
 
 // ReSharper disable ConvertToAutoProperty
 // ReSharper disable ConvertPropertyToExpressionBody
@@ -58,22 +56,19 @@ namespace PdfSharp.Drawing
         FontFamilyInternal(string familyName, bool createPlatformObjects)
         {
             _sourceName = _name = familyName;
-#if CORE
+
             if (createPlatformObjects)
             {
                 _gdiFontFamily = new GdiFontFamily(familyName);
                 _name = _gdiFontFamily.Name;
             }
-#endif
         }
 
-#if CORE
         FontFamilyInternal(GdiFontFamily gdiFontFamily)
         {
             _sourceName = _name = gdiFontFamily.Name;
             _gdiFontFamily = gdiFontFamily;
         }
-#endif
 
         internal static FontFamilyInternal GetOrCreateFromName(string familyName, bool createPlatformObject)
         {
@@ -91,7 +86,6 @@ namespace PdfSharp.Drawing
             finally { Lock.ExitFontFactory(); }
         }
 
-#if CORE
         internal static FontFamilyInternal GetOrCreateFromGdi(GdiFontFamily gdiFontFamily)
         {
             try
@@ -103,7 +97,6 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitFontFactory(); }
         }
-#endif
 
         /// <summary>
         /// Gets the family name this family was originally created with.
@@ -124,7 +117,6 @@ namespace PdfSharp.Drawing
         }
         readonly string _name;
 
-#if CORE
         /// <summary>
         /// Gets the underlying GDI+ font family object.
         /// Is null if the font was created by a font resolver.
@@ -134,7 +126,6 @@ namespace PdfSharp.Drawing
             get { return _gdiFontFamily; }
         }
         readonly GdiFontFamily _gdiFontFamily;
-#endif
 
         /// <summary>
         /// Gets the DebuggerDisplayAttribute text.

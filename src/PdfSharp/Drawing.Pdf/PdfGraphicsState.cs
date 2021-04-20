@@ -499,14 +499,12 @@ namespace PdfSharp.Drawing.Pdf
 
         void RealizeClipPath(XGraphicsPath clipPath)
         {
-#if CORE
             DiagnosticsHelper.HandleNotImplemented("RealizeClipPath");
-#endif
+
             _renderer.BeginGraphicMode();
             RealizeCtm();
-#if CORE
+
             _renderer.AppendPath(clipPath._corePath);
-#endif
             _renderer.Append(clipPath.FillMode == XFillMode.Winding ? "W n\n" : "W* n\n");
         }
 

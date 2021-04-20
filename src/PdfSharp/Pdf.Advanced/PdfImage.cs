@@ -31,9 +31,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-#if CORE
 using System.Drawing.Imaging;
-#endif
 using PdfSharp.Drawing;
 using PdfSharp.Drawing.Internal;
 using PdfSharp.Pdf.Filters;
@@ -117,16 +115,13 @@ namespace PdfSharp.Pdf.Advanced
             byte[] imageBits = null;
             int streamLength = 0;
 
-#if CORE
             if (_image._importedImage != null)
             {
                 ImageDataDct idd = (ImageDataDct)_image._importedImage.ImageData;
                 imageBits = idd.Data;
                 streamLength = idd.Length;
             }
-#endif
 
-#if CORE
             if (_image._importedImage == null)
             {
                 if (!_image._path.StartsWith("*"))
@@ -165,11 +160,9 @@ namespace PdfSharp.Pdf.Advanced
                     }
                     else
                     {
-#if CORE_WITH_GDI
                         // No stream, no filename, get image data.
                         // Save the image to a memory stream.
                         _image._gdiImage.Save(memory, ImageFormat.Jpeg);
-#endif
                     }
                 }
 
@@ -178,7 +171,6 @@ namespace PdfSharp.Pdf.Advanced
                     Debug.Assert(false, "Internal error? JPEG image, but file not found!");
                 }
             }
-#endif
             // THHO4THHO Use ImageImporterJPEG here to avoid redundant code.
 
             if (imageBits == null)
@@ -220,7 +212,6 @@ namespace PdfSharp.Pdf.Advanced
             Elements[Keys.Height] = new PdfInteger(_image.PixelHeight);
             Elements[Keys.BitsPerComponent] = new PdfInteger(8);
 
-#if CORE
             if (_image._importedImage != null)
             {
                 if (_image._importedImage.Information.ImageFormat == ImageInformation.ImageFormats.JPEGCMYK ||
@@ -240,8 +231,7 @@ namespace PdfSharp.Pdf.Advanced
                     Elements[Keys.ColorSpace] = new PdfName("/DeviceRGB");
                 }
             }
-#endif
-#if CORE_WITH_GDI
+
             if (_image._importedImage == null)
             {
                 if ((_image._gdiImage.Flags & ((int)ImageFlags.ColorSpaceCmyk | (int)ImageFlags.ColorSpaceYcck)) != 0)
@@ -260,7 +250,6 @@ namespace PdfSharp.Pdf.Advanced
                     Elements[Keys.ColorSpace] = new PdfName("/DeviceRGB");
                 }
             }
-#endif
         }
 
         /// <summary>
@@ -268,7 +257,6 @@ namespace PdfSharp.Pdf.Advanced
         /// </summary>
         void InitializeNonJpeg()
         {
-#if CORE
             if (_image._importedImage != null)
             {
                 switch (_image._importedImage.Information.ImageFormat)
@@ -294,9 +282,7 @@ namespace PdfSharp.Pdf.Advanced
                 }
                 return;
             }
-#endif
 
-#if CORE_WITH_GDI
             switch (_image._gdiImage.PixelFormat)
             {
                 case PixelFormat.Format24bppRgb:
@@ -330,10 +316,8 @@ namespace PdfSharp.Pdf.Advanced
 #endif
                     throw new NotImplementedException("Image format not supported.");
             }
-#endif
         }
 
-#if CORE
         private void CreateIndexedMemoryBitmap(int bits)
         {
             ImageDataBitmap idb = (ImageDataBitmap)_image._importedImage.ImageData;
@@ -541,7 +525,6 @@ namespace PdfSharp.Pdf.Advanced
             if (_image.Interpolate)
                 Elements[Keys.Interpolate] = PdfBoolean.True;
         }
-#endif
 
         private static int ReadWord(byte[] ab, int offset)
         {
@@ -566,9 +549,7 @@ namespace PdfSharp.Pdf.Advanced
 #endif
             int pdfVersion = Owner.Version;
             MemoryStream memory = new MemoryStream();
-#if CORE_WITH_GDI
             _image._gdiImage.Save(memory, ImageFormat.Bmp);
-#endif
             // THHO4THHO Use ImageImporterBMP here to avoid redundant code.
 
             int streamLength = (int)memory.Length;
@@ -739,9 +720,7 @@ namespace PdfSharp.Pdf.Advanced
             bool segmentedColorMask = false;
 
             MemoryStream memory = new MemoryStream();
-#if CORE_WITH_GDI
             _image._gdiImage.Save(memory, ImageFormat.Bmp);
-#endif
             // THHO4THHO Use ImageImporterBMP here to avoid redundant code.
 
             int streamLength = (int)memory.Length;

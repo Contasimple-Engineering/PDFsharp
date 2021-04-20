@@ -196,7 +196,7 @@ namespace PdfSharp.Pdf
             }
         }
 
-#if (CORE) && true_
+#if true_
         public class A
         {
             public string _a;

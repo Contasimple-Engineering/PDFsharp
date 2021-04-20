@@ -31,13 +31,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-#if CORE
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFont = System.Drawing.Font;
 using GdiFontStyle = System.Drawing.FontStyle;
-#endif
 using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 
@@ -96,19 +94,16 @@ namespace PdfSharp.Drawing
             return size;
         }
 
-#if CORE
         public static GdiFont CreateFont(string familyName, double emSize, GdiFontStyle style, out XFontSource fontSource)
         {
             fontSource = null;
             // ReSharper disable once JoinDeclarationAndInitializer
             GdiFont font;
 
-            // Use font resolver in CORE build. XPrivateFontCollection exists only in GDI and WPF build.
             // Create ordinary Win32 font.
             font = new GdiFont(familyName, (float)emSize, style, GraphicsUnit.World);
             return font;
         }
-#endif
 
         /// <summary>
         /// Calculates an Adler32 checksum combined with the buffer length

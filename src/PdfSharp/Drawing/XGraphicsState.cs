@@ -36,10 +36,8 @@ namespace PdfSharp.Drawing
     public sealed class XGraphicsState
     {
         // This class is simply a wrapper of InternalGraphicsState.
-#if CORE
         internal XGraphicsState()
         { }
-#endif
         internal InternalGraphicsState InternalState;
     }
 }

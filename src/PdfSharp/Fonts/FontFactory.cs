@@ -31,11 +31,9 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
-#if CORE
 using System.Drawing;
 using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFont = System.Drawing.Font;
-#endif
 using PdfSharp.Drawing;
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;

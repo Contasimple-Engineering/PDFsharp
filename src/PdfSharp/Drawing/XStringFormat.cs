@@ -28,8 +28,6 @@
 #endregion
 
 using System;
-#if CORE
-#endif
 
 namespace PdfSharp.Drawing
 {

@@ -72,7 +72,6 @@ namespace PdfSharp.Drawing.Internal
             return null;
         }
 
-#if CORE
         /// <summary>
         /// Imports the image.
         /// </summary>
@@ -85,7 +84,6 @@ namespace PdfSharp.Drawing.Internal
             }
             return ii;
         }
-#endif
 
         private readonly List<IImageImporter> _importers = new List<IImageImporter>();
     }

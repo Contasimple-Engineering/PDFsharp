@@ -90,7 +90,7 @@ namespace PdfSharp.Pdf.IO
             _lexer.Position = position;
             int objectNumber = ReadInteger();
             int generationNumber = ReadInteger();
-#if DEBUG && CORE
+#if DEBUG
             if (objectNumber == 1074)
                 GetType();
 #endif
@@ -1273,7 +1273,7 @@ namespace PdfSharp.Pdf.IO
             Debug.Assert(wsum * subsectionEntryCount == bytes.Length, "Check implementation here.");
             int testcount = subsections[0][1];
             int[] currentSubsection = subsections[0];
-#if DEBUG && CORE
+#if DEBUG
             if (PdfDiagnostics.TraceXrefStreams)
             {
                 for (int idx = 0; idx < testcount; idx++)

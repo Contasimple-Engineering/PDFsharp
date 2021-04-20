@@ -34,7 +34,6 @@ using System.Runtime.InteropServices;
 
 namespace PdfSharp.Internal
 {
-#if CORE
     /// <summary>
     /// Required native Win32 calls.
     /// </summary>
@@ -151,5 +150,4 @@ namespace PdfSharp.Internal
         [DllImport("gdi32.dll")]
         public static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
     }
-#endif
 }

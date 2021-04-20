@@ -31,9 +31,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using PdfSharp.Drawing;
-#if CORE
 using System.Drawing;
-#endif
 
 namespace PdfSharp.Fonts
 {

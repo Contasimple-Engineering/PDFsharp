@@ -377,11 +377,9 @@ namespace PdfSharp.Drawing.Pdf
             if (pen == null && brush == null)
                 throw new ArgumentNullException("pen");
 
-#if CORE
             Realize(pen, brush);
             AppendPath(path._corePath);
             AppendStrokeFill(pen, brush, path.FillMode, false);
-#endif
         }
 
         // ----- DrawString ---------------------------------------------------------------------------
@@ -1111,60 +1109,6 @@ namespace PdfSharp.Drawing.Pdf
                 pt2.X, pt2.Y);
         }
 
-#if CORE_
-        /// <summary>
-        /// Appends the content of a GraphicsPath object.
-        /// </summary>
-        internal void AppendPath(GraphicsPath path)
-        {
-            int count = path.PointCount;
-            if (count == 0)
-                return;
-            PointF[] points = path.PathPoints;
-            Byte[] types = path.PathTypes;
-
-            for (int idx = 0; idx < count; idx++)
-            {
-                // From GDI+ documentation:
-                const byte PathPointTypeStart = 0; // move
-                const byte PathPointTypeLine = 1; // line
-                const byte PathPointTypeBezier = 3; // default Bezier (= cubic Bezier)
-                const byte PathPointTypePathTypeMask = 0x07; // type mask (lowest 3 bits).
-                //const byte PathPointTypeDashMode = 0x10; // currently in dash mode.
-                //const byte PathPointTypePathMarker = 0x20; // a marker for the path.
-                const byte PathPointTypeCloseSubpath = 0x80; // closed flag
-
-                byte type = types[idx];
-                switch (type & PathPointTypePathTypeMask)
-                {
-                    case PathPointTypeStart:
-                        //PDF_moveto(pdf, points[idx].X, points[idx].Y);
-                        AppendFormat("{0:" + format + "} {1:" + format + "} m\n", points[idx].X, points[idx].Y);
-                        break;
-
-                    case PathPointTypeLine:
-                        //PDF_lineto(pdf, points[idx].X, points[idx].Y);
-                        AppendFormat("{0:" + format + "} {1:" + format + "} l\n", points[idx].X, points[idx].Y);
-                        if ((type & PathPointTypeCloseSubpath) != 0)
-                            Append("h\n");
-                        break;
-
-                    case PathPointTypeBezier:
-                        Debug.Assert(idx + 2 < count);
-                        //PDF_curveto(pdf, points[idx].X, points[idx].Y, 
-                        //                 points[idx + 1].X, points[idx + 1].Y, 
-                        //                 points[idx + 2].X, points[idx + 2].Y);
-                        AppendFormat("{0:" + format + "} {1:" + format + "} {2:" + format + "} {3:" + format + "} {4:" + format + "} {5:" + format + "} c\n", points[idx].X, points[idx].Y,
-                            points[++idx].X, points[idx].Y, points[++idx].X, points[idx].Y);
-                        if ((types[idx] & PathPointTypeCloseSubpath) != 0)
-                            Append("h\n");
-                        break;
-                }
-            }
-        }
-#endif
-
-#if CORE
         /// <summary>
         /// Appends the content of a GraphicsPath object.
         /// </summary>
@@ -1217,9 +1161,7 @@ namespace PdfSharp.Drawing.Pdf
             //    }
             //}
         }
-#endif
 
-#if CORE
         void AppendPath(XPoint[] points, Byte[] types)
         {
             const string format = Config.SignificantFigures4;
@@ -1268,7 +1210,6 @@ namespace PdfSharp.Drawing.Pdf
                 }
             }
         }
-#endif
 
         internal void Append(string value)
         {
@@ -1686,7 +1627,6 @@ namespace PdfSharp.Drawing.Pdf
         }
         #endregion
 
-#if CORE
         [Conditional("DEBUG")]
         void DumpPathData(XPoint[] points, byte[] types)
         {
@@ -1697,7 +1637,6 @@ namespace PdfSharp.Drawing.Pdf
                 Debug.WriteLine(info, "PathData");
             }
         }
-#endif
 
         /// <summary>
         /// Gets the owning PdfDocument of this page or form.

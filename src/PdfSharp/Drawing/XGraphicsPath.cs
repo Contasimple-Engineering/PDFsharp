@@ -43,9 +43,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         public XGraphicsPath()
         {
-#if CORE
             _corePath = new CoreGraphicsPath();
-#endif
         }
 
         /// <summary>
@@ -54,9 +52,9 @@ namespace PdfSharp.Drawing
         public XGraphicsPath Clone()
         {
             XGraphicsPath path = (XGraphicsPath)MemberwiseClone();
-#if CORE
+
             _corePath = new CoreGraphicsPath(_corePath);
-#endif
+
             return path;
         }
 
@@ -75,10 +73,8 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddLine(double x1, double y1, double x2, double y2)
         {
-#if CORE
             _corePath.MoveOrLineTo(x1, y1);
             _corePath.LineTo(x2, y2, false);
-#endif
         }
 
         // ----- AddLines -----------------------------------------------------------------------------
@@ -94,11 +90,10 @@ namespace PdfSharp.Drawing
             int count = points.Length;
             if (count == 0)
                 return;
-#if CORE
+
             _corePath.MoveOrLineTo(points[0].X, points[0].Y);
             for (int idx = 1; idx < count; idx++)
                 _corePath.LineTo(points[idx].X, points[idx].Y, false);
-#endif
         }
 
         // ----- AddBezier ----------------------------------------------------------------------------
@@ -116,10 +111,8 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddBezier(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
         {
-#if CORE
             _corePath.MoveOrLineTo(x1, y1);
             _corePath.BezierTo(x2, y2, x3, y3, x4, y4, false);
-#endif
         }
 
         // ----- AddBeziers ---------------------------------------------------------------------------
@@ -140,14 +133,12 @@ namespace PdfSharp.Drawing
                 throw new ArgumentException("Invalid number of points for bezier curve. Number must fulfil 4+3n.",
                     "points");
 
-#if CORE
             _corePath.MoveOrLineTo(points[0].X, points[0].Y);
             for (int idx = 1; idx < count; idx += 3)
             {
                 _corePath.BezierTo(points[idx].X, points[idx].Y, points[idx + 1].X, points[idx + 1].Y,
                     points[idx + 2].X, points[idx + 2].Y, false);
             }
-#endif
         }
 
         // ----- AddCurve -----------------------------------------------------------------------
@@ -168,9 +159,8 @@ namespace PdfSharp.Drawing
             int count = points.Length;
             if (count < 2)
                 throw new ArgumentException("AddCurve requires two or more points.", "points");
-#if CORE
+
             _corePath.AddCurve(points, tension);
-#endif
         }
 
         /// <summary>
@@ -178,9 +168,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddCurve(XPoint[] points, int offset, int numberOfSegments, double tension)
         {
-#if CORE
             throw new NotImplementedException("AddCurve not yet implemented.");
-#endif
         }
 
         // ----- AddArc -------------------------------------------------------------------------------
@@ -198,9 +186,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddArc(double x, double y, double width, double height, double startAngle, double sweepAngle)
         {
-#if CORE
             _corePath.AddArc(x, y, width, height, startAngle, sweepAngle);
-#endif
         }
 
         /// <summary>
@@ -208,9 +194,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddArc(XPoint point1, XPoint point2, XSize size, double rotationAngle, bool isLargeArg, XSweepDirection sweepDirection)
         {
-#if CORE
             _corePath.AddArc(point1, point2, size, rotationAngle, isLargeArg, sweepDirection);
-#endif
         }
 
         // ----- AddRectangle -------------------------------------------------------------------------
@@ -220,13 +204,11 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddRectangle(XRect rect)
         {
-#if CORE
             _corePath.MoveTo(rect.X, rect.Y);
             _corePath.LineTo(rect.X + rect.Width, rect.Y, false);
             _corePath.LineTo(rect.X + rect.Width, rect.Y + rect.Height, false);
             _corePath.LineTo(rect.X, rect.Y + rect.Height, true);
             _corePath.CloseSubpath();
-#endif
         }
 
         /// <summary>
@@ -247,9 +229,7 @@ namespace PdfSharp.Drawing
             int count = rects.Length;
             for (int idx = 0; idx < count; idx++)
             {
-#if CORE
                 AddRectangle(rects[idx]);
-#endif
             }
         }
 
@@ -260,7 +240,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddRoundedRectangle(double x, double y, double width, double height, double ellipseWidth, double ellipseHeight)
         {
-#if CORE
 #if true
             double arcWidth = ellipseWidth / 2;
             double arcHeight = ellipseHeight / 2;
@@ -302,7 +281,6 @@ namespace PdfSharp.Drawing
             AddArc((float)x, (float)y, (float)ellipseWidth, (float)ellipseHeight, 180, 90);
             CloseFigure();
 #endif
-#endif
         }
 
         // ----- AddEllipse ---------------------------------------------------------------------------
@@ -320,7 +298,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddEllipse(double x, double y, double width, double height)
         {
-#if CORE
             double w = width / 2;
             double h = height / 2;
             double xc = x + w;
@@ -331,7 +308,6 @@ namespace PdfSharp.Drawing
             _corePath.QuadrantArcTo(xc, yc, w, h, 3, true);
             _corePath.QuadrantArcTo(xc, yc, w, h, 2, true);
             _corePath.CloseSubpath();
-#endif
         }
 
         // ----- AddPolygon ---------------------------------------------------------------------------
@@ -341,7 +317,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddPolygon(XPoint[] points)
         {
-#if CORE
             int count = points.Length;
             if (count == 0)
                 return;
@@ -351,7 +326,6 @@ namespace PdfSharp.Drawing
                 _corePath.LineTo(points[idx].X, points[idx].Y, false);
             _corePath.LineTo(points[count - 1].X, points[count - 1].Y, true);
             _corePath.CloseSubpath();
-#endif
         }
 
         // ----- AddPie -------------------------------------------------------------------------------
@@ -369,9 +343,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddPie(double x, double y, double width, double height, double startAngle, double sweepAngle)
         {
-#if CORE
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddPie");
-#endif
         }
 
         // ----- AddClosedCurve ------------------------------------------------------------------------
@@ -397,9 +369,7 @@ namespace PdfSharp.Drawing
             if (count < 2)
                 throw new ArgumentException("Not enough points.", "points");
 
-#if CORE
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddClosedCurve");
-#endif
         }
 
         // ----- AddPath ------------------------------------------------------------------------------
@@ -409,9 +379,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void AddPath(XGraphicsPath path, bool connect)
         {
-#if CORE
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddPath");
-#endif
         }
 
         // ----- AddString ----------------------------------------------------------------------------
@@ -424,9 +392,7 @@ namespace PdfSharp.Drawing
         {
             try
             {
-#if CORE
                 DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddString");
-#endif
             }
             catch
             {
@@ -457,26 +423,8 @@ namespace PdfSharp.Drawing
                 return;
 
             XFont font = new XFont(family.Name, emSize, style);
-#if CORE
+
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddString");
-#endif
-#if CORE_
-            //Gfx.DrawString(text, font.Realize_GdiFont(), brush.RealizeGdiBrush(), rect,
-            //  format != null ? format.RealizeGdiStringFormat() : null);
-
-            if (family.GdiFamily == null)
-                throw new NotFiniteNumberException(PSSR.NotImplementedForFontsRetrievedWithFontResolver(family.Name));
-
-            RectangleF rect = layoutRect.ToRectangleF();
-            rect.Offset(new PointF(0, SimulateBaselineOffset(family, style, emSize, format)));
-
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddString(s, family.GdiFamily, (int)style, (float)emSize, rect, format.RealizeGdiStringFormat());
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // --------------------------------------------------------------------------------------------
@@ -486,9 +434,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void CloseFigure()
         {
-#if CORE
             _corePath.CloseSubpath();
-#endif
         }
 
         /// <summary>
@@ -496,9 +442,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void StartFigure()
         {
-#if CORE
-            // TODO: ???
-#endif
         }
 
         // --------------------------------------------------------------------------------------------
@@ -512,9 +455,6 @@ namespace PdfSharp.Drawing
             set
             {
                 _fillMode = value;
-#if CORE
-                // Nothing to do.
-#endif
             }
         }
 
@@ -527,9 +467,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void Flatten()
         {
-#if CORE
-            // Just do nothing.
-#endif
         }
 
         /// <summary>
@@ -537,9 +474,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void Flatten(XMatrix matrix)
         {
-#if CORE
-            // Just do nothing.
-#endif
         }
 
         /// <summary>
@@ -547,12 +481,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void Flatten(XMatrix matrix, double flatness)
         {
-#if CORE
-            // Just do nothing.
-#endif
-#if CORE___
-            throw new NotImplementedException("XGraphicsPath.Flatten");
-#endif
         }
 
         // --------------------------------------------------------------------------------------------
@@ -563,12 +491,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void Widen(XPen pen)
         {
-#if CORE
-            // Just do nothing.
-#endif
-#if CORE___
-            throw new NotImplementedException("XGraphicsPath.Widen");
-#endif
         }
 
         /// <summary>
@@ -577,12 +499,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void Widen(XPen pen, XMatrix matrix)
         {
-#if CORE
-            // Just do nothing.
-#endif
-#if CORE
             throw new NotImplementedException("XGraphicsPath.Widen");
-#endif
         }
 
         /// <summary>
@@ -591,12 +508,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void Widen(XPen pen, XMatrix matrix, double flatness)
         {
-#if CORE
-            // Just do nothing.
-#endif
-#if CORE__
-            throw new NotImplementedException("XGraphicsPath.Widen");
-#endif
         }
 
         /// <summary>
@@ -607,11 +518,9 @@ namespace PdfSharp.Drawing
             get { return new XGraphicsPathInternals(this); }
         }
 
-#if CORE
         /// <summary>
         /// Gets access to underlying Core graphics path.
         /// </summary>
         internal CoreGraphicsPath _corePath;
-#endif
     }
 }

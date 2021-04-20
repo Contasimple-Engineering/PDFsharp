@@ -29,13 +29,11 @@
 
 using System;
 using System.Diagnostics;
-#if CORE
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFont = System.Drawing.Font;
 using GdiFontStyle = System.Drawing.FontStyle;
-#endif
 using PdfSharp.Drawing;
 
 #pragma warning disable 1591
@@ -79,28 +77,23 @@ namespace PdfSharp.Fonts
             // It is possible that we already have the correct font source. E.g. we already have the regular typeface in cache
             // and looking now for the italic typeface, but no such font exists. In this case we get the regular font source
             // and cache again it with the italic typeface key. Furthermore in glyph typeface style simulation for italic is set.
-#if (CORE)
             GdiFont gdiFont;
             XFontSource fontSource = CreateFontSource(familyName, fontResolvingOptions, out gdiFont, typefaceKey);
-#endif
+
             // If no such font exists return null. PDFsharp will fail.
             if (fontSource == null)
                 return null;
 
             if (fontResolvingOptions.OverrideStyleSimulations)
             {
-#if (CORE)
                 // TODO: Support style simulation for GDI+ platform fonts.
                 fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, fontResolvingOptions.MustSimulateBold, fontResolvingOptions.MustSimulateItalic, gdiFont);
-#endif
             }
             else
             {
-#if (CORE)
                 bool mustSimulateBold = gdiFont.Bold && !fontSource.Fontface.os2.IsBold;
                 bool mustSimulateItalic = gdiFont.Italic && !fontSource.Fontface.os2.IsItalic;
                 fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, mustSimulateBold, mustSimulateItalic, gdiFont);
-#endif
             }
 
             FontFactory.CacheFontResolverInfo(typefaceKey, fontResolverInfo);
@@ -112,7 +105,6 @@ namespace PdfSharp.Fonts
             return fontResolverInfo;
         }
 
-#if (CORE_WITH_GDI)
         /// <summary>
         /// Create a GDI+ font and use its handle to retrieve font data using native calls.
         /// </summary>
@@ -192,6 +184,5 @@ namespace PdfSharp.Fonts
             }
             return fontSource;
         }
-#endif
     }
 }

@@ -59,10 +59,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
     /// </summary>
     public sealed class XGraphics : IDisposable
     {
-#if CORE
-        // TODO: Implement better concept of a measure context.
-#endif
-
         /// <summary>
         /// Initializes a new instance of the XGraphics class for drawing on a PDF page.
         /// </summary>
@@ -98,9 +94,8 @@ namespace PdfSharp.Drawing  // #??? Clean up
             }
             page.RenderContent = content;
 
-#if CORE
             TargetContext = XGraphicTargetContext.CORE;
-#endif
+
             _renderer = new PdfSharp.Drawing.Pdf.XGraphicsPdfRenderer(page, this, options);
             _pageSizePoints = new XSize(page.Width, page.Height);
             switch (pageUnit)
@@ -146,14 +141,13 @@ namespace PdfSharp.Drawing  // #??? Clean up
             form.AssociateGraphics(this);
 
             _gsStack = new GraphicsStateStack(this);
-#if CORE
+
             TargetContext = XGraphicTargetContext.CORE;
             _drawGraphics = false;
             if (form.Owner != null)
                 _renderer = new XGraphicsPdfRenderer(form, this);
             _pageSize = form.Size;
             Initialize();
-#endif
         }
 
         /// <summary>
@@ -162,14 +156,10 @@ namespace PdfSharp.Drawing  // #??? Clean up
         /// </summary>
         public static XGraphics CreateMeasureContext(XSize size, XGraphicsUnit pageUnit, XPageDirection pageDirection)
         {
-#if CORE
-            //throw new InvalidOperationException("No measure context in CORE build.");
             PdfDocument dummy = new PdfDocument();
             PdfPage page = dummy.AddPage();
-            //XGraphics gfx = new XGraphics(((System.Drawing.Graphics)null, size, pageUnit, pageDirection);
             XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append, pageUnit, pageDirection);
             return gfx;
-#endif
         }
 
         /// <summary>
@@ -269,9 +259,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
             XBitmapImage bmImage = image as XBitmapImage;
             if (bmImage != null)
             {
-#if CORE
                 return null;
-#endif
             }
             return null;
         }
@@ -293,10 +281,10 @@ namespace PdfSharp.Drawing  // #??? Clean up
             }
 
             XMatrix matrix = new XMatrix();
-#if CORE
+
             // Nothing to do here.
             Debug.Assert(TargetContext == XGraphicTargetContext.CORE);
-#endif
+
             if (_pageDirection != XPageDirection.Downwards)
                 matrix.Prepend(new XMatrix(1, 0, 0, -1, 0, pageHeight));
 
@@ -1304,14 +1292,8 @@ namespace PdfSharp.Drawing  // #??? Clean up
                 throw new ArgumentNullException("font");
             if (stringFormat == null)
                 throw new ArgumentNullException("stringFormat");
-#if true
+
             return FontHelper.MeasureString(text, font, stringFormat);
-#else
-#if CORE
-            XSize size = FontHelper.MeasureString(text, font, XStringFormats.Default);
-            return size;
-#endif
-#endif
         }
 
         /// <summary>
@@ -1494,7 +1476,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
         public XGraphicsState Save()
         {
             XGraphicsState xState = null;
-#if CORE
+
             if (TargetContext == XGraphicTargetContext.CORE || TargetContext == XGraphicTargetContext.NONE)
             {
                 xState = new XGraphicsState();
@@ -1506,7 +1488,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
             {
                 Debug.Assert(false, "XGraphicTargetContext must be XGraphicTargetContext.CORE.");
             }
-#endif
 
             if (_renderer != null)
                 _renderer.Save(xState);
@@ -1523,13 +1504,11 @@ namespace PdfSharp.Drawing  // #??? Clean up
             if (state == null)
                 throw new ArgumentNullException("state");
 
-#if CORE
             if (TargetContext == XGraphicTargetContext.CORE)
             {
                 _gsStack.Restore(state.InternalState);
                 _transform = state.InternalState.Transform;
             }
-#endif
 
             if (_renderer != null)
                 _renderer.Restore(state);
@@ -1565,10 +1544,10 @@ namespace PdfSharp.Drawing  // #??? Clean up
                 throw new ArgumentException("The current implementation supports XGraphicsUnit.Point only.", "unit");
 
             XGraphicsContainer xContainer = null;
-#if CORE
+
             if (TargetContext == XGraphicTargetContext.CORE)
                 xContainer = new XGraphicsContainer();
-#endif
+
             InternalGraphicsState iState = new InternalGraphicsState(this, xContainer);
             iState.Transform = _transform;
 
@@ -1598,9 +1577,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
                 throw new ArgumentNullException("container");
 
             _gsStack.Restore(container.InternalState);
-#if CORE
-            // nothing to do
-#endif
             _transform = container.InternalState.Transform;
 
             if (_renderer != null)
@@ -1630,17 +1606,11 @@ namespace PdfSharp.Drawing  // #??? Clean up
         {
             get
             {
-#if CORE
-                // nothing to do
-#endif
                 return _smoothingMode;
             }
             set
             {
                 _smoothingMode = value;
-#if CORE
-                // nothing to do
-#endif
             }
         }
         XSmoothingMode _smoothingMode;
@@ -1870,13 +1840,13 @@ namespace PdfSharp.Drawing  // #??? Clean up
             _transform = matrix;
             matrix = DefaultViewMatrix;
             matrix.Multiply(_transform, XMatrixOrder.Prepend);
-#if CORE
+
             if (TargetContext == XGraphicTargetContext.CORE)
             {
                 GetType();
                 // TODO: _gsStack...
             }
-#endif
+
             if (_renderer != null)
                 _renderer.AddTransform(transform, XMatrixOrder.Prepend);
         }

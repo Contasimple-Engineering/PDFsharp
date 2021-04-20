@@ -28,12 +28,10 @@
 #endregion
 
 using System;
-#if CORE
 using System.Drawing;
 using GdiFont = System.Drawing.Font;
 using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFontStyle = System.Drawing.FontStyle;
-#endif
 using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 
@@ -66,13 +64,6 @@ namespace PdfSharp.Drawing
             FamilyInternal = fontFamilyInternal;
         }
 
-#if CORE
-        //public XFontFamily(GdiFontFamily gdiFontFamily)
-        //{
-        //    FamilyInternal = FontFamilyInternal.GetOrCreateFromGdi(gdiFontFamily);
-        //}
-#endif
-
         internal static XFontFamily CreateFromName_not_used(string name, bool createPlatformFamily)
         {
             XFontFamily fontFamily = new XFontFamily(name);
@@ -100,13 +91,11 @@ namespace PdfSharp.Drawing
             return new XFontFamily(fontFamilyInternal);
         }
 
-#if CORE
         internal static XFontFamily GetOrCreateFromGdi(GdiFont font)
         {
             FontFamilyInternal fontFamilyInternal = FontFamilyInternal.GetOrCreateFromGdi(font.FontFamily);
             return new XFontFamily(fontFamilyInternal);
         }
-#endif
 
         /// <summary>
         /// Gets the name of the font family.
@@ -180,9 +169,8 @@ namespace PdfSharp.Drawing
         public bool IsStyleAvailable(XFontStyle style)
         {
             XGdiFontStyle xStyle = ((XGdiFontStyle)style) & XGdiFontStyle.BoldItalic;
-#if CORE
+
             throw new InvalidOperationException("In CORE build it is the responsibility of the developer to provide all required font faces.");
-#endif
         }
 
         /// <summary>

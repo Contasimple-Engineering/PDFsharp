@@ -27,15 +27,11 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if CORE
-#endif
-#if CORE_WITH_GDI
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using PdfSharp.Internal;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -51,7 +47,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         internal XBitmapImage(int width, int height)
         {
-#if CORE_WITH_GDI
             try
             {
                 Lock.EnterGdiPlus();
@@ -59,10 +54,8 @@ namespace PdfSharp.Drawing
                 _gdiImage = new Bitmap(width, height);
             }
             finally { Lock.ExitGdiPlus(); }
-#endif
-#if CORE // Prevent unreachable code error
+
             Initialize();
-#endif
         }
 
         /// <summary>

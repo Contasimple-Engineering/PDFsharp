@@ -33,10 +33,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
-#if CORE
 using System.Drawing;
 using GdiFontFamily = System.Drawing.FontFamily;
-#endif
 using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;

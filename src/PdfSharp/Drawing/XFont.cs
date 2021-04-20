@@ -33,17 +33,16 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.ComponentModel;
-#if CORE
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiFontFamily = System.Drawing.FontFamily;
 using GdiFont = System.Drawing.Font;
 using GdiFontStyle = System.Drawing.FontStyle;
-#endif
 using PdfSharp.Fonts;
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;
 using PdfSharp.Pdf;
+
 // ReSharper disable ConvertToAutoProperty
 
 namespace PdfSharp.Drawing
@@ -104,7 +103,6 @@ namespace PdfSharp.Drawing
             Initialize();
         }
 
-#if CORE
         /// <summary>
         /// Initializes a new instance of the <see cref="XFont"/> class from a System.Drawing.FontFamily.
         /// </summary>
@@ -157,7 +155,6 @@ namespace PdfSharp.Drawing
             _pdfOptions = pdfOptions;
             InitializeFromGdi();
         }
-#endif
 
         //// Methods
         //public Font(Font prototype, FontStyle newStyle);
@@ -190,10 +187,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         void Initialize()
         {
-//#if DEBUG
-//            if (_familyName == "Segoe UI Semilight" && (_style & XFontStyle.BoldItalic) == XFontStyle.Italic)
-//                GetType();
-//#endif
 
             FontResolvingOptions fontResolvingOptions = OverrideStyleSimulations
                 ? new FontResolvingOptions(_style, StyleSimulations)
@@ -202,9 +195,7 @@ namespace PdfSharp.Drawing
             // HACK: 'PlatformDefault' is used in unit test code.
             if (StringComparer.OrdinalIgnoreCase.Compare(_familyName, GlobalFontSettings.DefaultFontName) == 0)
             {
-#if CORE
                 _familyName = "Calibri";
-#endif
             }
 
             // In principle an XFont is an XGlyphTypeface plus an em-size.
@@ -212,7 +203,6 @@ namespace PdfSharp.Drawing
             CreateDescriptorAndInitializeFontMetrics();
         }
 
-#if CORE
         /// <summary>
         /// A GDI+ font object is used to setup the internal font objects.
         /// </summary>
@@ -249,7 +239,6 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitFontFactory(); }
         }
-#endif
 
         /// <summary>
         /// Code separated from Metric getter to make code easier to debug.
@@ -445,9 +434,8 @@ namespace PdfSharp.Drawing
         public double GetHeight()
         {
             double value = CellSpace * _emSize / UnitsPerEm;
-#if CORE
+
             return value;
-#endif
         }
 
         /// <summary>
@@ -458,14 +446,7 @@ namespace PdfSharp.Drawing
         [Obsolete("Use GetHeight() without parameter.")]
         public double GetHeight(XGraphics graphics)
         {
-#if true
             throw new InvalidOperationException("Honestly: Use GetHeight() without parameter!");
-#else
-#if CORE
-            double value = CellSpace * _emSize / UnitsPerEm;
-            return value;
-#endif
-#endif
         }
 
         /// <summary>
@@ -521,8 +502,6 @@ namespace PdfSharp.Drawing
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-#if CORE
         /// <summary>
         /// Gets the GDI family.
         /// </summary>
@@ -555,7 +534,6 @@ namespace PdfSharp.Drawing
         {
             return new XFont(font);
         }
-#endif
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

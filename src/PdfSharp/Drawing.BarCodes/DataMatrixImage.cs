@@ -719,9 +719,7 @@ namespace PdfSharp.Drawing.BarCodes
         /// </summary>
         public XImage CreateImage(char[] code, int rows, int columns, int pixelsize)
         {
-#if CORE
             return null;
-#endif
         }
 
         struct Ecc200Block
