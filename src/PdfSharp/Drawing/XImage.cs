@@ -53,22 +53,6 @@ namespace PdfSharp.Drawing
     /// </summary>
     public class XImage : IDisposable
     {
-        // The hierarchy is adapted to WPF/WinRT
-        //
-        // XImage                           <-- ImageSource
-        //   XForm
-        //   PdfForm
-        //   XBitmapSource               <-- BitmapSource
-        //     XBitmapImage             <-- BitmapImage
-
-        // ???
-        //public bool Disposed
-        //{
-        //    get { return _disposed; }
-        //    set { _disposed = value; }
-        //}
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="XImage"/> class.
         /// </summary>

@@ -190,7 +190,7 @@ namespace PdfSharp.Drawing
         }
 
         /// <summary>
-        /// Adds an elliptical arc to the current figure. The arc is specified WPF like.
+        /// Adds an elliptical arc to the current figure.
         /// </summary>
         public void AddArc(XPoint point1, XPoint point2, XSize size, double rotationAngle, bool isLargeArg, XSweepDirection sweepDirection)
         {

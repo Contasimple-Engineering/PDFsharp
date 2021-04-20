@@ -58,30 +58,6 @@ namespace PdfSharp
         // appropriate message text.
 
         #region Helper functions
-        /// <summary>
-        /// Loads the message from the resource associated with the enum type and formats it
-        /// using 'String.Format'. Because this function is intended to be used during error
-        /// handling it never raises an exception.
-        /// </summary>
-        /// <param name="id">The type of the parameter identifies the resource
-        /// and the name of the enum identifies the message in the resource.</param>
-        /// <param name="args">Parameters passed through 'String.Format'.</param>
-        /// <returns>The formatted message.</returns>
-        public static string Format(PSMsgID id, params object[] args)
-        {
-            string message;
-            try
-            {
-                message = GetString(id);
-                message = message != null ? Format(message, args) : "INTERNAL ERROR: Message not found in resources.";
-                return message;
-            }
-            catch (Exception ex)
-            {
-                message = String.Format("UNEXPECTED ERROR while formatting message with ID {0}: {1}", id.ToString(), ex.ToString());
-            }
-            return message;
-        }
 
         public static string Format(string format, params object[] args)
         {
@@ -98,14 +74,6 @@ namespace PdfSharp
                 message = String.Format("UNEXPECTED ERROR while formatting message '{0}': {1}", format, ex);
             }
             return message;
-        }
-
-        /// <summary>
-        /// Gets the localized message identified by the specified DomMsgID.
-        /// </summary>
-        public static string GetString(PSMsgID id)
-        {
-            return ResMngr.GetString(id.ToString());
         }
 
         #endregion
@@ -242,8 +210,7 @@ namespace PdfSharp
 
         public static string UserOrOwnerPasswordRequired
         {
-            get { return GetString(PSMsgID.UserOrOwnerPasswordRequired); }
-            //get { return "At least a user or an owner password is required to encrypt the document."; }
+            get { return "At least a user or an owner password is required to encrypt the document."; }
         }
 
         public static string CannotModify
@@ -253,7 +220,6 @@ namespace PdfSharp
 
         public static string NameMustStartWithSlash
         {
-            //get { return GetString(PSMsgID.NameMustStartWithSlash); }
             get { return "A PDF name must start with a slash (/)."; }
         }
 
@@ -324,67 +290,12 @@ namespace PdfSharp
 
         public static string UnexpectedToken(string token)
         {
-            return Format(PSMsgID.UnexpectedToken, token);
-            //return Format("Token '{0}' was not expected.", token);
+            return Format("Token '{0}' was not expected.", token);
         }
 
         public static string UnknownEncryption
         {
-            get { return GetString(PSMsgID.UnknownEncryption); }
-            //get { return "The PDF document is protected with an encryption not supported by PDFsharp."; }
-        }
-
-        #endregion
-
-        #region Resource manager
-
-        /// <summary>
-        /// Gets the resource manager for this module.
-        /// </summary>
-        public static ResourceManager ResMngr
-        {
-            get
-            {
-                if (_resmngr == null)
-                {
-                    try
-                    {
-                        Lock.EnterFontFactory();
-                        if (_resmngr == null)
-                        {
-#if true_
-                            // Force the English language.
-                            System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
-#endif
-                            _resmngr = new ResourceManager("PdfSharp.Resources.Messages",
-                                Assembly.GetExecutingAssembly());
-                        }
-                    }
-                    finally { Lock.ExitFontFactory(); }
-                }
-                return _resmngr;
-            }
-        }
-        static ResourceManager _resmngr;
-
-        /// <summary>
-        /// Writes all messages defined by PSMsgID.
-        /// </summary>
-        [Conditional("DEBUG")]
-        public static void TestResourceMessages()
-        {
-            string[] names = Enum.GetNames(typeof(PSMsgID));
-            foreach (string name in names)
-            {
-                string message = String.Format("{0}: '{1}'", name, ResMngr.GetString(name));
-                Debug.Assert(message != null);
-                Debug.WriteLine(message);
-            }
-        }
-
-        static PSSR()
-        {
-            TestResourceMessages();
+            get { return "The PDF document is protected with an encryption not supported by PDFsharp."; }
         }
 
         #endregion

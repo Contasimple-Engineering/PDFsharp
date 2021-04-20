@@ -53,8 +53,6 @@ namespace PdfSharp.Pdf
         static PdfDocument()
         {
             PSSR.TestResourceMessages();
-            //string test = PSSR.ResMngr.GetString("SampleMessage1");
-            //test.GetType();
         }
 #endif
 

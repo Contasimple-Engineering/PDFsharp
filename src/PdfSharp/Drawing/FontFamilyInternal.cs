@@ -112,7 +112,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public string Name
         {
-            // In WPF this is the Win32FamilyName, not the WPF family name.
             get { return _name; }
         }
         readonly string _name;

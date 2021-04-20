@@ -105,17 +105,6 @@ namespace PdfSharp.Drawing
             get { return FamilyInternal.Name; }
         }
 
-#if true__
-        public double LineSpacing
-        {
-            get
-            {
-                WpfFamily.FamilyTypefaces[0].UnderlineThickness
-            }
-        }
-
-#endif
-
         /// <summary>
         /// Returns the cell ascent, in design units, of the XFontFamily object of the specified style.
         /// </summary>

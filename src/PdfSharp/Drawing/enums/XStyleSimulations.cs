@@ -35,7 +35,7 @@ namespace PdfSharp.Drawing
     /// Describes the simulation style of a font.
     /// </summary>
     [Flags]
-    public enum XStyleSimulations  // Identical to WpfStyleSimulations.
+    public enum XStyleSimulations
     {
         /// <summary>
         /// No font style simulation.

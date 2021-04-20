@@ -249,7 +249,7 @@ namespace PdfSharp.Drawing
         }
 
         /// <summary>
-        /// Creates between 1 and 5 Béziers curves from parameters specified like in WPF.
+        /// Creates between 1 and 5 Béziers curves from parameters specified
         /// </summary>
         public static List<XPoint> BezierCurveFromArc(XPoint point1, XPoint point2, XSize size,
             double rotationAngle, bool isLargeArc, bool clockwise, PathStart pathStart)

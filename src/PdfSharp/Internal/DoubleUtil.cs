@@ -34,7 +34,7 @@ using PdfSharp.Drawing;
 namespace PdfSharp.Internal
 {
     /// <summary>
-    /// Some floating point utilities. Partially reflected from WPF, later equalized with original source code.
+    /// Some floating point utilities.
     /// </summary>
     internal static class DoubleUtil
     {

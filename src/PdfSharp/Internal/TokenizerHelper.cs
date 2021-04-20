@@ -32,7 +32,6 @@ using System.Globalization;
 
 namespace PdfSharp.Internal
 {
-    // Reflected from WPF to ensure compatibility
     // Use netmassdownloader -d "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.0" -output g:\cachetest -v
     class TokenizerHelper
     {

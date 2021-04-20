@@ -42,8 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="!internal\Configuration.cs" />
-    <Compile Include="!internal\TargetContext.cs" />
-    <Compile Include="!JetBrains\Annotations.cs" />
     <Compile Include="Drawing.BarCodes\BarCode.cs" />
     <Compile Include="Drawing.BarCodes\BarCodeRenderInfo.cs" />
     <Compile Include="Drawing.BarCodes\BcgSR.cs" />
@@ -333,9 +331,7 @@
     <Compile Include="Pdf\PdfObject.cs" />
     <Compile Include="Pdf\PdfObjectID.cs" />
     <Compile Include="Pdf\PdfOutline.cs" />
-    <Compile Include="Pdf\PdfOutlineCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Pdf\PdfOutlineCollection.cs" />
     <Compile Include="Pdf\PdfPage.cs" />
     <Compile Include="Pdf\PdfPages.cs" />
     <Compile Include="Pdf\PdfReal.cs" />
@@ -351,7 +347,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="root\enums\PageOrientation.cs" />
     <Compile Include="root\enums\PageSize.cs" />
-    <Compile Include="root\enums\PSMsgID.cs" />
     <Compile Include="root\PageSizeConverter.cs" />
     <Compile Include="root\PdfSharpException.cs" />
     <Compile Include="root\ProductVersionInfo.cs" />
@@ -378,15 +373,11 @@
     <Compile Include="SharpZipLib\Zip\ZipException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Messages.de.restext" />
-    <EmbeddedResource Include="Resources\Messages.restext" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="SharpZipLib\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Drawing\internal\" />
-    <Folder Include="Resources\images\" />
+    <Folder Include="Resources\" />
     <Folder Include="SharpZipLib\SharpZip\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

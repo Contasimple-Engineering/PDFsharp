@@ -104,17 +104,17 @@ namespace PdfSharp
         /// <summary>
         /// The major version number of the product.
         /// </summary>
-        public const string VersionMajor = "1";
+        public const string VersionMajor = "2";
 
         /// <summary>
         /// The minor version number of the product.
         /// </summary>
-        public const string VersionMinor = "50";
+        public const string VersionMinor = "0";
 
         /// <summary>
         /// The build number of the product.
         /// </summary>
-        public const string VersionBuild = "5147";  // V16G // Build = days since 2005-01-01  -  change this values ONLY HERE
+        public const string VersionBuild = "0";
 
         /// <summary>
         /// The patch number of the product.
@@ -125,15 +125,6 @@ namespace PdfSharp
         /// The Version Prerelease String for NuGet.
         /// </summary>
         public const string VersionPrerelease = ""; // "" for stable Release, e.g. "beta" or "rc.1.2" for Prerelease. // Also used for NuGet Version.
-
-#if DEBUG
-        /// <summary>
-        /// The calculated build number.
-        /// </summary>
-// ReSharper disable RedundantNameQualifier
-        public static int BuildNumber = (System.DateTime.Now - new System.DateTime(2005, 1, 1)).Days;
-        // ReSharper restore RedundantNameQualifier
-#endif
 
         /// <summary>
         /// E.g. "2005-01-01", for use in NuGet Script.

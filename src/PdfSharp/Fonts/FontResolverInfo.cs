@@ -45,12 +45,6 @@ namespace PdfSharp.Fonts
     //     Glyph -> Glyphe 
     // 
     // It seems that typeface and font family are synonyms in English.
-    // In WPF a family name is used as a term for a bunch of fonts that share the same
-    // characteristics, like Univers or Times New Roman.
-    // In WPF a fontface describes a request of a font of a particular font family, e.g.
-    // Univers medium bold italic.
-    // In WPF a glyph typeface is the result of requesting a typeface, i.e. a physical font
-    // plus the information whether bold and/or italic should be simulated.
     // 
     // Wikipedia DE -> EN
     //     Schriftart -> Typeface
