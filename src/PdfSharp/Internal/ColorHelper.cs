@@ -28,9 +28,6 @@
 #endregion
 
 using System;
-#if GDI
-using System.Drawing;
-#endif
 
 #pragma warning disable 649
 

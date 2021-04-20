@@ -29,7 +29,7 @@
 
 using System;
 using System.Diagnostics;
-#if CORE || GDI
+#if CORE
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiFontFamily = System.Drawing.FontFamily;
@@ -79,7 +79,7 @@ namespace PdfSharp.Fonts
             // It is possible that we already have the correct font source. E.g. we already have the regular typeface in cache
             // and looking now for the italic typeface, but no such font exists. In this case we get the regular font source
             // and cache again it with the italic typeface key. Furthermore in glyph typeface style simulation for italic is set.
-#if (CORE || GDI)
+#if (CORE)
             GdiFont gdiFont;
             XFontSource fontSource = CreateFontSource(familyName, fontResolvingOptions, out gdiFont, typefaceKey);
 #endif
@@ -87,20 +87,16 @@ namespace PdfSharp.Fonts
             if (fontSource == null)
                 return null;
 
-            //#if (CORE || GDI) && !WPF
-            //            // TODO: Support style simulation for GDI+ platform fonts.
-            //            fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, false, false, gdiFont);
-            //#endif
             if (fontResolvingOptions.OverrideStyleSimulations)
             {
-#if (CORE || GDI)
+#if (CORE)
                 // TODO: Support style simulation for GDI+ platform fonts.
                 fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, fontResolvingOptions.MustSimulateBold, fontResolvingOptions.MustSimulateItalic, gdiFont);
 #endif
             }
             else
             {
-#if (CORE || GDI)
+#if (CORE)
                 bool mustSimulateBold = gdiFont.Bold && !fontSource.Fontface.os2.IsBold;
                 bool mustSimulateItalic = gdiFont.Italic && !fontSource.Fontface.os2.IsItalic;
                 fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, mustSimulateBold, mustSimulateItalic, gdiFont);
@@ -116,7 +112,7 @@ namespace PdfSharp.Fonts
             return fontResolverInfo;
         }
 
-#if (CORE_WITH_GDI || GDI) && !WPF
+#if (CORE_WITH_GDI)
         /// <summary>
         /// Create a GDI+ font and use its handle to retrieve font data using native calls.
         /// </summary>

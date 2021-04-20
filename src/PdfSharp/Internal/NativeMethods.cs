@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 
 namespace PdfSharp.Internal
 {
-#if CORE || GDI || WPF
+#if CORE
     /// <summary>
     /// Required native Win32 calls.
     /// </summary>

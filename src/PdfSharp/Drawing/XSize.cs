@@ -31,9 +31,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
-#if GDI
-using System.Drawing;
-#endif
 using PdfSharp.Internal;
 
 namespace PdfSharp.Drawing
@@ -131,16 +128,6 @@ namespace PdfSharp.Drawing
             return empty;
         }
 
-#if GDI
-        /// <summary>
-        /// Converts this XSize to a PointF.
-        /// </summary>
-        public PointF ToPointF()
-        {
-            return new PointF((float)_width, (float)_height);
-        }
-#endif
-
         /// <summary>
         /// Converts this XSize to an XPoint.
         /// </summary>
@@ -156,45 +143,6 @@ namespace PdfSharp.Drawing
         {
             return new XVector(_width, _height);
         }
-
-#if GDI
-        /// <summary>
-        /// Converts this XSize to a SizeF.
-        /// </summary>
-        public SizeF ToSizeF()
-        {
-            return new SizeF((float)_width, (float)_height);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Creates an XSize from a System.Drawing.Size.
-        /// </summary>
-        public static XSize FromSize(System.Drawing.Size size)
-        {
-            return new XSize(size.Width, size.Height);
-        }
-
-        /// <summary>
-        /// Implicit conversion from XSize to System.Drawing.Size. The conversion must be implicit because the
-        /// WinForms designer uses it.
-        /// </summary>
-        public static implicit operator XSize(System.Drawing.Size size)
-        {
-            return new XSize(size.Width, size.Height);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Creates an XSize from a System.Drawing.Size.
-        /// </summary>
-        public static XSize FromSizeF(SizeF size)
-        {
-            return new XSize(size.Width, size.Height);
-        }
-#endif
 
         /// <summary>
         /// Converts this XSize to a human readable string.

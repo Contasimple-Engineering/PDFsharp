@@ -38,11 +38,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 #endif
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -93,7 +88,7 @@ namespace PdfSharp.Drawing
         {
             if (Source == null)
                 throw new InvalidOperationException("No image source.");
-#if CORE_WITH_GDI || GDI
+#if CORE_WITH_GDI
             if (Source.AssociatedGraphics != null)
             {
                 Source.DisassociateWithGraphics();

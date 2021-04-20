@@ -31,9 +31,6 @@ using System;
 using System.Globalization;
 using System.ComponentModel;
 using System.Threading;
-#if GDI
-using System.Drawing;
-#endif
 
 namespace PdfSharp.Drawing
 {

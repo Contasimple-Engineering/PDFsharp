@@ -334,7 +334,7 @@ namespace PdfSharp.Pdf.Security
         }
     }
 
-#if GDI && DEBUG && true_
+#if DEBUG && true_
 
     // See here for details: http://archive.msdn.microsoft.com/SilverlightMD5/WorkItem/View.aspx?WorkItemId=3
 

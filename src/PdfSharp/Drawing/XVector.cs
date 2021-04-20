@@ -32,9 +32,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using PdfSharp.Internal;
-#if GDI
-using System.Drawing;
-#endif
 
 #pragma warning disable 1591
 

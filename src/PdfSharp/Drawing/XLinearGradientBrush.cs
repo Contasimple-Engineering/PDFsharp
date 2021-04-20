@@ -30,11 +30,6 @@
 using System;
 using System.ComponentModel;
 using PdfSharp.Internal;
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using GdiLinearGradientBrush = System.Drawing.Drawing2D.LinearGradientBrush;
-#endif
 
 // ReSharper disable RedundantNameQualifier because it is required for hybrid build
 
@@ -45,21 +40,6 @@ namespace PdfSharp.Drawing
     /// </summary>
     public sealed class XLinearGradientBrush : XBrush
     {
-#if GDI
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
-        /// </summary>
-        public XLinearGradientBrush(System.Drawing.Point point1, System.Drawing.Point point2, XColor color1, XColor color2)
-            : this(new XPoint(point1), new XPoint(point2), color1, color2)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
-        /// </summary>
-        public XLinearGradientBrush(PointF point1, PointF point2, XColor color1, XColor color2)
-            : this(new XPoint(point1), new XPoint(point2), color1, color2)
-        { }
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
@@ -71,22 +51,6 @@ namespace PdfSharp.Drawing
             _color1 = color1;
             _color2 = color2;
         }
-
-#if GDI
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
-        /// </summary>
-        public XLinearGradientBrush(Rectangle rect, XColor color1, XColor color2, XLinearGradientMode linearGradientMode)
-            : this(new XRect(rect), color1, color2, linearGradientMode)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
-        /// </summary>
-        public XLinearGradientBrush(RectangleF rect, XColor color1, XColor color2, XLinearGradientMode linearGradientMode)
-            : this(new XRect(rect), color1, color2, linearGradientMode)
-        { }
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XLinearGradientBrush"/> class.
@@ -212,46 +176,6 @@ namespace PdfSharp.Drawing
         //public void SetBlendTriangularShape(double focus, double scale);
         //public void SetSigmaBellShape(double focus);
         //public void SetSigmaBellShape(double focus, double scale);
-
-#if GDI
-        internal override System.Drawing.Brush RealizeGdiBrush()
-        {
-            //if (dirty)
-            //{
-            //  if (brush == null)
-            //    brush = new SolidBrush(color.ToGdiColor());
-            //  else
-            //  {
-            //    brush.Color = color.ToGdiColor();
-            //  }
-            //  dirty = false;
-            //}
-
-            // TODO: use dirty to optimize code
-            GdiLinearGradientBrush brush;
-            try
-            {
-                Lock.EnterGdiPlus();
-                if (_useRect)
-                {
-                    brush = new GdiLinearGradientBrush(_rect.ToRectangleF(),
-                        _color1.ToGdiColor(), _color2.ToGdiColor(), (LinearGradientMode)_linearGradientMode);
-                }
-                else
-                {
-                    brush = new GdiLinearGradientBrush(
-                        _point1.ToPointF(), _point2.ToPointF(),
-                        _color1.ToGdiColor(), _color2.ToGdiColor());
-                }
-                if (!_matrix.IsIdentity)
-                    brush.Transform = _matrix.ToGdiMatrix();
-                //brush.WrapMode = WrapMode.Clamp;
-            }
-            finally { Lock.ExitGdiPlus(); }
-            return brush;
-        }
-#endif
-
         //public Blend Blend { get; set; }
         //public bool GammaCorrection { get; set; }
         //public ColorBlend InterpolationColors { get; set; }

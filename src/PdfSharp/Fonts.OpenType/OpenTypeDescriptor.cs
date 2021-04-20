@@ -30,10 +30,6 @@
 using System;
 using System.Diagnostics;
 using System.Text;
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
 using PdfSharp.Pdf.Internal;
 using PdfSharp.Drawing;
 

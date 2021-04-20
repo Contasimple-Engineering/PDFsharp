@@ -35,19 +35,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using PdfSharp.Internal;
-
 #endif
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using PdfSharp.Internal;
-
-#endif
-
-// WPFHACK
-#pragma warning disable 0169
-#pragma warning disable 0649
 
 namespace PdfSharp.Drawing
 {
@@ -63,7 +51,7 @@ namespace PdfSharp.Drawing
         /// </summary>
         internal XBitmapImage(int width, int height)
         {
-#if GDI || CORE_WITH_GDI
+#if CORE_WITH_GDI
             try
             {
                 Lock.EnterGdiPlus();
@@ -72,7 +60,7 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if CORE || GDI && !WPF // Prevent unreachable code error
+#if CORE // Prevent unreachable code error
             Initialize();
 #endif
         }

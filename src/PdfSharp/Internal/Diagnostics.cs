@@ -32,10 +32,6 @@ using System.Globalization;
 using PdfSharp.Pdf.Content;
 using PdfSharp.Pdf.IO;
 
-#if GDI
-using System.Drawing;
-#endif
-
 namespace PdfSharp.Internal
 {
     enum NotImplementedBehaviour

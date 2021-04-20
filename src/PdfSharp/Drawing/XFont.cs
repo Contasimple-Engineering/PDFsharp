@@ -33,7 +33,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.ComponentModel;
-#if CORE || GDI
+#if CORE
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiFontFamily = System.Drawing.FontFamily;
@@ -104,7 +104,7 @@ namespace PdfSharp.Drawing
             Initialize();
         }
 
-#if CORE || GDI
+#if CORE
         /// <summary>
         /// Initializes a new instance of the <see cref="XFont"/> class from a System.Drawing.FontFamily.
         /// </summary>
@@ -202,22 +202,17 @@ namespace PdfSharp.Drawing
             // HACK: 'PlatformDefault' is used in unit test code.
             if (StringComparer.OrdinalIgnoreCase.Compare(_familyName, GlobalFontSettings.DefaultFontName) == 0)
             {
-#if CORE || GDI || WPF
+#if CORE
                 _familyName = "Calibri";
 #endif
             }
 
             // In principle an XFont is an XGlyphTypeface plus an em-size.
             _glyphTypeface = XGlyphTypeface.GetOrCreateFrom(_familyName, fontResolvingOptions);
-#if GDI  // TODO: In CORE build it is not necessary to create a GDI font at all
-            // Create font by using font family.
-            XFontSource fontSource;  // Not needed here.
-            _gdiFont = FontHelper.CreateFont(_familyName, (float)_emSize, (GdiFontStyle)(_style & XFontStyle.BoldItalic), out fontSource);
-#endif
             CreateDescriptorAndInitializeFontMetrics();
         }
 
-#if CORE || GDI
+#if CORE
         /// <summary>
         /// A GDI+ font object is used to setup the internal font objects.
         /// </summary>
@@ -280,20 +275,6 @@ namespace PdfSharp.Drawing
             CellDescent = _descriptor.Descender;
             CellSpace = _descriptor.LineSpacing;
 
-#if DEBUG_ && GDI
-            int gdiValueUnitsPerEm = Font.FontFamily.GetEmHeight(Font.Style);
-            Debug.Assert(gdiValueUnitsPerEm == UnitsPerEm);
-            int gdiValueAscent = Font.FontFamily.GetCellAscent(Font.Style);
-            Debug.Assert(gdiValueAscent == CellAscent);
-            int gdiValueDescent = Font.FontFamily.GetCellDescent(Font.Style);
-            Debug.Assert(gdiValueDescent == CellDescent);
-            int gdiValueLineSpacing = Font.FontFamily.GetLineSpacing(Font.Style);
-            Debug.Assert(gdiValueLineSpacing == CellSpace);
-#endif
-#if DEBUG_ && WPF
-            int wpfValueLineSpacing = (int)Math.Round(Family.LineSpacing * _descriptor.UnitsPerEm);
-            Debug.Assert(wpfValueLineSpacing == CellSpace);
-#endif
             Debug.Assert(fm.UnitsPerEm == _descriptor.UnitsPerEm);
         }
 
@@ -467,13 +448,6 @@ namespace PdfSharp.Drawing
 #if CORE
             return value;
 #endif
-#if GDI
-#if DEBUG_
-            double gdiValue = Font.GetHeight();
-            Debug.Assert(DoubleUtil.AreRoughlyEqual(gdiValue, value, 5));
-#endif
-            return value;
-#endif
         }
 
         /// <summary>
@@ -490,17 +464,6 @@ namespace PdfSharp.Drawing
 #if CORE
             double value = CellSpace * _emSize / UnitsPerEm;
             return value;
-#endif
-#if GDI
-            if (graphics._gfx != null)  // #MediumTrust
-            {
-                double value = Font.GetHeight(graphics._gfx);
-                Debug.Assert(value == Font.GetHeight(graphics._gfx.DpiY));
-                double value2 = CellSpace * _emSize / UnitsPerEm;
-                Debug.Assert(value - value2 < 1e-3, "??");
-                return Font.GetHeight(graphics._gfx);
-            }
-            return CellSpace * _emSize / UnitsPerEm;
 #endif
 #endif
         }
@@ -559,7 +522,7 @@ namespace PdfSharp.Drawing
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#if CORE || GDI
+#if CORE
         /// <summary>
         /// Gets the GDI family.
         /// </summary>
@@ -585,7 +548,6 @@ namespace PdfSharp.Drawing
               (font.Underline ? XFontStyle.Underline : 0);
         }
 
-#if true || UseGdiObjects
         /// <summary>
         /// Implicit conversion form Font to XFont
         /// </summary>
@@ -593,7 +555,6 @@ namespace PdfSharp.Drawing
         {
             return new XFont(font);
         }
-#endif
 #endif
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -30,7 +30,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-#if CORE || GDI
+#if CORE
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiFontFamily = System.Drawing.FontFamily;
@@ -63,7 +63,7 @@ namespace PdfSharp.Drawing
 
         const string KeyPrefix = "tk:";  // "typeface key"
 
-#if CORE || GDI
+#if CORE
         XGlyphTypeface(string key, XFontFamily fontFamily, XFontSource fontSource, XStyleSimulations styleSimulations, GdiFont gdiFont)
         {
             _key = key;
@@ -76,26 +76,6 @@ namespace PdfSharp.Drawing
             _gdiFont = gdiFont;
 
             _styleSimulations = styleSimulations;
-            Initialize();
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XGlyphTypeface"/> class by a font source.
-        /// </summary>
-        public XGlyphTypeface(XFontSource fontSource)
-        {
-            string familyName = fontSource.Fontface.name.Name;
-            _fontFamily = new XFontFamily(familyName, false);
-            _fontface = fontSource.Fontface;
-            _isBold = _fontface.os2.IsBold;
-            _isItalic = _fontface.os2.IsItalic;
-
-            _key = ComputeKey(familyName, _isBold, _isItalic);
-            //_fontFamily =xfont  FontFamilyCache.GetFamilyByName(familyName);
-            _fontSource = fontSource;
-
             Initialize();
         }
 #endif
@@ -123,7 +103,7 @@ namespace PdfSharp.Drawing
                     throw new InvalidOperationException("No appropriate font found.");
                 }
 
-#if CORE || GDI
+#if CORE
                 GdiFont gdiFont = null;
 #endif
                 // Now create the font family at the first.
@@ -133,7 +113,7 @@ namespace PdfSharp.Drawing
                 {
                     // Case: fontResolverInfo was created by platform font resolver
                     // and contains platform specific objects that are reused.
-#if CORE || GDI
+#if CORE
                     // Reuse GDI+ font from platform font resolver.
                     gdiFont = platformFontResolverInfo.GdiFont;
                     fontFamily = XFontFamily.GetOrCreateFromGdi(gdiFont);
@@ -152,7 +132,7 @@ namespace PdfSharp.Drawing
                 Debug.Assert(fontSource != null);
 
                 // Each font source already contains its OpenTypeFontface.
-#if CORE || GDI
+#if CORE
                 glyphTypeface = new XGlyphTypeface(typefaceKey, fontFamily, fontSource, fontResolverInfo.StyleSimulations, gdiFont);
 #endif
                 GlyphTypefaceCache.AddGlyphTypeface(glyphTypeface);
@@ -161,7 +141,7 @@ namespace PdfSharp.Drawing
             return glyphTypeface;
         }
 
-#if CORE || GDI
+#if CORE
         public static XGlyphTypeface GetOrCreateFromGdi(GdiFont gdiFont)
         {
             // $TODO THHO Lock???
@@ -352,7 +332,7 @@ namespace PdfSharp.Drawing
             return ComputeKey(familyName, new FontResolvingOptions(FontHelper.CreateStyle(isBold, isItalic)));
         }
 
-#if CORE || GDI
+#if CORE
         internal static string ComputeKey(GdiFont gdiFont)
         {
             string name1 = gdiFont.Name;
@@ -373,7 +353,7 @@ namespace PdfSharp.Drawing
         }
         readonly string _key;
 
-#if CORE || GDI
+#if CORE
         internal GdiFont GdiFont
         {
             get { return _gdiFont; }

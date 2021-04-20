@@ -27,10 +27,6 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -102,9 +98,6 @@ namespace PdfSharp.Drawing
         /// </summary>
         public void Pushed()
         {
-#if GDI
-            // Nothing to do.
-#endif
         }
 
         /// <summary>
@@ -113,19 +106,9 @@ namespace PdfSharp.Drawing
         public void Popped()
         {
             Invalid = true;
-#if GDI
-            // Nothing to do.
-#endif
         }
 
         public bool Invalid;
-
-#if GDI_
-        /// <summary>
-        /// The GDI+ GraphicsState if contructed from XGraphicsState.
-        /// </summary>
-        public GraphicsState GdiGraphicsState;
-#endif
 
         readonly XGraphics _gfx;
 

@@ -32,7 +32,7 @@
 namespace PdfSharp.Drawing
 {
     ///<summary>
-    /// Determines whether rendering based on GDI+ or WPF.
+    /// Determines the rendering mode
     /// For internal use in hybrid build only only.
     /// </summary>
     enum XGraphicTargetContext
@@ -40,23 +40,8 @@ namespace PdfSharp.Drawing
         NONE = 0,
 
         /// <summary>
-        /// Rendering does not depent on a particular technology.
+        /// Rendering does not depend on a particular technology.
         /// </summary>
-        CORE = 1,
-
-        /// <summary>
-        /// Renders using GDI+.
-        /// </summary>
-        GDI = 2,
-
-        /// <summary>
-        /// Renders using WPF
-        /// </summary>
-        WPF = 3,
-
-        /// <summary>
-        /// Universal Windows Platform.
-        /// </summary>
-        UWP = 10,
+        CORE = 1
     }
 }

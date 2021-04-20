@@ -27,10 +27,6 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -45,14 +41,6 @@ namespace PdfSharp.Drawing
             Type = type;
             Points = null;
         }
-
-#if GDI
-        public XGraphicsPathItem(XGraphicsPathItemType type, params PointF[] points)
-        {
-            Type = type;
-            Points = XGraphics.MakeXPointArray(points, 0, points.Length);
-        }
-#endif
 
         public XGraphicsPathItem(XGraphicsPathItemType type, params XPoint[] points)
         {

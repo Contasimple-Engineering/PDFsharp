@@ -31,9 +31,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.ComponentModel;
-#if GDI
-using System.Drawing;
-#endif
 
 
 // ReSharper disable RedundantNameQualifier
@@ -118,18 +115,6 @@ namespace PdfSharp.Drawing
             GrayChanged();
         }
 
-#if GDI
-        XColor(System.Drawing.Color color)
-            : this(color.A, color.R, color.G, color.B)
-        { }
-#endif
-
-#if GDI
-        XColor(KnownColor knownColor)
-            : this(System.Drawing.Color.FromKnownColor(knownColor))
-        { }
-#endif
-
         internal XColor(XKnownColor knownColor)
             : this(XKnownColorTable.KnownColorToArgb(knownColor))
         { }
@@ -181,16 +166,6 @@ namespace PdfSharp.Drawing
             return new XColor((byte)alpha, (byte)red, (byte)green, (byte)blue);
         }
 
-#if GDI
-        /// <summary>
-        /// Creates an XColor structure from the specified System.Drawing.Color.
-        /// </summary>
-        public static XColor FromArgb(System.Drawing.Color color)
-        {
-            return new XColor(color);
-        }
-#endif
-
         /// <summary>
         /// Creates an XColor structure from the specified alpha value and color.
         /// </summary>
@@ -199,17 +174,6 @@ namespace PdfSharp.Drawing
             color.A = ((byte)alpha) / 255.0;
             return color;
         }
-
-#if GDI
-        /// <summary>
-        /// Creates an XColor structure from the specified alpha value and color.
-        /// </summary>
-        public static XColor FromArgb(int alpha, System.Drawing.Color color)
-        {
-            // Cast required to use correct constructor.
-            return new XColor((byte)alpha, color.R, color.G, color.B);
-        }
-#endif
 
         /// <summary>
         /// Creates an XColor structure from the specified CMYK values.
@@ -243,33 +207,11 @@ namespace PdfSharp.Drawing
             return new XColor(color);
         }
 
-#if GDI
-        /// <summary>
-        /// Creates an XColor from the specified pre-defined color.
-        /// </summary>
-        public static XColor FromKnownColor(KnownColor color)
-        {
-            return new XColor(color);
-        }
-#endif
-
         /// <summary>
         /// Creates an XColor from the specified name of a pre-defined color.
         /// </summary>
         public static XColor FromName(string name)
         {
-#if GDI
-            // The implementation in System.Drawing.dll is interesting. It uses a ColorConverter
-            // with hash tables, locking mechanisms etc. I'm not sure what problems that solves.
-            // So I don't use the source, but the reflection.
-            try
-            {
-                return new XColor((KnownColor)Enum.Parse(typeof(KnownColor), name, true));
-            }
-            // ReSharper disable EmptyGeneralCatchClause
-            catch { }
-            // ReSharper restore EmptyGeneralCatchClause
-#endif
             return Empty;
         }
 
@@ -294,26 +236,6 @@ namespace PdfSharp.Drawing
         {
             get { return this == Empty; }
         }
-
-#if GDI
-#if UseGdiObjects
-        /// <summary>
-        /// Implicit conversion from Color to XColor
-        /// </summary>
-        public static implicit operator XColor(Color color)
-        {
-            return new XColor(color);
-        }
-#endif
-
-        ///<summary>
-        /// Creates a System.Drawing.Color object from this color.
-        /// </summary>
-        public System.Drawing.Color ToGdiColor()
-        {
-            return System.Drawing.Color.FromArgb((int)(_a * 255), _r, _g, _b);
-        }
-#endif
 
         /// <summary>
         /// Determines whether the specified object is a Color structure and is equivalent to this 

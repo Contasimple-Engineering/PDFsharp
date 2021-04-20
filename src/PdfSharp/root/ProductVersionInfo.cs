@@ -48,7 +48,6 @@ namespace PdfSharp
 
         /// <summary>
         /// The PDF producer information string.
-        /// TODO: Called Creator in MigraDoc???
         /// </summary>
         public const string Producer = Title + " " + VersionMajor + "." + VersionMinor + "." + VersionBuild + Technology + " (" + Url + ")";
 
@@ -196,10 +195,6 @@ namespace PdfSharp
         /// <summary>
         /// Nuspec Doc: A URL for the home page of the package.
         /// </summary>
-        /// <remarks>
-        /// http://www.pdfsharp.net/NuGetPackage_PDFsharp-GDI.ashx
-        /// http://www.pdfsharp.net/NuGetPackage_PDFsharp-WPF.ashx
-        /// </remarks>
         public const string NuGetProjectUrl = "www.pdfsharp.net";
 
         /// <summary>
@@ -227,15 +222,9 @@ namespace PdfSharp
         /// <summary>
         /// The technology tag of the product:
         /// (none) Pure .NET
-        /// -gdi : GDI+,
-        /// -wrt : Windows RunTime
         /// </summary>
-#if GDI
-        // GDI+ (System.Drawing)
-        public const string Technology = "-gdi";
-#endif
 #if CORE
-        // .net without GDI+ and WPF
+        // .NET without
         public const string Technology = "";  // no extension
 #endif
     }

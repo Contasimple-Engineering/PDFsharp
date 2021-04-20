@@ -34,19 +34,10 @@ using PdfSharp.Pdf;
 #if CORE
 using System.Drawing;
 #endif
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-#endif
 using PdfSharp.Drawing.Internal;
 using PdfSharp.Internal;
 using PdfSharp.Pdf.IO;
 using PdfSharp.Pdf.Advanced;
-
-// WPFHACK
-#pragma warning disable 0169
-#pragma warning disable 0649
 
 namespace PdfSharp.Drawing
 {
@@ -86,7 +77,7 @@ namespace PdfSharp.Drawing
         protected XImage()
         { }
 
-#if GDI || CORE || WPF
+#if CORE
         /// <summary>
         /// Initializes a new instance of the <see cref="XImage"/> class from an image read by ImageImporter.
         /// </summary>
@@ -98,17 +89,6 @@ namespace PdfSharp.Drawing
                 throw new ArgumentNullException("image");
 
             _importedImage = image;
-            Initialize();
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XImage"/> class from a GDI+ image.
-        /// </summary>
-        XImage(Image image)
-        {
-            _gdiImage = image;
             Initialize();
         }
 #endif
@@ -127,7 +107,7 @@ namespace PdfSharp.Drawing
             //Bits = new byte[BitsLength];
             //file.Read(Bits, 0, BitsLength);
             //file.Close();
-#if CORE_WITH_GDI || GDI
+#if CORE_WITH_GDI
             try
             {
                 Lock.EnterGdiPlus();
@@ -165,15 +145,6 @@ namespace PdfSharp.Drawing
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
-#if GDI
-            // Create a GDI+ image.
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdiImage = Image.FromStream(stream);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
 
 #if true_
             float vres = image.VerticalResolution;
@@ -189,26 +160,6 @@ namespace PdfSharp.Drawing
             _stream = stream;
             Initialize();
         }
-
-#if GDI //|| CORE
-#if UseGdiObjects
-        /// <summary>
-        /// Implicit conversion from Image to XImage.
-        /// </summary>
-        public static implicit operator XImage(Image image)
-        {
-            return new XImage(image);
-        }
-#endif
-
-        /// <summary>
-        /// Conversion from Image to XImage.
-        /// </summary>
-        public static XImage FromGdiPlusImage(Image image)
-        {
-            return new XImage(image);
-        }
-#endif
 
         /// <summary>
         /// Creates an image from the specified file.
@@ -236,7 +187,7 @@ namespace PdfSharp.Drawing
         }
 
 #if DEBUG
-#if CORE || GDI || WPF
+#if CORE
         /// <summary>
         /// Creates an image from the specified file.
         /// </summary>
@@ -290,7 +241,7 @@ namespace PdfSharp.Drawing
 #endif
 
 #if DEBUG
-#if CORE || GDI || WPF
+#if CORE
         /// <summary>
         /// Creates an image.
         /// </summary>
@@ -331,7 +282,7 @@ namespace PdfSharp.Drawing
 
         internal void Initialize()
         {
-#if CORE || GDI || WPF
+#if CORE
             if (_importedImage != null)
             {
                 ImportedImageJpeg iiJpeg = _importedImage as ImportedImageJpeg;
@@ -395,54 +346,6 @@ namespace PdfSharp.Drawing
                 return;
             }
 #endif
-#if GDI
-            if (_gdiImage != null)
-            {
-                // ImageFormat has no overridden Equals function.
-                string guid;
-                try
-                {
-                    Lock.EnterGdiPlus();
-                    guid = _gdiImage.RawFormat.Guid.ToString("B").ToUpper();
-                }
-                finally { Lock.ExitGdiPlus(); }
-
-                switch (guid)
-                {
-                    case "{B96B3CAA-0728-11D3-9D7B-0000F81EF32E}":  // memoryBMP
-                    case "{B96B3CAB-0728-11D3-9D7B-0000F81EF32E}":  // bmp
-                    case "{B96B3CAF-0728-11D3-9D7B-0000F81EF32E}":  // png
-                        _format = XImageFormat.Png;
-                        break;
-
-                    case "{B96B3CAE-0728-11D3-9D7B-0000F81EF32E}":  // jpeg
-                        _format = XImageFormat.Jpeg;
-                        break;
-
-                    case "{B96B3CB0-0728-11D3-9D7B-0000F81EF32E}":  // gif
-                        _format = XImageFormat.Gif;
-                        break;
-
-                    case "{B96B3CB1-0728-11D3-9D7B-0000F81EF32E}":  // tiff
-                        _format = XImageFormat.Tiff;
-                        break;
-
-                    case "{B96B3CB5-0728-11D3-9D7B-0000F81EF32E}":  // icon
-                        _format = XImageFormat.Icon;
-                        break;
-
-                    case "{B96B3CAC-0728-11D3-9D7B-0000F81EF32E}":  // emf
-                    case "{B96B3CAD-0728-11D3-9D7B-0000F81EF32E}":  // wmf
-                    case "{B96B3CB2-0728-11D3-9D7B-0000F81EF32E}":  // exif
-                    case "{B96B3CB3-0728-11D3-9D7B-0000F81EF32E}":  // photoCD
-                    case "{B96B3CB4-0728-11D3-9D7B-0000F81EF32E}":  // flashPIX
-
-                    default:
-                        throw new InvalidOperationException("Unsupported image format.");
-                }
-                return;
-            }
-#endif
         }
 
         /// <summary>
@@ -462,14 +365,14 @@ namespace PdfSharp.Drawing
             if (!_disposed)
                 _disposed = true;
 
-#if CORE || GDI || WPF
+#if CORE
             //if (_importedImage != null)
             {
                 _importedImage = null;
             }
 #endif
 
-#if CORE_WITH_GDI || GDI
+#if CORE_WITH_GDI
             if (_gdiImage != null)
             {
                 try
@@ -492,14 +395,14 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE || GDI || WPF
+#if CORE
                 if (_importedImage != null)
                 {
                     return _importedImage.Information.Width;
                 }
 #endif
 
-#if (CORE_WITH_GDI || GDI)
+#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -507,9 +410,6 @@ namespace PdfSharp.Drawing
                 }
                 finally { Lock.ExitGdiPlus(); }
 #endif
-                //#if GDI && !WPF
-                //                return _gdiImage.Width;
-                //#endif
             }
         }
 
@@ -521,14 +421,14 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE_WITH_GDI || GDI || WPF
+#if CORE_WITH_GDI
                 if (_importedImage != null)
                 {
                     return _importedImage.Information.Height;
                 }
 #endif
 
-#if (CORE_WITH_GDI || GDI)
+#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -536,13 +436,10 @@ namespace PdfSharp.Drawing
                 }
                 finally { Lock.ExitGdiPlus(); }
 #endif
-                //#if GDI && !WPF
-                //                return _gdiImage.Height;
-                //#endif
             }
         }
 
-#if CORE || GDI
+#if CORE
         /// <summary>
         /// The factor for conversion from DPM to PointWidth or PointHeight.
         /// 72 points per inch, 1000 mm per meter, 25.4 mm per inch => 72 * 1000 / 25.4.
@@ -563,7 +460,7 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE || GDI || WPF
+#if CORE
                 if (_importedImage != null)
                 {
                     if (_importedImage.Information.HorizontalDPM > 0)
@@ -575,7 +472,7 @@ namespace PdfSharp.Drawing
                 }
 #endif
 
-#if (CORE_WITH_GDI || GDI)
+#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -593,7 +490,7 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE || GDI || WPF
+#if CORE
                 if (_importedImage != null)
                 {
                     if (_importedImage.Information.VerticalDPM > 0)
@@ -605,7 +502,7 @@ namespace PdfSharp.Drawing
                 }
 #endif
 
-#if (CORE_WITH_GDI || GDI)
+#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -623,20 +520,12 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE || GDI || WPF
+#if CORE
                 if (_importedImage != null)
                     return (int)_importedImage.Information.Width;
 #endif
 
 #if CORE_WITH_GDI
-                try
-                {
-                    Lock.EnterGdiPlus();
-                    return _gdiImage.Width;
-                }
-                finally { Lock.ExitGdiPlus(); }
-#endif
-#if GDI
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -654,20 +543,12 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE || GDI || WPF
+#if CORE
                 if (_importedImage != null)
                     return (int)_importedImage.Information.Height;
 #endif
 
 #if CORE_WITH_GDI
-                try
-                {
-                    Lock.EnterGdiPlus();
-                    return _gdiImage.Height;
-                }
-                finally { Lock.ExitGdiPlus(); }
-#endif
-#if GDI
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -693,7 +574,7 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE || GDI || WPF
+#if CORE
                 if (_importedImage != null)
                 {
                     if (_importedImage.Information.HorizontalDPI > 0)
@@ -704,7 +585,7 @@ namespace PdfSharp.Drawing
                 }
 #endif
 
-#if (CORE_WITH_GDI || GDI)
+#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -722,7 +603,7 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if CORE || GDI || WPF
+#if CORE
                 if (_importedImage != null)
                 {
                     if (_importedImage.Information.VerticalDPI > 0)
@@ -733,7 +614,7 @@ namespace PdfSharp.Drawing
                 }
 #endif
 
-#if (CORE_WITH_GDI || GDI)
+#if CORE_WITH_GDI
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -813,11 +694,11 @@ namespace PdfSharp.Drawing
         }
         XGraphics _associatedGraphics;
 
-#if CORE || GDI
+#if CORE
         internal ImportedImage _importedImage;
 #endif
 
-#if CORE_WITH_GDI || GDI
+#if CORE_WITH_GDI
         internal Image _gdiImage;
 #endif
 

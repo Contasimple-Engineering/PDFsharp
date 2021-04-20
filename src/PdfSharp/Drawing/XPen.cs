@@ -29,11 +29,6 @@
 
 using System;
 using PdfSharp.Internal;
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using GdiPen = System.Drawing.Pen;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -253,80 +248,7 @@ namespace PdfSharp.Drawing
         }
         internal bool _overprint;
 
-#if GDI
-#if UseGdiObjects
-        /// <summary>
-        /// Implicit conversion from Pen to XPen
-        /// </summary>
-        public static implicit operator XPen(Pen pen)
-        {
-            XPen xpen;
-            try
-            {
-                Lock.EnterGdiPlus();
-                switch (pen.PenType)
-                {
-                    case PenType.SolidColor:
-                        xpen = new XPen(pen.Color, pen.Width);
-                        xpen.LineJoin = (XLineJoin)pen.LineJoin;
-                        xpen.DashStyle = (XDashStyle)pen.DashStyle;
-                        xpen._miterLimit = pen.MiterLimit;
-                        break;
-
-                    default:
-                        throw new NotImplementedException("Pen type not supported by PDFsharp.");
-                }
-                // Bug fixed by drice2@ageone.de
-                if (pen.DashStyle == System.Drawing.Drawing2D.DashStyle.Custom)
-                {
-                    int length = pen.DashPattern.Length;
-                    double[] pattern = new double[length];
-                    for (int idx = 0; idx < length; idx++)
-                        pattern[idx] = pen.DashPattern[idx];
-                    xpen.DashPattern = pattern;
-                    xpen._dashOffset = pen.DashOffset;
-                }
-            }
-            finally { Lock.ExitGdiPlus(); }
-            return xpen;
-        }
-#endif
-
-        internal System.Drawing.Pen RealizeGdiPen()
-        {
-            if (_dirty)
-            {
-                if (_gdiPen == null)
-                    _gdiPen = new System.Drawing.Pen(_color.ToGdiColor(), (float)_width);
-                else
-                {
-                    _gdiPen.Color = _color.ToGdiColor();
-                    _gdiPen.Width = (float)_width;
-                }
-                LineCap lineCap = XConvert.ToLineCap(_lineCap);
-                _gdiPen.StartCap = lineCap;
-                _gdiPen.EndCap = lineCap;
-                _gdiPen.LineJoin = XConvert.ToLineJoin(_lineJoin);
-                _gdiPen.DashOffset = (float)_dashOffset;
-                if (_dashStyle == XDashStyle.Custom)
-                {
-                    int len = _dashPattern == null ? 0 : _dashPattern.Length;
-                    float[] pattern = new float[len];
-                    for (int idx = 0; idx < len; idx++)
-                        pattern[idx] = (float)_dashPattern[idx];
-                    _gdiPen.DashPattern = pattern;
-                }
-                else
-                    _gdiPen.DashStyle = (System.Drawing.Drawing2D.DashStyle)_dashStyle;
-            }
-            return _gdiPen;
-        }
-#endif
-
         bool _dirty = true;
         readonly bool _immutable;
-#if GDI
-        GdiPen _gdiPen;
-#endif
     }
 }

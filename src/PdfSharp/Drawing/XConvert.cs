@@ -27,15 +27,6 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if CORE
-#endif
-#if CORE
-#endif
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
-
 namespace PdfSharp.Drawing
 {
     /// <summary>
@@ -43,30 +34,5 @@ namespace PdfSharp.Drawing
     /// </summary>
     internal static class XConvert
     {
-#if GDI
-//#if UseGdiObjects
-        /// <summary>
-        /// Converts XLineJoin to LineJoin.
-        /// </summary>
-        public static LineJoin ToLineJoin(XLineJoin lineJoin)
-        {
-            return GdiLineJoin[(int)lineJoin];
-        }
-        static readonly LineJoin[] GdiLineJoin = new LineJoin[] { LineJoin.Miter, LineJoin.Round, LineJoin.Bevel };
-//#endif
-#endif
-
-#if GDI
-//#if UseGdiObjects
-        /// <summary>
-        /// Converts XLineCap to LineCap.
-        /// </summary>
-        public static LineCap ToLineCap(XLineCap lineCap)
-        {
-            return _gdiLineCap[(int)lineCap];
-        }
-        static readonly LineCap[] _gdiLineCap = new LineCap[] { LineCap.Flat, LineCap.Round, LineCap.Square };
-        //#endif
-#endif
     }
 }

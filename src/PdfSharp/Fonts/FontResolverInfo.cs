@@ -34,9 +34,6 @@ using PdfSharp.Drawing;
 #if CORE
 using System.Drawing;
 #endif
-#if GDI
-using System.Drawing;
-#endif
 
 namespace PdfSharp.Fonts
 {

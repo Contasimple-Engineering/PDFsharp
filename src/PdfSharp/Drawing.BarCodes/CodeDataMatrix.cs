@@ -29,9 +29,6 @@
 #endregion
 
 using System;
-#if GDI
-using System.Drawing;
-#endif
 
 namespace PdfSharp.Drawing.BarCodes
 {

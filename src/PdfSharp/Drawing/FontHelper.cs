@@ -31,7 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-#if CORE || GDI
+#if CORE
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiFontFamily = System.Drawing.FontFamily;
@@ -96,7 +96,7 @@ namespace PdfSharp.Drawing
             return size;
         }
 
-#if CORE || GDI
+#if CORE
         public static GdiFont CreateFont(string familyName, double emSize, GdiFontStyle style, out XFontSource fontSource)
         {
             fontSource = null;
@@ -104,15 +104,6 @@ namespace PdfSharp.Drawing
             GdiFont font;
 
             // Use font resolver in CORE build. XPrivateFontCollection exists only in GDI and WPF build.
-#if GDI
-            // Try private font collection first.
-            font = XPrivateFontCollection.TryCreateFont(familyName, emSize, style, out fontSource);
-            if (font != null)
-            {
-                // Get font source is different for this font because Win32 does not know it.
-                return font;
-            }
-#endif
             // Create ordinary Win32 font.
             font = new GdiFont(familyName, (float)emSize, style, GraphicsUnit.World);
             return font;

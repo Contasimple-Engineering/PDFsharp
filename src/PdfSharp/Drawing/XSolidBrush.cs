@@ -29,9 +29,6 @@
 
 using System;
 using System.Diagnostics;
-#if GDI
-using System.Drawing;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -77,9 +74,6 @@ namespace PdfSharp.Drawing
             {
                 if (_immutable)
                     throw new ArgumentException(PSSR.CannotChangeImmutableObject("XSolidBrush"));
-#if GDI
-                _gdiDirty = _gdiDirty || _color != value;
-#endif
                 _color = value;
             }
         }
@@ -100,32 +94,6 @@ namespace PdfSharp.Drawing
             }
         }
         internal bool _overprint;
-
-#if GDI
-        internal override System.Drawing.Brush RealizeGdiBrush()
-        {
-            if (_gdiDirty)
-            {
-                if (_gdiBrush == null)
-                    _gdiBrush = new SolidBrush(_color.ToGdiColor());
-                else
-                    _gdiBrush.Color = _color.ToGdiColor();
-                _gdiDirty = false;
-            }
-
-#if DEBUG
-            System.Drawing.Color clr = _color.ToGdiColor();
-            SolidBrush brush1 = new SolidBrush(clr);
-            Debug.Assert(_gdiBrush.Color == brush1.Color);
-#endif
-            return _gdiBrush;
-        }
-#endif
-
-#if GDI
-        bool _gdiDirty = true;
-        SolidBrush _gdiBrush;
-#endif
         readonly bool _immutable;
     }
 }

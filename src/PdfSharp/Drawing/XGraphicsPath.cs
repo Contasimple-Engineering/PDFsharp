@@ -29,10 +29,6 @@
 
 using System;
 using System.Diagnostics;
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
 using PdfSharp.Internal;
 
 namespace PdfSharp.Drawing
@@ -50,32 +46,7 @@ namespace PdfSharp.Drawing
 #if CORE
             _corePath = new CoreGraphicsPath();
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath = new GraphicsPath();
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
-
-#if GDI
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XGraphicsPath"/> class.
-        /// </summary>
-        public XGraphicsPath(PointF[] points, byte[] types, XFillMode fillMode)
-        {
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath = new GraphicsPath(points, types, (FillMode)fillMode);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
-        }
-#endif
 
         /// <summary>
         /// Clones this instance.
@@ -86,38 +57,10 @@ namespace PdfSharp.Drawing
 #if CORE
             _corePath = new CoreGraphicsPath(_corePath);
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                path._gdipPath = _gdipPath.Clone() as GraphicsPath;
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
             return path;
         }
 
         // ----- AddLine ------------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a line segment to current figure.
-        /// </summary>
-        public void AddLine(System.Drawing.Point pt1, System.Drawing.Point pt2)
-        {
-            AddLine(pt1.X, pt1.Y, pt2.X, pt2.Y);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds  a line segment to current figure.
-        /// </summary>
-        public void AddLine(PointF pt1, PointF pt2)
-        {
-            AddLine(pt1.X, pt1.Y, pt2.X, pt2.Y);
-        }
-#endif
 
         /// <summary>
         /// Adds  a line segment to current figure.
@@ -136,37 +79,9 @@ namespace PdfSharp.Drawing
             _corePath.MoveOrLineTo(x1, y1);
             _corePath.LineTo(x2, y2, false);
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddLine((float)x1, (float)y1, (float)x2, (float)y2);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddLines -----------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a series of connected line segments to current figure.
-        /// </summary>
-        public void AddLines(System.Drawing.Point[] points)
-        {
-            AddLines(XGraphics.MakeXPointArray(points, 0, points.Length));
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a series of connected line segments to current figure.
-        /// </summary>
-        public void AddLines(PointF[] points)
-        {
-            AddLines(XGraphics.MakeXPointArray(points, 0, points.Length));
-        }
-#endif
 
         /// <summary>
         /// Adds a series of connected line segments to current figure.
@@ -184,37 +99,9 @@ namespace PdfSharp.Drawing
             for (int idx = 1; idx < count; idx++)
                 _corePath.LineTo(points[idx].X, points[idx].Y, false);
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddLines(XGraphics.MakePointFArray(points));
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddBezier ----------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a cubic Bézier curve to the current figure.
-        /// </summary>
-        public void AddBezier(System.Drawing.Point pt1, System.Drawing.Point pt2, System.Drawing.Point pt3, System.Drawing.Point pt4)
-        {
-            AddBezier(pt1.X, pt1.Y, pt2.X, pt2.Y, pt3.X, pt3.Y, pt4.X, pt4.Y);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a cubic Bézier curve to the current figure.
-        /// </summary>
-        public void AddBezier(PointF pt1, PointF pt2, PointF pt3, PointF pt4)
-        {
-            AddBezier(pt1.X, pt1.Y, pt2.X, pt2.Y, pt3.X, pt3.Y, pt4.X, pt4.Y);
-        }
-#endif
 
         /// <summary>
         /// Adds a cubic Bézier curve to the current figure.
@@ -233,37 +120,9 @@ namespace PdfSharp.Drawing
             _corePath.MoveOrLineTo(x1, y1);
             _corePath.BezierTo(x2, y2, x3, y3, x4, y4, false);
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddBezier((float)x1, (float)y1, (float)x2, (float)y2, (float)x3, (float)y3, (float)x4, (float)y4);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddBeziers ---------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a sequence of connected cubic Bézier curves to the current figure.
-        /// </summary>
-        public void AddBeziers(System.Drawing.Point[] points)
-        {
-            AddBeziers(XGraphics.MakeXPointArray(points, 0, points.Length));
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a sequence of connected cubic Bézier curves to the current figure.
-        /// </summary>
-        public void AddBeziers(PointF[] points)
-        {
-            AddBeziers(XGraphics.MakeXPointArray(points, 0, points.Length));
-        }
-#endif
 
         /// <summary>
         /// Adds a sequence of connected cubic Bézier curves to the current figure.
@@ -289,37 +148,9 @@ namespace PdfSharp.Drawing
                     points[idx + 2].X, points[idx + 2].Y, false);
             }
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddBeziers(XGraphics.MakePointFArray(points));
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddCurve -----------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a spline curve to the current figure.
-        /// </summary>
-        public void AddCurve(System.Drawing.Point[] points)
-        {
-            AddCurve(XGraphics.MakeXPointArray(points, 0, points.Length));
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a spline curve to the current figure.
-        /// </summary>
-        public void AddCurve(PointF[] points)
-        {
-            AddCurve(XGraphics.MakeXPointArray(points, 0, points.Length));
-        }
-#endif
 
         /// <summary>
         /// Adds a spline curve to the current figure.
@@ -328,26 +159,6 @@ namespace PdfSharp.Drawing
         {
             AddCurve(points, 0.5);
         }
-
-#if GDI
-        /// <summary>
-        /// Adds a spline curve to the current figure.
-        /// </summary>
-        public void AddCurve(System.Drawing.Point[] points, double tension)
-        {
-            AddCurve(XGraphics.MakeXPointArray(points, 0, points.Length), tension);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a spline curve to the current figure.
-        /// </summary>
-        public void AddCurve(PointF[] points, double tension)
-        {
-            AddCurve(XGraphics.MakeXPointArray(points, 0, points.Length), tension);
-        }
-#endif
 
         /// <summary>
         /// Adds a spline curve to the current figure.
@@ -360,35 +171,7 @@ namespace PdfSharp.Drawing
 #if CORE
             _corePath.AddCurve(points, tension);
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddCurve(XGraphics.MakePointFArray(points), (float)tension);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
-
-#if GDI
-        /// <summary>
-        /// Adds a spline curve to the current figure.
-        /// </summary>
-        public void AddCurve(System.Drawing.Point[] points, int offset, int numberOfSegments, float tension)
-        {
-            AddCurve(XGraphics.MakeXPointArray(points, 0, points.Length), offset, numberOfSegments, tension);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a spline curve to the current figure.
-        /// </summary>
-        public void AddCurve(PointF[] points, int offset, int numberOfSegments, float tension)
-        {
-            AddCurve(XGraphics.MakeXPointArray(points, 0, points.Length), offset, numberOfSegments, tension);
-        }
-#endif
 
         /// <summary>
         /// Adds a spline curve to the current figure.
@@ -398,37 +181,9 @@ namespace PdfSharp.Drawing
 #if CORE
             throw new NotImplementedException("AddCurve not yet implemented.");
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddCurve(XGraphics.MakePointFArray(points), offset, numberOfSegments, (float)tension);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddArc -------------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds an elliptical arc to the current figure.
-        /// </summary>
-        public void AddArc(Rectangle rect, double startAngle, double sweepAngle)
-        {
-            AddArc(rect.X, rect.Y, rect.Width, rect.Height, startAngle, sweepAngle);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds an elliptical arc to the current figure.
-        /// </summary>
-        public void AddArc(RectangleF rect, double startAngle, double sweepAngle)
-        {
-            AddArc(rect.X, rect.Y, rect.Width, rect.Height, startAngle, sweepAngle);
-        }
-#endif
 
         /// <summary>
         /// Adds an elliptical arc to the current figure.
@@ -446,14 +201,6 @@ namespace PdfSharp.Drawing
 #if CORE
             _corePath.AddArc(x, y, width, height, startAngle, sweepAngle);
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddArc((float)x, (float)y, (float)width, (float)height, (float)startAngle, (float)sweepAngle);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         /// <summary>
@@ -464,32 +211,9 @@ namespace PdfSharp.Drawing
 #if CORE
             _corePath.AddArc(point1, point2, size, rotationAngle, isLargeArg, sweepDirection);
 #endif
-#if GDI
-            DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddArc");
-#endif
         }
 
         // ----- AddRectangle -------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a rectangle to this path.
-        /// </summary>
-        public void AddRectangle(Rectangle rect)
-        {
-            AddRectangle(new XRect(rect));
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a rectangle to this path.
-        /// </summary>
-        public void AddRectangle(RectangleF rect)
-        {
-            AddRectangle(new XRect(rect));
-        }
-#endif
 
         /// <summary>
         /// Adds a rectangle to this path.
@@ -503,22 +227,6 @@ namespace PdfSharp.Drawing
             _corePath.LineTo(rect.X, rect.Y + rect.Height, true);
             _corePath.CloseSubpath();
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                // If rect is empty GDI+ removes the rect from the path.
-                // This is not intended if the path is used for clipping.
-                // See http://forum.pdfsharp.net/viewtopic.php?p=9433#p9433
-                // _gdipPath.AddRectangle(rect.ToRectangleF());
-
-                // Draw the rectangle manually.
-                _gdipPath.StartFigure();
-                _gdipPath.AddLines(new PointF[] { rect.TopLeft.ToPointF(), rect.TopRight.ToPointF(), rect.BottomRight.ToPointF(), rect.BottomLeft.ToPointF() });
-                _gdipPath.CloseFigure();
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         /// <summary>
@@ -531,44 +239,6 @@ namespace PdfSharp.Drawing
 
         // ----- AddRectangles ------------------------------------------------------------------------
 
-#if GDI
-        /// <summary>
-        /// Adds a series of rectangles to this path.
-        /// </summary>
-        public void AddRectangles(Rectangle[] rects)
-        {
-            int count = rects.Length;
-            for (int idx = 0; idx < count; idx++)
-                AddRectangle(rects[idx]);
-
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddRectangles(rects);
-            }
-            finally { Lock.ExitGdiPlus(); }
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a series of rectangles to this path.
-        /// </summary>
-        public void AddRectangles(RectangleF[] rects)
-        {
-            int count = rects.Length;
-            for (int idx = 0; idx < count; idx++)
-                AddRectangle(rects[idx]);
-
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddRectangles(rects);
-            }
-            finally { Lock.ExitGdiPlus(); }
-        }
-#endif
-
         /// <summary>
         /// Adds a series of rectangles to this path.
         /// </summary>
@@ -580,48 +250,10 @@ namespace PdfSharp.Drawing
 #if CORE
                 AddRectangle(rects[idx]);
 #endif
-#if GDI
-                try
-                {
-                    Lock.EnterGdiPlus();
-                    _gdipPath.AddRectangle(rects[idx].ToRectangleF());
-                }
-                finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
         // ----- AddRoundedRectangle ------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a rectangle with rounded corners to this path.
-        /// </summary>
-        public void AddRoundedRectangle(Rectangle rect, System.Drawing.Size ellipseSize)
-        {
-            AddRoundedRectangle(rect.X, rect.Y, rect.Width, rect.Height, ellipseSize.Width, ellipseSize.Height);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a rectangle with rounded corners to this path.
-        /// </summary>
-        public void AddRoundedRectangle(RectangleF rect, SizeF ellipseSize)
-        {
-            AddRoundedRectangle(rect.X, rect.Y, rect.Width, rect.Height, ellipseSize.Width, ellipseSize.Height);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a rectangle with rounded corners to this path.
-        /// </summary>
-        public void AddRoundedRectangle(XRect rect, SizeF ellipseSize)
-        {
-            AddRoundedRectangle(rect.X, rect.Y, rect.Width, rect.Height, ellipseSize.Width, ellipseSize.Height);
-        }
-#endif
 
         /// <summary>
         /// Adds a rectangle with rounded corners to this path.
@@ -671,42 +303,9 @@ namespace PdfSharp.Drawing
             CloseFigure();
 #endif
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.StartFigure();
-                _gdipPath.AddArc((float)(x + width - ellipseWidth), (float)y, (float)ellipseWidth, (float)ellipseHeight, -90, 90);
-                _gdipPath.AddArc((float)(x + width - ellipseWidth), (float)(y + height - ellipseHeight), (float)ellipseWidth, (float)ellipseHeight, 0, 90);
-                _gdipPath.AddArc((float)x, (float)(y + height - ellipseHeight), (float)ellipseWidth, (float)ellipseHeight, 90, 90);
-                _gdipPath.AddArc((float)x, (float)y, (float)ellipseWidth, (float)ellipseHeight, 180, 90);
-                _gdipPath.CloseFigure();
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddEllipse ---------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds an ellipse to the current path.
-        /// </summary>
-        public void AddEllipse(Rectangle rect)
-        {
-            AddEllipse(rect.X, rect.Y, rect.Width, rect.Height);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds an ellipse to the current path.
-        /// </summary>
-        public void AddEllipse(RectangleF rect)
-        {
-            AddEllipse(rect.X, rect.Y, rect.Width, rect.Height);
-        }
-#endif
 
         /// <summary>
         /// Adds an ellipse to the current path.
@@ -733,47 +332,9 @@ namespace PdfSharp.Drawing
             _corePath.QuadrantArcTo(xc, yc, w, h, 2, true);
             _corePath.CloseSubpath();
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddEllipse((float)x, (float)y, (float)width, (float)height);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddPolygon ---------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a polygon to this path.
-        /// </summary>
-        public void AddPolygon(System.Drawing.Point[] points)
-        {
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddPolygon(points);
-            }
-            finally { Lock.ExitGdiPlus(); }
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a polygon to this path.
-        /// </summary>
-        public void AddPolygon(PointF[] points)
-        {
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddPolygon(points);
-            }
-            finally { Lock.ExitGdiPlus(); }
-        }
-#endif
 
         /// <summary>
         /// Adds a polygon to this path.
@@ -791,42 +352,9 @@ namespace PdfSharp.Drawing
             _corePath.LineTo(points[count - 1].X, points[count - 1].Y, true);
             _corePath.CloseSubpath();
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddPolygon(XGraphics.MakePointFArray(points));
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddPie -------------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds the outline of a pie shape to this path.
-        /// </summary>
-        public void AddPie(Rectangle rect, double startAngle, double sweepAngle)
-        {
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddPie(rect, (float)startAngle, (float)sweepAngle);
-            }
-            finally { Lock.ExitGdiPlus(); }
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds the outline of a pie shape to this path.
-        /// </summary>
-        public void AddPie(RectangleF rect, double startAngle, double sweepAngle)
-        {
-            AddPie(rect.X, rect.Y, rect.Width, rect.Height, startAngle, sweepAngle);
-        }
-#endif
 
         /// <summary>
         /// Adds the outline of a pie shape to this path.
@@ -844,37 +372,9 @@ namespace PdfSharp.Drawing
 #if CORE
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddPie");
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddPie((float)x, (float)y, (float)width, (float)height, (float)startAngle, (float)sweepAngle);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddClosedCurve ------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a closed curve to this path.
-        /// </summary>
-        public void AddClosedCurve(System.Drawing.Point[] points)
-        {
-            AddClosedCurve(XGraphics.MakeXPointArray(points, 0, points.Length), 0.5);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a closed curve to this path.
-        /// </summary>
-        public void AddClosedCurve(PointF[] points)
-        {
-            AddClosedCurve(XGraphics.MakeXPointArray(points, 0, points.Length), 0.5);
-        }
-#endif
 
         /// <summary>
         /// Adds a closed curve to this path.
@@ -883,26 +383,6 @@ namespace PdfSharp.Drawing
         {
             AddClosedCurve(points, 0.5);
         }
-
-#if GDI
-        /// <summary>
-        /// Adds a closed curve to this path.
-        /// </summary>
-        public void AddClosedCurve(System.Drawing.Point[] points, double tension)
-        {
-            AddClosedCurve(XGraphics.MakeXPointArray(points, 0, points.Length), tension);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a closed curve to this path.
-        /// </summary>
-        public void AddClosedCurve(PointF[] points, double tension)
-        {
-            AddClosedCurve(XGraphics.MakeXPointArray(points, 0, points.Length), tension);
-        }
-#endif
 
         /// <summary>
         /// Adds a closed curve to this path.
@@ -920,14 +400,6 @@ namespace PdfSharp.Drawing
 #if CORE
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddClosedCurve");
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddClosedCurve(XGraphics.MakePointFArray(points), (float)tension);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddPath ------------------------------------------------------------------------------
@@ -940,37 +412,9 @@ namespace PdfSharp.Drawing
 #if CORE
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddPath");
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddPath(path._gdipPath, connect);
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         // ----- AddString ----------------------------------------------------------------------------
-
-#if GDI
-        /// <summary>
-        /// Adds a text string to this path.
-        /// </summary>
-        public void AddString(string s, XFontFamily family, XFontStyle style, double emSize, System.Drawing.Point origin, XStringFormat format)
-        {
-            AddString(s, family, style, emSize, new XRect(origin.X, origin.Y, 0, 0), format);
-        }
-#endif
-
-#if GDI
-        /// <summary>
-        /// Adds a text string to this path.
-        /// </summary>
-        public void AddString(string s, XFontFamily family, XFontStyle style, double emSize, PointF origin, XStringFormat format)
-        {
-            AddString(s, family, style, emSize, new XRect(origin.X, origin.Y, 0, 0), format);
-        }
-#endif
 
         /// <summary>
         /// Adds a text string to this path.
@@ -983,95 +427,12 @@ namespace PdfSharp.Drawing
 #if CORE
                 DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddString");
 #endif
-#if GDI
-                if (family.GdiFamily == null)
-                    throw new NotFiniteNumberException(PSSR.NotImplementedForFontsRetrievedWithFontResolver(family.Name));
-
-                PointF p = origin.ToPointF();
-                p.Y += SimulateBaselineOffset(family, style, emSize, format);
-
-                try
-                {
-                    Lock.EnterGdiPlus();
-                    _gdipPath.AddString(s, family.GdiFamily, (int)style, (float)emSize, p, format.RealizeGdiStringFormat());
-                }
-                finally { Lock.ExitGdiPlus(); }
-#endif
             }
             catch
             {
                 throw;
             }
         }
-
-#if GDI
-        /// <summary>
-        /// Adds a text string to this path.
-        /// </summary>
-        public void AddString(string s, XFontFamily family, XFontStyle style, double emSize, Rectangle layoutRect, XStringFormat format)
-        {
-            if (family.GdiFamily == null)
-                throw new NotFiniteNumberException(PSSR.NotImplementedForFontsRetrievedWithFontResolver(family.Name));
-
-            Rectangle rect = new Rectangle(layoutRect.X, layoutRect.Y, layoutRect.Width, layoutRect.Height);
-            rect.Offset(new System.Drawing.Point(0, (int)SimulateBaselineOffset(family, style, emSize, format)));
-
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddString(s, family.GdiFamily, (int)style, (float)emSize, rect, format.RealizeGdiStringFormat());
-            }
-            finally { Lock.ExitGdiPlus(); }
-        }
-
-        /// <summary>
-        /// Adds a text string to this path.
-        /// </summary>
-        public void AddString(string s, XFontFamily family, XFontStyle style, double emSize, RectangleF layoutRect, XStringFormat format)
-        {
-            if (family.GdiFamily == null)
-                throw new NotFiniteNumberException(PSSR.NotImplementedForFontsRetrievedWithFontResolver(family.Name));
-
-            RectangleF rect = new RectangleF(layoutRect.X, layoutRect.Y, layoutRect.Width, layoutRect.Height);
-            rect.Offset(new PointF(0, SimulateBaselineOffset(family, style, emSize, format)));
-
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.AddString(s, family.GdiFamily, (int)style, (float)emSize, layoutRect, format.RealizeGdiStringFormat());
-            }
-            finally { Lock.ExitGdiPlus(); }
-        }
-
-        /// <summary>
-        /// Calculates the offset for BaseLine positioning simulation:
-        /// In GDI we have only Near, Center and Far as LineAlignment and no BaseLine. For XLineAlignment.BaseLine StringAlignment.Near is returned.
-        /// We now return the negative drawed ascender height.
-        /// This has to be added to the LayoutRect/Origin before each _gdipPath.AddString().
-        /// </summary>
-        /// <param name="family"></param>
-        /// <param name="style"></param>
-        /// <param name="emSize"></param>
-        /// <param name="format"></param>
-        /// <returns></returns>
-        private float SimulateBaselineOffset(XFontFamily family, XFontStyle style, double emSize, XStringFormat format)
-        {
-            XFont font = new XFont(family.Name, emSize, style);
-
-            if (format.LineAlignment == XLineAlignment.BaseLine)
-            {
-                double lineSpace = font.GetHeight();
-                int cellSpace = font.FontFamily.GetLineSpacing(font.Style);
-                int cellAscent = font.FontFamily.GetCellAscent(font.Style);
-                int cellDescent = font.FontFamily.GetCellDescent(font.Style);
-                double cyAscent = lineSpace * cellAscent / cellSpace;
-                cyAscent = lineSpace * font.CellAscent / font.CellSpace;
-                return (float)-cyAscent;
-            }
-            return 0;
-        }
-
-#endif
 
         /// <summary>
         /// Adds a text string to this path.
@@ -1099,7 +460,7 @@ namespace PdfSharp.Drawing
 #if CORE
             DiagnosticsHelper.HandleNotImplemented("XGraphicsPath.AddString");
 #endif
-#if (GDI || CORE_)
+#if CORE_
             //Gfx.DrawString(text, font.Realize_GdiFont(), brush.RealizeGdiBrush(), rect,
             //  format != null ? format.RealizeGdiStringFormat() : null);
 
@@ -1128,14 +489,6 @@ namespace PdfSharp.Drawing
 #if CORE
             _corePath.CloseSubpath();
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.CloseFigure();
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         /// <summary>
@@ -1145,14 +498,6 @@ namespace PdfSharp.Drawing
         {
 #if CORE
             // TODO: ???
-#endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.StartFigure();
-            }
-            finally { Lock.ExitGdiPlus(); }
 #endif
         }
 
@@ -1170,14 +515,6 @@ namespace PdfSharp.Drawing
 #if CORE
                 // Nothing to do.
 #endif
-#if GDI
-                try
-                {
-                    Lock.EnterGdiPlus();
-                    _gdipPath.FillMode = (FillMode)value;
-                }
-                finally { Lock.ExitGdiPlus(); }
-#endif
             }
         }
 
@@ -1193,14 +530,6 @@ namespace PdfSharp.Drawing
 #if CORE
             // Just do nothing.
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.Flatten();
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         /// <summary>
@@ -1210,14 +539,6 @@ namespace PdfSharp.Drawing
         {
 #if CORE
             // Just do nothing.
-#endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.Flatten(matrix.ToGdiMatrix());
-            }
-            finally { Lock.ExitGdiPlus(); }
 #endif
         }
 
@@ -1231,14 +552,6 @@ namespace PdfSharp.Drawing
 #endif
 #if CORE___
             throw new NotImplementedException("XGraphicsPath.Flatten");
-#endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.Flatten(matrix.ToGdiMatrix(), (float)flatness);
-            }
-            finally { Lock.ExitGdiPlus(); }
 #endif
         }
 
@@ -1256,14 +569,6 @@ namespace PdfSharp.Drawing
 #if CORE___
             throw new NotImplementedException("XGraphicsPath.Widen");
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.Widen(pen.RealizeGdiPen());
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         /// <summary>
@@ -1278,14 +583,6 @@ namespace PdfSharp.Drawing
 #if CORE
             throw new NotImplementedException("XGraphicsPath.Widen");
 #endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.Widen(pen.RealizeGdiPen(), matrix.ToGdiMatrix());
-            }
-            finally { Lock.ExitGdiPlus(); }
-#endif
         }
 
         /// <summary>
@@ -1299,14 +596,6 @@ namespace PdfSharp.Drawing
 #endif
 #if CORE__
             throw new NotImplementedException("XGraphicsPath.Widen");
-#endif
-#if GDI
-            try
-            {
-                Lock.EnterGdiPlus();
-                _gdipPath.Widen(pen.RealizeGdiPen(), matrix.ToGdiMatrix(), (float)flatness);
-            }
-            finally { Lock.ExitGdiPlus(); }
 #endif
         }
 
@@ -1323,13 +612,6 @@ namespace PdfSharp.Drawing
         /// Gets access to underlying Core graphics path.
         /// </summary>
         internal CoreGraphicsPath _corePath;
-#endif
-
-#if GDI
-        /// <summary>
-        /// Gets access to underlying GDI+ graphics path.
-        /// </summary>
-        internal GraphicsPath _gdipPath;
 #endif
     }
 }

@@ -29,10 +29,6 @@
 
 using System;
 using System.Diagnostics;
-#if GDI
-using System.Drawing;
-using System.Drawing.Imaging;
-#endif
 using PdfSharp.Drawing;
 
 namespace PdfSharp.Pdf.Advanced

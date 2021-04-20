@@ -28,9 +28,6 @@
 #endregion
 
 using System;
-#if GDI
-using System.Drawing;
-#endif
 using PdfSharp.Drawing;
 
 namespace PdfSharp.Internal

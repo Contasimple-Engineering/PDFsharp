@@ -72,7 +72,7 @@ namespace PdfSharp.Drawing.Internal
             return null;
         }
 
-#if GDI || WPF || CORE
+#if CORE
         /// <summary>
         /// Imports the image.
         /// </summary>

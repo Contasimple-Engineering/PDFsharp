@@ -30,11 +30,6 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-#endif
 using PdfSharp.Internal;
 
 // ReSharper disable RedundantNameQualifier

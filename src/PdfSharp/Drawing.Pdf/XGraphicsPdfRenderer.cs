@@ -34,10 +34,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
 using PdfSharp.Fonts.OpenType;
 using PdfSharp.Internal;
 using PdfSharp.Pdf;
@@ -384,11 +380,6 @@ namespace PdfSharp.Drawing.Pdf
 #if CORE
             Realize(pen, brush);
             AppendPath(path._corePath);
-            AppendStrokeFill(pen, brush, path.FillMode, false);
-#endif
-#if GDI
-            Realize(pen, brush);
-            AppendPath(path._gdipPath);
             AppendStrokeFill(pen, brush, path.FillMode, false);
 #endif
         }
@@ -1228,64 +1219,7 @@ namespace PdfSharp.Drawing.Pdf
         }
 #endif
 
-#if GDI
-        /// <summary>
-        /// Appends the content of a GraphicsPath object.
-        /// </summary>
-        internal void AppendPath(GraphicsPath path)
-        {
-#if true
-            AppendPath(XGraphics.MakeXPointArray(path.PathPoints, 0, path.PathPoints.Length), path.PathTypes);
-#else
-            int count = path.PointCount;
-            if (count == 0)
-                return;
-            PointF[] points = path.PathPoints;
-            Byte[] types = path.PathTypes;
-
-            for (int idx = 0; idx < count; idx++)
-            {
-                // From GDI+ documentation:
-                const byte PathPointTypeStart = 0; // move
-                const byte PathPointTypeLine = 1; // line
-                const byte PathPointTypeBezier = 3; // default Bezier (= cubic Bezier)
-                const byte PathPointTypePathTypeMask = 0x07; // type mask (lowest 3 bits).
-                //const byte PathPointTypeDashMode = 0x10; // currently in dash mode.
-                //const byte PathPointTypePathMarker = 0x20; // a marker for the path.
-                const byte PathPointTypeCloseSubpath = 0x80; // closed flag
-
-                byte type = types[idx];
-                switch (type & PathPointTypePathTypeMask)
-                {
-                    case PathPointTypeStart:
-                        //PDF_moveto(pdf, points[idx].X, points[idx].Y);
-                        AppendFormat("{0:" + format + "} {1:" + format + "} m\n", points[idx].X, points[idx].Y);
-                        break;
-
-                    case PathPointTypeLine:
-                        //PDF_lineto(pdf, points[idx].X, points[idx].Y);
-                        AppendFormat("{0:" + format + "} {1:" + format + "} l\n", points[idx].X, points[idx].Y);
-                        if ((type & PathPointTypeCloseSubpath) != 0)
-                            Append("h\n");
-                        break;
-
-                    case PathPointTypeBezier:
-                        Debug.Assert(idx + 2 < count);
-                        //PDF_curveto(pdf, points[idx].X, points[idx].Y, 
-                        //                 points[idx + 1].X, points[idx + 1].Y, 
-                        //                 points[idx + 2].X, points[idx + 2].Y);
-                        AppendFormat("{0:" + format + "} {1:" + format + "} {2:" + format + "} {3:" + format + "} {4:" + format + "} {5:" + format + "} c\n", points[idx].X, points[idx].Y,
-                            points[++idx].X, points[idx].Y, points[++idx].X, points[idx].Y);
-                        if ((types[idx] & PathPointTypeCloseSubpath) != 0)
-                            Append("h\n");
-                        break;
-                }
-            }
-#endif
-        }
-#endif
-
-#if CORE || GDI
+#if CORE
         void AppendPath(XPoint[] points, Byte[] types)
         {
             const string format = Config.SignificantFigures4;
@@ -1752,18 +1686,7 @@ namespace PdfSharp.Drawing.Pdf
         }
         #endregion
 
-#if GDI
-        [Conditional("DEBUG")]
-        void DumpPathData(PathData pathData)
-        {
-            XPoint[] points = new XPoint[pathData.Points.Length];
-            for (int i = 0; i < points.Length; i++)
-                points[i] = new XPoint(pathData.Points[i].X, pathData.Points[i].Y);
-
-            DumpPathData(points, pathData.Types);
-        }
-#endif
-#if CORE || GDI
+#if CORE
         [Conditional("DEBUG")]
         void DumpPathData(XPoint[] points, byte[] types)
         {

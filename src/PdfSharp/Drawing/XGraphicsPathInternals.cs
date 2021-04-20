@@ -27,10 +27,6 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
 
 namespace PdfSharp.Drawing
 {
@@ -45,15 +41,5 @@ namespace PdfSharp.Drawing
             _path = path;
         }
         XGraphicsPath _path;
-
-#if GDI
-        /// <summary>
-        /// Gets the underlying GDI+ path object.
-        /// </summary>
-        public GraphicsPath GdiPath
-        {
-            get { return _path._gdipPath; }
-        }
-#endif
     }
 }

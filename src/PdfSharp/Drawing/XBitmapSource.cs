@@ -33,15 +33,6 @@
 using System.Diagnostics;
 using PdfSharp.Internal;
 
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-#endif
-
-// WPFHACK
-#pragma warning disable 0169
-#pragma warning disable 0649
 
 namespace PdfSharp.Drawing
 {
@@ -59,7 +50,7 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if (CORE_WITH_GDI || GDI)
+#if (CORE_WITH_GDI)
                 try
                 {
                     Lock.EnterGdiPlus();
@@ -77,7 +68,7 @@ namespace PdfSharp.Drawing
         {
             get
             {
-#if (CORE_WITH_GDI || GDI)
+#if (CORE_WITH_GDI)
                 try
                 {
                     Lock.EnterGdiPlus();

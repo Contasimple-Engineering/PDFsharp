@@ -27,11 +27,6 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
-
 namespace PdfSharp.Drawing
 {
     /// <summary>
@@ -44,14 +39,6 @@ namespace PdfSharp.Drawing
 #if CORE
         internal XGraphicsState()
         { }
-#endif
-#if GDI
-        internal XGraphicsState(GraphicsState state)
-        {
-            GdiState = state;
-        }
-
-        internal GraphicsState GdiState;
 #endif
         internal InternalGraphicsState InternalState;
     }

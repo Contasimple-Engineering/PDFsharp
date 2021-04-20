@@ -29,13 +29,6 @@
 
 using System;
 using System.Diagnostics;
-#if GDI
-using System.Drawing;
-using System.Drawing.Imaging;
-#endif
-
-// WPFHACK
-#pragma warning disable 162
 
 namespace PdfSharp.Drawing.BarCodes
 {
@@ -726,25 +719,6 @@ namespace PdfSharp.Drawing.BarCodes
         /// </summary>
         public XImage CreateImage(char[] code, int rows, int columns, int pixelsize)
         {
-#if GDI
-            Bitmap bm = new Bitmap(columns * pixelsize, rows * pixelsize);
-            using (Graphics gfx = Graphics.FromImage(bm))
-            {
-                gfx.FillRectangle(System.Drawing.Brushes.White, new Rectangle(0, 0, columns * pixelsize, rows * pixelsize));
-
-                for (int i = rows - 1; i >= 0; i--)
-                {
-                    for (int j = 0; j < columns; j++)
-                    {
-                        if (code[((rows - 1) - i) * columns + j] == (char)1)
-                            gfx.FillRectangle(System.Drawing.Brushes.Black, j * pixelsize, i * pixelsize, pixelsize, pixelsize);
-                    }
-                }
-            }
-            XImage image = XImage.FromGdiPlusImage(bm);
-            image.Interpolate = false;
-            return image;
-#endif
 #if CORE
             return null;
 #endif

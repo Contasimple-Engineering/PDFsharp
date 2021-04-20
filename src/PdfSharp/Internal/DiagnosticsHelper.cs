@@ -28,9 +28,6 @@
 #endregion
 
 using System;
-#if GDI
-using System.Drawing;
-#endif
 using System.Diagnostics;
 using PdfSharp.Drawing;
 using PdfSharp.Fonts;

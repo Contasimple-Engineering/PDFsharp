@@ -31,10 +31,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-#if GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-#endif
 using PdfSharp.Internal;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
@@ -506,18 +502,10 @@ namespace PdfSharp.Drawing.Pdf
 #if CORE
             DiagnosticsHelper.HandleNotImplemented("RealizeClipPath");
 #endif
-#if GDI
-            // Do not render an empty path.
-            if (clipPath._gdipPath.PointCount < 0)
-                return;
-#endif
             _renderer.BeginGraphicMode();
             RealizeCtm();
 #if CORE
             _renderer.AppendPath(clipPath._corePath);
-#endif
-#if GDI
-            _renderer.AppendPath(clipPath._gdipPath);
 #endif
             _renderer.Append(clipPath.FillMode == XFillMode.Winding ? "W n\n" : "W* n\n");
         }

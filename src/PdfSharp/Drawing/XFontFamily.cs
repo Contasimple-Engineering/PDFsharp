@@ -28,7 +28,7 @@
 #endregion
 
 using System;
-#if CORE || GDI
+#if CORE
 using System.Drawing;
 using GdiFont = System.Drawing.Font;
 using GdiFontFamily = System.Drawing.FontFamily;
@@ -66,7 +66,7 @@ namespace PdfSharp.Drawing
             FamilyInternal = fontFamilyInternal;
         }
 
-#if CORE || GDI
+#if CORE
         //public XFontFamily(GdiFontFamily gdiFontFamily)
         //{
         //    FamilyInternal = FontFamilyInternal.GetOrCreateFromGdi(gdiFontFamily);
@@ -78,9 +78,6 @@ namespace PdfSharp.Drawing
             XFontFamily fontFamily = new XFontFamily(name);
             if (createPlatformFamily)
             {
-#if GDI
-                //fontFamily._gdiFamily = new System.Drawing.FontFamily(name);
-#endif
             }
             return fontFamily;
         }
@@ -103,7 +100,7 @@ namespace PdfSharp.Drawing
             return new XFontFamily(fontFamilyInternal);
         }
 
-#if CORE || GDI
+#if CORE
         internal static XFontFamily GetOrCreateFromGdi(GdiFont font)
         {
             FontFamilyInternal fontFamilyInternal = FontFamilyInternal.GetOrCreateFromGdi(font.FontFamily);
@@ -137,10 +134,6 @@ namespace PdfSharp.Drawing
         {
             OpenTypeDescriptor descriptor = (OpenTypeDescriptor)FontDescriptorCache.GetOrCreateDescriptor(Name, style);
             int result = descriptor.Ascender;
-#if DEBUG_ && GDI
-            int gdiValue = _gdiFamily.GetCellAscent((FontStyle)style);
-            Debug.Assert(gdiValue == result);
-#endif
             return result;
         }
 
@@ -151,10 +144,6 @@ namespace PdfSharp.Drawing
         {
             OpenTypeDescriptor descriptor = (OpenTypeDescriptor)FontDescriptorCache.GetOrCreateDescriptor(Name, style);
             int result = descriptor.Descender;
-#if DEBUG_ && GDI
-            int gdiValue = _gdiFamily.GetCellDescent((FontStyle)style);
-            Debug.Assert(gdiValue == result);
-#endif
             return result;
         }
 
@@ -165,10 +154,6 @@ namespace PdfSharp.Drawing
         {
             OpenTypeDescriptor descriptor = (OpenTypeDescriptor)FontDescriptorCache.GetOrCreateDescriptor(Name, style);
             int result = descriptor.UnitsPerEm;
-#if DEBUG_ && GDI
-            int gdiValue = _gdiFamily.GetEmHeight((FontStyle)style);
-            Debug.Assert(gdiValue == result);
-#endif
 #if DEBUG_
             int headValue = descriptor.FontFace.head.unitsPerEm;
             Debug.Assert(headValue == result);
@@ -184,14 +169,6 @@ namespace PdfSharp.Drawing
         {
             OpenTypeDescriptor descriptor = (OpenTypeDescriptor)FontDescriptorCache.GetOrCreateDescriptor(Name, style);
             int result = descriptor.LineSpacing;
-#if DEBUG_ && GDI
-            int gdiValue = _gdiFamily.GetLineSpacing((FontStyle)style);
-            Debug.Assert(gdiValue == result);
-#endif
-#if DEBUG_ && WPF
-            int wpfValue = (int)Math.Round(_wpfFamily.LineSpacing * GetEmHeight(style));
-            Debug.Assert(wpfValue == result);
-#endif
             return result;
         }
 
@@ -205,11 +182,6 @@ namespace PdfSharp.Drawing
             XGdiFontStyle xStyle = ((XGdiFontStyle)style) & XGdiFontStyle.BoldItalic;
 #if CORE
             throw new InvalidOperationException("In CORE build it is the responsibility of the developer to provide all required font faces.");
-#endif
-#if GDI
-            if (GdiFamily != null)
-                return GdiFamily.IsStyleAvailable((GdiFontStyle)xStyle);
-            return false;
 #endif
         }
 
@@ -234,17 +206,6 @@ namespace PdfSharp.Drawing
         {
             throw new InvalidOperationException("Obsolete and not implemted any more.");
         }
-
-#if GDI
-        /// <summary>
-        /// Gets the underlying GDI+ font family object.
-        /// Is null if the font was created by a font resolver.
-        /// </summary>
-        internal GdiFontFamily GdiFamily
-        {
-            get { return FamilyInternal.GdiFamily; }
-        }
-#endif
 
         /// <summary>
         /// The implementation sigleton of font family;

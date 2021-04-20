@@ -27,10 +27,6 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if GDI
-using System.Drawing;
-using System.Drawing.Text;
-#endif
 using PdfSharp.Drawing;
 
 namespace PdfSharp.Fonts

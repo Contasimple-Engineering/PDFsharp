@@ -33,7 +33,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using PdfSharp.Fonts;
-#if CORE || GDI
+#if CORE
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GdiFontFamily = System.Drawing.FontFamily;
@@ -60,25 +60,6 @@ namespace PdfSharp.Drawing
             // HACK: Use one global PrivateFontCollection in GDI+
         }
 
-#if GDI
-        //internal PrivateFontCollection PrivateFontCollection
-        //{
-        //  get { return privateFontCollection; }
-        //  set { privateFontCollection = value; }
-        //}
-
-        GdiPrivateFontCollection GetPrivateFontCollection()
-        {
-            // Create only if really needed.
-            if (_privateFontCollection == null)
-                _privateFontCollection = new GdiPrivateFontCollection();
-            return _privateFontCollection;
-        }
-
-        // PrivateFontCollection of GDI+
-        private GdiPrivateFontCollection _privateFontCollection;
-#endif
-
         /// <summary>
         /// Gets the global font collection.
         /// </summary>
@@ -88,41 +69,11 @@ namespace PdfSharp.Drawing
         }
         internal static XPrivateFontCollection _singleton = new XPrivateFontCollection();
 
-#if GDI
-        /// <summary>
-        /// Adds the font data to the font collections.
-        /// </summary>
-        [Obsolete("Use Add(Stream stream)")]
-        public void AddFont(byte[] data, string familyName)
-        {
-            if (String.IsNullOrEmpty(familyName))
-                throw new ArgumentNullException("familyName");
-
-            //if (glyphTypeface == null)
-            //  throw new ArgumentNullException("glyphTypeface");
-
-            // Add to GDI+ PrivateFontCollection
-            int length = data.Length;
-
-            // Copy data without unsafe code 
-            IntPtr ip = Marshal.AllocCoTaskMem(length);
-            Marshal.Copy(data, 0, ip, length);
-            GetPrivateFontCollection().AddMemoryFont(ip, length);
-            // Do not free the memory here, AddMemoryFont stores a pointer, not a copy!
-            //Marshal.FreeCoTaskMem(ip);
-            //privateFonts.Add(glyphTypeface);
-        }
-#endif
-
         /// <summary>
         /// Adds the specified font data to the global PrivateFontCollection.
         /// Family name and style are automatically retrieved from the font.
         /// </summary>
-#if GDI
-        [Obsolete("Use Add(Stream stream)")]
-#else
         [Obsolete("Use the GDI build of PDFsharp and use Add(Stream stream)")]
-#endif
         public static void AddFont(string filename)
         {
             throw new NotImplementedException();
@@ -130,200 +81,17 @@ namespace PdfSharp.Drawing
             //Global.AddGlyphTypeface(glyphTypeface);
         }
 
-#if GDI
         /// <summary>
         /// Adds the specified font data to the global PrivateFontCollection.
         /// Family name and style are automatically retrieved from the font.
         /// </summary>
-        [Obsolete("Use Add(stream).")]
-        public static void AddFont(Stream stream)
-        {
-            Add(stream);
-        }
-
-        /// <summary>
-        /// Adds the specified font data to the global PrivateFontCollection.
-        /// Family name and style are automatically retrieved from the font.
-        /// </summary>
-        public static void Add(Stream stream)
-        {
-            int length = (int)stream.Length;
-            byte[] bytes = new byte[length];
-            stream.Read(bytes, 0, length);
-            Add(bytes);
-        }
-
-        /// <summary>
-        /// Adds the specified font data to the global PrivateFontCollection.
-        /// Family name and style are automatically retrieved from the font.
-        /// </summary>
-        public static void Add(byte[] font)
-        {
-            IntPtr unmanagedPointer = Marshal.AllocCoTaskMem(font.Length);
-            Marshal.Copy(font, 0, unmanagedPointer, font.Length);
-            Singleton.GetPrivateFontCollection().AddMemoryFont(unmanagedPointer, font.Length);
-            // Do not free the memory here, AddMemoryFont stores a pointer, not a copy!
-            //Marshal.FreeCoTaskMem(ip);
-
-            XFontSource fontSource = XFontSource.GetOrCreateFrom(font);
-
-            string familyName = fontSource.FontName;
-
-            if (familyName.EndsWith(" Regular", StringComparison.OrdinalIgnoreCase))
-                familyName = familyName.Substring(0, familyName.Length - 8);
-
-            bool bold = fontSource.Fontface.os2.IsBold;
-            bool italic = fontSource.Fontface.os2.IsItalic;
-            IncompetentlyMakeAHackToFixAProblemYouWoldNeverHaveIfYouUseAFontResolver(fontSource, ref familyName, ref bold, ref italic);
-            string key = MakeKey(familyName, bold, italic);
-            Singleton._fontSources.Add(key, fontSource);
-
-            string typefaceKey = XGlyphTypeface.ComputeKey(familyName, bold, italic);
-            FontFactory.CacheExistingFontSourceWithNewTypefaceKey(typefaceKey, fontSource);
-        }
-
-        static void IncompetentlyMakeAHackToFixAProblemYouWoldNeverHaveIfYouUseAFontResolver(XFontSource fontSource,
-            ref string familyName, ref bool bold, ref bool italic)
-        {
-            const string regularSuffix = " Regular";
-            const string boldSuffix = " Bold";
-            const string italicSuffix = " Italic";
-            const string boldItalicSuffix = " Bold Italic";
-            const string italicBoldSuffix = " Italic Bold";
-
-            if (familyName.EndsWith(regularSuffix, StringComparison.OrdinalIgnoreCase))
-            {
-                familyName = familyName.Substring(0, familyName.Length - regularSuffix.Length);
-                Debug.Assert(!bold && !italic);
-                bold = italic = false;
-            }
-            else if (familyName.EndsWith(boldItalicSuffix, StringComparison.OrdinalIgnoreCase) || familyName.EndsWith(italicBoldSuffix, StringComparison.OrdinalIgnoreCase))
-            {
-                familyName = familyName.Substring(0, familyName.Length - boldItalicSuffix.Length);
-                Debug.Assert(bold && italic);
-                bold = italic = true;
-            }
-            else if (familyName.EndsWith(boldSuffix, StringComparison.OrdinalIgnoreCase))
-            {
-                familyName = familyName.Substring(0, familyName.Length - boldSuffix.Length);
-                Debug.Assert(bold && !italic);
-                bold = true;
-                italic = false;
-            }
-            else if (familyName.EndsWith(italicSuffix, StringComparison.OrdinalIgnoreCase))
-            {
-                familyName = familyName.Substring(0, familyName.Length - italicSuffix.Length);
-                Debug.Assert(!bold && italic);
-                bold = false;
-                italic = true;
-            }
-            else
-            {
-                Debug.Assert(!bold && !italic);
-                bold = false;
-                italic = false;
-            }
-        }
-#endif
-
-        /// <summary>
-        /// Adds the specified font data to the global PrivateFontCollection.
-        /// Family name and style are automatically retrieved from the font.
-        /// </summary>
-#if GDI
-        [Obsolete("Use Add(Stream stream)")]
-#else
         [Obsolete("Use the GDI build of PDFsharp and use Add(Stream stream)")]
-#endif
         public static void AddFont(Stream stream, string facename)
         {
             throw new NotImplementedException();
             //XGlyphTypeface glyphTypeface = new XGlyphTypeface(stream, facename);
             //Global.AddGlyphTypeface(glyphTypeface);
         }
-
-        //        /// <summary>
-        //        /// Adds XGlyphTypeface to internal collection.
-        //        /// Family name and style are automatically retrieved from the font.
-        //        /// </summary>
-        //        void AddGlyphTypeface(XGlyphTypeface glyphTypeface)
-        //        {
-        //            string name = MakeName(glyphTypeface);
-        //            if (_typefaces.ContainsKey(name))
-        //                throw new InvalidOperationException(PSSR.FontAlreadyAdded(glyphTypeface.DisplayName));
-
-        //            _typefaces.Add(name, glyphTypeface);
-        //            //Debug.WriteLine("Font added: " + name);
-
-        //#if GDI
-        //            // Add to GDI+ PrivateFontCollection singleton.
-        //            byte[] data = glyphTypeface.Fontface.FontSource.Bytes;
-        //            int length = data.Length;
-
-        //            IntPtr ip = Marshal.AllocCoTaskMem(length);
-        //            Marshal.Copy(data, 0, ip, length);
-        //            _privateFontCollection.AddMemoryFont(ip, length);
-        //            // Do not free the memory here, AddMemoryFont stores a pointer, not a copy!
-        //            // Marshal.FreeCoTaskMem(ip);
-        //#endif
-
-        //        }
-
-        //internal static XGlyphTypeface TryGetXGlyphTypeface(string familyName, XFontStyle style)
-        //{
-        //    string name = MakeName(familyName, style);
-
-        //    XGlyphTypeface typeface;
-        //    _global._typefaces.TryGetValue(name, out typeface);
-        //    return typeface;
-        //}
-
-#if GDI
-        internal static GdiFont TryCreateFont(string name, double size, GdiFontStyle style, out XFontSource fontSource)
-        {
-            fontSource = null;
-            try
-            {
-                GdiPrivateFontCollection pfc = Singleton._privateFontCollection;
-                if (pfc == null)
-                    return null;
-#if true
-                string key = MakeKey(name, (XFontStyle)style);
-                if (Singleton._fontSources.TryGetValue(key, out fontSource))
-                {
-                    GdiFont font = new GdiFont(name, (float)size, style, GraphicsUnit.World);
-#if DEBUG_
-                    Debug.Assert(StringComparer.OrdinalIgnoreCase.Compare(name, font.Name) == 0);
-                    Debug.Assert(font.Bold == ((style & GdiFontStyle.Bold) != 0));
-                    Debug.Assert(font.Italic == ((style & GdiFontStyle.Italic) != 0));
-#endif
-                    return font;
-                }
-                return null;
-#else
-                foreach (GdiFontFamily family in pfc.Families)
-                {
-                    if (string.Compare(family.Name, name, StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        GdiFont font = new GdiFont(family, (float)size, style, GraphicsUnit.World);
-                        if (string.Compare(font.Name, name, StringComparison.OrdinalIgnoreCase) != 0)
-                        {
-                            // Style simulation is not implemented in GDI+.
-                            // Use WPF build.
-                        }
-                        return font;
-                    }
-                }
-#endif
-            }
-            catch (Exception ex)
-            {
-                // Ignore exception and return null.
-                Debug.WriteLine(ex.ToString());
-            }
-            return null;
-        }
-#endif
 
         static string MakeKey(string familyName, XFontStyle style)
         {
@@ -336,10 +104,6 @@ namespace PdfSharp.Drawing
         }
 
         readonly Dictionary<string, XGlyphTypeface> _typefaces = new Dictionary<string, XGlyphTypeface>();
-#if GDI
-        //List<XGlyphTypeface> privateFonts = new List<XGlyphTypeface>();
-        readonly Dictionary<string, XFontSource> _fontSources = new Dictionary<string, XFontSource>(StringComparer.OrdinalIgnoreCase);
-#endif
     }
 #endif
 }
