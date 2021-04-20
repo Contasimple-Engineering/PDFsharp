@@ -94,8 +94,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
             }
             page.RenderContent = content;
 
-            TargetContext = XGraphicTargetContext.CORE;
-
             _renderer = new PdfSharp.Drawing.Pdf.XGraphicsPdfRenderer(page, this, options);
             _pageSizePoints = new XSize(page.Width, page.Height);
             switch (pageUnit)
@@ -142,7 +140,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 
             _gsStack = new GraphicsStateStack(this);
 
-            TargetContext = XGraphicTargetContext.CORE;
             _drawGraphics = false;
             if (form.Owner != null)
                 _renderer = new XGraphicsPdfRenderer(form, this);
@@ -282,9 +279,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
 
             XMatrix matrix = new XMatrix();
 
-            // Nothing to do here.
-            Debug.Assert(TargetContext == XGraphicTargetContext.CORE);
-
             if (_pageDirection != XPageDirection.Downwards)
                 matrix.Prepend(new XMatrix(1, 0, 0, -1, 0, pageHeight));
 
@@ -343,11 +337,6 @@ namespace PdfSharp.Drawing  // #??? Clean up
             set { _muh = value; }
         }
         PdfFontEncoding _muh;
-
-        /// <summary>
-        /// A value indicating whether GDI+ or WPF is used as context.
-        /// </summary>
-        internal XGraphicTargetContext TargetContext;
 
         /// <summary>
         /// Gets or sets the unit of measure used for page coordinates.
@@ -1477,17 +1466,10 @@ namespace PdfSharp.Drawing  // #??? Clean up
         {
             XGraphicsState xState = null;
 
-            if (TargetContext == XGraphicTargetContext.CORE || TargetContext == XGraphicTargetContext.NONE)
-            {
-                xState = new XGraphicsState();
-                InternalGraphicsState iState = new InternalGraphicsState(this, xState);
-                iState.Transform = _transform;
-                _gsStack.Push(iState);
-            }
-            else
-            {
-                Debug.Assert(false, "XGraphicTargetContext must be XGraphicTargetContext.CORE.");
-            }
+            xState = new XGraphicsState();
+            InternalGraphicsState iState = new InternalGraphicsState(this, xState);
+            iState.Transform = _transform;
+            _gsStack.Push(iState);
 
             if (_renderer != null)
                 _renderer.Save(xState);
@@ -1504,11 +1486,8 @@ namespace PdfSharp.Drawing  // #??? Clean up
             if (state == null)
                 throw new ArgumentNullException("state");
 
-            if (TargetContext == XGraphicTargetContext.CORE)
-            {
-                _gsStack.Restore(state.InternalState);
-                _transform = state.InternalState.Transform;
-            }
+            _gsStack.Restore(state.InternalState);
+            _transform = state.InternalState.Transform;
 
             if (_renderer != null)
                 _renderer.Restore(state);
@@ -1543,10 +1522,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
             if (unit != XGraphicsUnit.Point)
                 throw new ArgumentException("The current implementation supports XGraphicsUnit.Point only.", "unit");
 
-            XGraphicsContainer xContainer = null;
-
-            if (TargetContext == XGraphicTargetContext.CORE)
-                xContainer = new XGraphicsContainer();
+            XGraphicsContainer xContainer = new XGraphicsContainer();
 
             InternalGraphicsState iState = new InternalGraphicsState(this, xContainer);
             iState.Transform = _transform;
@@ -1841,11 +1817,7 @@ namespace PdfSharp.Drawing  // #??? Clean up
             matrix = DefaultViewMatrix;
             matrix.Multiply(_transform, XMatrixOrder.Prepend);
 
-            if (TargetContext == XGraphicTargetContext.CORE)
-            {
-                GetType();
-                // TODO: _gsStack...
-            }
+            GetType();
 
             if (_renderer != null)
                 _renderer.AddTransform(transform, XMatrixOrder.Prepend);

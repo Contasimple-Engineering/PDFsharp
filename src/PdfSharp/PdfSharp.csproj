@@ -78,7 +78,6 @@
     <Compile Include="Drawing\enums\XFillMode.cs" />
     <Compile Include="Drawing\enums\XFontStyle.cs" />
     <Compile Include="Drawing\enums\XGdiFontStyle.cs" />
-    <Compile Include="Drawing\enums\XGraphicRenderTarget.cs" />
     <Compile Include="Drawing\enums\XGraphicsPathItemType.cs" />
     <Compile Include="Drawing\enums\XGraphicsPdfPageOptions.cs" />
     <Compile Include="Drawing\enums\XGraphicsUnit.cs" />
